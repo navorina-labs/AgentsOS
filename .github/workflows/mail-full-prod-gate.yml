@@ -1,0 +1,36 @@
+# Full prod gate on demand (contracts + Playwright)
+name: Mail Agent / Full prod gate
+
+on:
+  workflow_dispatch:
+
+defaults:
+  run:
+    working-directory: agents/mail-agent
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: agents/mail-agent/package-lock.json
+
+      - run: npm ci
+
+      - name: test:prod
+        env:
+          MAILAGENT_API_URL: https://api.webmailagent.com
+          MAILAGENT_API_KEY: ${{ secrets.MAILAGENT_API_KEY }}
+        run: |
+          if [ -z "$MAILAGENT_API_KEY" ]; then
+            echo "::error::Set MAILAGENT_API_KEY — see agents/mail-agent/docs/OPERATOR.md"
+            exit 1
+          fi
+          npx playwright install chromium --with-deps
+          npm run test:prod
+

@@ -1,0 +1,50 @@
+# Smoke QA on feature branches and pull requests (no Worker deploy)
+name: Mail Agent / QA Smoke
+
+on:
+  push:
+    branches:
+      - "qa/**"
+    paths:
+      - "agents/mail-agent/**"
+      - ".github/workflows/mail-qa-smoke.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "agents/mail-agent/**"
+      - ".github/workflows/mail-qa-smoke.yml"
+
+defaults:
+  run:
+    working-directory: agents/mail-agent
+
+jobs:
+  check-and-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: agents/mail-agent/package-lock.json
+
+      - run: npm ci
+      - run: npm run check
+      - run: npm run build:qa
+      - run: npm run verify:codex
+
+      - name: Smoke prod gate (light — saves KV quota)
+        env:
+          MAILAGENT_API_URL: https://api.webmailagent.com
+          MAILAGENT_API_KEY: ${{ secrets.MAILAGENT_API_KEY }}
+        run: |
+          if [ -z "$MAILAGENT_API_KEY" ]; then
+            echo "::error::Set MAILAGENT_API_KEY in GitHub Actions secrets — see agents/mail-agent/docs/OPERATOR.md"
+            exit 1
+          fi
+          npm run test:prod:gate
+          npm run test:qa-pilot-starter
+          npm run test:qa-pilot-cypress-starter
+

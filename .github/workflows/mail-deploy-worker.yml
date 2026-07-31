@@ -1,0 +1,85 @@
+# Deploy Mail Agent Worker to Cloudflare (API; landing — Netlify)
+name: Mail Agent / Deploy Worker
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "agents/mail-agent/src/**"
+      - "agents/mail-agent/public/**"
+      - "agents/mail-agent/migrations/**"
+      - "agents/mail-agent/wrangler.jsonc"
+      - "agents/mail-agent/package-lock.json"
+      - "agents/mail-agent/package.json"
+      - "agents/mail-agent/examples/playwright/**"
+      - "agents/mail-agent/scripts/contract-qa*.mjs"
+      - "agents/mail-agent/scripts/verify-agent-skill.mjs"
+      - "agents/mail-agent/scripts/sync-agent-skill.mjs"
+      - "agents/mail-agent/skills/**"
+      - "agents/mail-agent/.agents/**"
+      - "agents/mail-agent/scripts/test-prod.mjs"
+      - "agents/mail-agent/scripts/test-contract-all.mjs"
+  workflow_dispatch:
+
+defaults:
+  run:
+    working-directory: agents/mail-agent
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: agents/mail-agent/package-lock.json
+
+      - run: npm ci
+      - run: npm run check
+      - run: npm run test:agent-autopilot
+      - run: npm run test:workspace-autonomy
+      - run: npm run verify:codex
+
+      - name: Require Cloudflare secrets
+        run: |
+          if [ -z "${{ secrets.CLOUDFLARE_API_TOKEN }}" ]; then
+            echo "::error::Missing GitHub secret CLOUDFLARE_API_TOKEN — see agents/mail-agent/docs/CI.md"
+            exit 1
+          fi
+          if [ -z "${{ secrets.CLOUDFLARE_ACCOUNT_ID }}" ]; then
+            echo "::error::Missing GitHub secret CLOUDFLARE_ACCOUNT_ID"
+            exit 1
+          fi
+
+      - name: Database migrate (optional)
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          if [ -n "$DATABASE_URL" ]; then npm run db:migrate; fi
+
+      - name: Deploy to Cloudflare Workers
+        run: npm run deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+      - name: Smoke prod gate (light — saves KV quota)
+        env:
+          MAILAGENT_API_URL: https://api.webmailagent.com
+          MAILAGENT_API_KEY: ${{ secrets.MAILAGENT_API_KEY }}
+          MAILAGENT_REQUIRE_DIAGNOSE_RECOVERY: "1"
+          MAILAGENT_REQUIRE_VERIFICATION_CONFIDENCE: "1"
+          MAILAGENT_REQUIRE_AGENT_FLOWS: "1"
+          MAILAGENT_REQUIRE_RUN_TIMELINE: "1"
+          MAILAGENT_REQUIRE_CLEANUP_POLICIES: "1"
+          MAILAGENT_REQUIRE_HTML_ACTIONS: "1"
+        run: |
+          if [ -z "$MAILAGENT_API_KEY" ]; then
+            echo "::error::Set MAILAGENT_API_KEY in GitHub Actions secrets — see agents/mail-agent/docs/OPERATOR.md"
+            exit 1
+          fi
+          npm run test:prod:gate
+

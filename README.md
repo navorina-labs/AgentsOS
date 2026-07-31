@@ -52,3 +52,7 @@ npm run verify
 
 See each agent's README or `SKILL.md` for its own setup and verification commands.
 
+## Product direction
+
+- [Platform direction](docs/platform-direction.md)
+- [Product roadmap and priorities](docs/product-roadmap.md)

@@ -2,7 +2,7 @@
  * Shared nav (thirdweb-style dropdowns), docs sidebar, and footer.
  */
 (function () {
-  const GITHUB = "https://github.com/Alex0nder/MailAgent";
+  const GITHUB = "https://github.com/navorina-labs/AgentsOS";
   const PORTFOLIO = "https://alexyoung33rd.com/";
   const LOGO_SVG = `<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><text x="12" y="12.5" text-anchor="middle" dominant-baseline="middle" fill="#ecfef5" font-family="Georgia, 'Times New Roman', Times, serif" font-size="14" font-weight="500">@</text></svg>`;
 
@@ -11,6 +11,8 @@
       id: "product",
       label: "Product",
       items: [
+        { href: "/#agents", label: "Agent catalog", desc: "Mail, context, design, and safety" },
+        { href: "/dashboard.html", label: "Mail Agent", desc: "Production email and QA agent" },
         { href: "/#features", label: "Features", desc: "OTP, magic links, safe CTAs" },
         { href: "/#qa", label: "QA / Playwright", desc: "Isolated inboxes per CI worker" },
         { href: "/#workspace", label: "Workspace Agent", desc: "Summarize, draft, policy-gated send" },
@@ -189,7 +191,7 @@
   function renderNavLinks() {
     if (mode === "marketing") {
       const dropdowns = NAV_DROPDOWNS.map(renderDropdown).join("");
-      return `${dropdowns}${navLink("/docs/", "Docs")}${navLink("/dashboard.html", "Console")}`;
+      return `${dropdowns}${navLink("/docs/", "Docs")}${navLink("/dashboard.html", "Mail Agent")}`;
     }
     return `${navLink("/docs/", "Docs")}
       ${navLink("/docs/integrate.html", "Self-host")}
@@ -201,17 +203,18 @@
   function renderNav() {
     if (mode === "app") return renderAppNav();
 
-    const consoleCta = `<a class="btn btn-sm btn-primary btn-nav-console" href="/dashboard.html">Console</a>`;
-    const qaCta = `<a class="btn btn-sm btn-ghost" href="/docs/qa.html">Start QA setup</a>`;
+    const consoleCta = `<a class="btn btn-sm btn-primary btn-nav-console" href="/dashboard.html">Open Mail Agent</a>`;
+    const qaCta = `<a class="btn btn-sm btn-ghost" href="/#agents">Agents</a>`;
     const navCtas = `${qaCta}${consoleCta}`;
     const links = renderNavLinks();
+    const brandName = mode === "marketing" ? "AgentsOS" : "MailAgent";
 
     return `<header class="nav" id="site-header">
       <div class="nav-inner site-container">
         <div class="nav-start">
           <a href="/" class="logo">
             <span class="logo-mark">${LOGO_SVG}</span>
-            MailAgent
+            ${brandName}
           </a>
         </div>
         <nav class="nav-links" id="nav-links" aria-label="Primary">${links}</nav>
@@ -261,6 +264,8 @@
         <div class="footer-col">
           <h4>Product</h4>
           <ul>
+            <li><a href="/#agents">Agent catalog</a></li>
+            <li><a href="/dashboard.html">Mail Agent</a></li>
             <li><a href="/#features">Features</a></li>
             <li><a href="/#qa">For QA</a></li>
             <li><a href="/#workspace">Workspace Agent</a></li>
@@ -280,10 +285,10 @@
             <li><a href="/docs/">API reference</a></li>
             <li><a href="/docs/agents.html">AI agents &amp; MCP</a></li>
             <li>
-              <a href="https://github.com/Alex0nder/MailAgent/blob/main/docs/WORKSPACE-AUTONOMY.md" rel="noopener noreferrer">Workspace autonomy</a>
+              <a href="${GITHUB}/blob/main/agents/mail-agent/docs/WORKSPACE-AUTONOMY.md" rel="noopener noreferrer">Workspace autonomy</a>
             </li>
             <li>
-              <a href="https://github.com/Alex0nder/MailAgent/blob/main/docs/WORKSPACE-LOCAL-LLM.md" rel="noopener noreferrer">Local LLM (Ollama)</a>
+              <a href="${GITHUB}/blob/main/agents/mail-agent/docs/WORKSPACE-LOCAL-LLM.md" rel="noopener noreferrer">Local LLM (Ollama)</a>
             </li>
             <li><a href="/docs/qa.html">QA / Playwright</a></li>
             <li><a href="/docs/scoped-keys.html">Scoped keys</a></li>
@@ -325,7 +330,7 @@
   function renderFooterLegal() {
     return `<div class="footer-legal">
         <p class="footer-legal-copy">
-          © MailAgent. Open-source email verification for agents and QA.
+          © AgentsOS. Focused open-source agents for product teams.
           <a href="${GITHUB}" rel="noopener noreferrer">Source</a>
           · <a href="/privacy.html">Privacy</a>
           · <a href="/terms.html">Terms</a>
@@ -338,8 +343,8 @@
   }
 
   function renderFooterWordmark() {
-    return `<a href="/" class="footer-wordmark-link" aria-label="MailAgent — home">
-        <span class="footer-wordmark" id="footerWordmark">MailAgent</span>
+    return `<a href="/" class="footer-wordmark-link" aria-label="AgentsOS — home">
+        <span class="footer-wordmark" id="footerWordmark">AgentsOS</span>
       </a>`;
   }
 

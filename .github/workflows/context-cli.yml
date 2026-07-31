@@ -2,6 +2,7 @@ name: Context Agent / CLI
 
 on:
   push:
+    branches: [main]
     paths:
       - "agents/context-agent/packages/**"
       - "agents/context-agent/package.json"
@@ -51,4 +52,3 @@ jobs:
       - run: npm run test:semantic-offline
       - run: npm run test:drift
       - run: npm run context-os -- stats "Stripe webhook failed" --root examples/scaffold-saas
-

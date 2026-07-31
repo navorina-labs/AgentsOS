@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Phase 2 Results — Vercel style</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      font-family: Inter, -apple-system, BlinkMacSystemFont, sans-serif;
+      padding: 32px;
+      -webkit-font-smoothing: antialiased;
+    }
+    .frame {
+      width: 1200px;
+      position: relative;
+      background: #000;
+      border: 1px solid #262626;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .grid-bg {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
+      background-size: 48px 48px;
+      mask-image: radial-gradient(ellipse 80% 70% at 50% 0%, #000 20%, transparent 100%);
+      pointer-events: none;
+    }
+    .inner { position: relative; padding: 48px 52px 44px; }
+    .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 36px;
+      gap: 24px;
+    }
+    .eyebrow {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #737373;
+      margin-bottom: 12px;
+    }
+    .title {
+      font-size: 32px;
+      font-weight: 600;
+      letter-spacing: -0.035em;
+      line-height: 1.15;
+      color: #fafafa;
+    }
+    .meta {
+      font-size: 14px;
+      color: #737373;
+      margin-top: 10px;
+      letter-spacing: -0.01em;
+    }
+    .pill {
+      font-size: 12px;
+      font-weight: 500;
+      color: #fafafa;
+      border: 1px solid #404040;
+      background: rgba(255,255,255,.04);
+      padding: 8px 14px;
+      border-radius: 999px;
+      white-space: nowrap;
+      letter-spacing: -0.01em;
+    }
+    .legend {
+      display: flex;
+      gap: 24px;
+      margin-bottom: 24px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid #262626;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: #a3a3a3;
+      letter-spacing: -0.01em;
+    }
+    .sq {
+      width: 8px;
+      height: 8px;
+      border-radius: 2px;
+      border: 1px solid #525252;
+      background: #171717;
+    }
+    .sq-b { background: #fafafa; border-color: #fafafa; }
+    table { width: 100%; border-collapse: collapse; }
+    thead th {
+      text-align: left;
+      padding: 0 12px 14px 0;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #525252;
+      border-bottom: 1px solid #262626;
+    }
+    tbody td {
+      padding: 18px 12px 18px 0;
+      font-size: 14px;
+      color: #d4d4d4;
+      border-bottom: 1px solid #1a1a1a;
+      letter-spacing: -0.02em;
+    }
+    tbody tr:last-child td { border-bottom: none; }
+    .name { font-weight: 600; color: #fafafa; font-size: 15px; }
+    .sub { font-size: 12px; color: #525252; margin-top: 3px; font-weight: 400; }
+    .hi { color: #fafafa; font-weight: 600; }
+    .dim { color: #737373; }
+    .foot {
+      margin-top: 28px;
+      padding-top: 24px;
+      border-top: 1px solid #262626;
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: #525252;
+      letter-spacing: -0.01em;
+    }
+    .bar {
+      margin-top: 28px;
+      padding: 16px 20px;
+      border: 1px solid #262626;
+      border-radius: 8px;
+      background: rgba(255,255,255,.02);
+      font-size: 13px;
+      line-height: 1.55;
+      color: #a3a3a3;
+      letter-spacing: -0.02em;
+    }
+    .bar strong { color: #fafafa; font-weight: 600; }
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <div class="grid-bg"></div>
+    <div class="inner">
+      <div class="top">
+        <div>
+          <div class="eyebrow">AI Context OS · Phase 2</div>
+          <div class="title">Full Repo vs Context Cores vs Graph</div>
+          <div class="meta">119 questions · 3 codebases · gpt-4o-mini</div>
+        </div>
+        <div class="pill">Hypothesis supported</div>
+      </div>
+
+      <div class="legend">
+        <div class="legend-item"><span class="sq"></span> A — full repo</div>
+        <div class="legend-item"><span class="sq sq-b"></span> B — domain cores</div>
+        <div class="legend-item"><span class="sq"></span> C — graph retrieval</div>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Project</th>
+            <th>Qs</th>
+            <th>A</th>
+            <th>B</th>
+            <th>C</th>
+            <th>Cost B</th>
+            <th>Hall B</th>
+            <th>Hall C</th>
+            <th>CCR</th>
+            <th>Pick</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><div class="name">MailAgent</div><div class="sub">320k LOC · 6 cores</div></td>
+            <td class="dim">35</td>
+            <td class="dim">1.40</td>
+            <td class="hi">1.69</td>
+            <td class="dim">1.37</td>
+            <td class="hi">$0.015</td>
+            <td>20%</td>
+            <td>14%</td>
+            <td class="hi">45×</td>
+            <td class="hi">B</td>
+          </tr>
+          <tr>
+            <td><div class="name">Django REST</div><div class="sub">1.2M LOC · 5 cores</div></td>
+            <td class="dim">42</td>
+            <td class="dim">1.35</td>
+            <td class="hi">1.68</td>
+            <td>1.40</td>
+            <td class="hi">$0.012</td>
+            <td>22%</td>
+            <td class="hi">11%</td>
+            <td class="hi">38×</td>
+            <td class="hi">C</td>
+          </tr>
+          <tr>
+            <td><div class="name">Navorina</div><div class="sub">270k LOC · 11 cores</div></td>
+            <td class="dim">42</td>
+            <td class="dim">1.00</td>
+            <td class="hi">1.19</td>
+            <td class="dim">0.93</td>
+            <td class="hi">$0.015</td>
+            <td>19%</td>
+            <td class="hi">7%</td>
+            <td>14×</td>
+            <td class="hi">C</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="bar">
+        <strong>B</strong> wins accuracy (+19–24%) and cost (12–45× compression) ·
+        <strong>C</strong> wins trust (7–14% halluc vs 19–23%) on complex codebases
+      </div>
+
+      <div class="foot">
+        <span>github.com/navorina-labs/AI-Context-OS</span>
+        <span>open eval protocol + raw runs</span>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

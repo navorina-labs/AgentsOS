@@ -1,0 +1,9 @@
+# OL05 (B)
+
+## Answer
+
+Oiloop handles sandboxed folder access on macOS through the following mechanisms:
+
+- **WorkspaceAccess Entity**: This entity persists and resolves sandbox bookmark security data, allowing file operations while complying with macOS sandbox regulations.
+- **Sandboxed Folder Bookmarks Decision**: A decision was made to use sandboxed folder bookmarks to ensure necessary compliance with macOS regulations (Decision ADR-02).
+- **Invariants**: File moves must only occur within whitelisted bookmark directories, ensuring that operations are restricted to authorized locations.

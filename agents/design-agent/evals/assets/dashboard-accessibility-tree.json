@@ -1,0 +1,2111 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-07-29T11:53:07.893089+00:00",
+  "source": {
+    "file": "visual-dashboard-after.html",
+    "sha256": "d73b9b02a552358c0b773afb826cc36ac6aa25cf9b225a342485cc6498ee8753"
+  },
+  "harness": {
+    "file": "dashboard-interactions.js",
+    "sha256": "40482e625121a3ed9890a1a59dba4bac21fe15675fadd5cbe294f798a4f61302"
+  },
+  "snapshots": [
+    {
+      "id": "desktop-default",
+      "scope": "Browser accessibility-tree semantics only; this is not evidence of VoiceOver, NVDA, JAWS, TalkBack, or any spoken output.",
+      "total_nodes": 473,
+      "relevant_nodes": [
+        {
+          "node_id": "167",
+          "backend_dom_node_id": 167,
+          "ignored": false,
+          "role": "link",
+          "name": "Skip to operations",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "190",
+          "backend_dom_node_id": 190,
+          "ignored": false,
+          "role": "main",
+          "name": "",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "148",
+          "backend_dom_node_id": 148,
+          "ignored": false,
+          "role": "StaticText",
+          "name": "Skip to operations",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "169",
+          "backend_dom_node_id": 169,
+          "ignored": false,
+          "role": "heading",
+          "name": "Operations overview",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "156",
+          "backend_dom_node_id": 156,
+          "ignored": false,
+          "role": "search",
+          "name": "",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "178",
+          "backend_dom_node_id": 178,
+          "ignored": false,
+          "role": "button",
+          "name": "Create ticket",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "179",
+          "backend_dom_node_id": 179,
+          "ignored": false,
+          "role": "button",
+          "name": "Export",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "180",
+          "backend_dom_node_id": 180,
+          "ignored": false,
+          "role": "button",
+          "name": "Settings",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "-1000000321",
+          "backend_dom_node_id": null,
+          "ignored": false,
+          "role": "InlineTextBox",
+          "name": "Skip to operations",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "171",
+          "backend_dom_node_id": 171,
+          "ignored": false,
+          "role": "searchbox",
+          "name": "Search everything",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "193",
+          "backend_dom_node_id": 193,
+          "ignored": false,
+          "role": "heading",
+          "name": "Active incidents",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "220",
+          "backend_dom_node_id": 220,
+          "ignored": false,
+          "role": "heading",
+          "name": "Affected tickets",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "293",
+          "backend_dom_node_id": 293,
+          "ignored": false,
+          "role": "table",
+          "name": "",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "418",
+          "backend_dom_node_id": 418,
+          "ignored": false,
+          "role": "status",
+          "name": "",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "454",
+          "backend_dom_node_id": 454,
+          "ignored": false,
+          "role": "heading",
+          "name": "Operational metrics",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "199",
+          "backend_dom_node_id": 199,
+          "ignored": false,
+          "role": "heading",
+          "name": "Payments API",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "202",
+          "backend_dom_node_id": 202,
+          "ignored": false,
+          "role": "button",
+          "name": "Assign owner",
+          "description": "Owner could not be assigned. Check permissions and retry.",
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "203",
+          "backend_dom_node_id": 203,
+          "ignored": false,
+          "role": "button",
+          "name": "Open",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "207",
+          "backend_dom_node_id": 207,
+          "ignored": false,
+          "role": "heading",
+          "name": "Login latency",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "210",
+          "backend_dom_node_id": 210,
+          "ignored": false,
+          "role": "button",
+          "name": "Open",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "214",
+          "backend_dom_node_id": 214,
+          "ignored": false,
+          "role": "heading",
+          "name": "Webhooks delayed",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "217",
+          "backend_dom_node_id": 217,
+          "ignored": false,
+          "role": "button",
+          "name": "Open",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "223",
+          "backend_dom_node_id": 223,
+          "ignored": false,
+          "role": "searchbox",
+          "name": "Search tickets",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "290",
+          "backend_dom_node_id": 290,
+          "ignored": false,
+          "role": "button",
+          "name": "Apply",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "291",
+          "backend_dom_node_id": 291,
+          "ignored": false,
+          "role": "button",
+          "name": "Bulk edit",
+          "description": null,
+          "properties": {
+            "disabled": true
+          }
+        },
+        {
+          "node_id": "420",
+          "backend_dom_node_id": 420,
+          "ignored": false,
+          "role": "button",
+          "name": "Previous",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "421",
+          "backend_dom_node_id": 421,
+          "ignored": false,
+          "role": "button",
+          "name": "Next",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "422",
+          "backend_dom_node_id": 422,
+          "ignored": false,
+          "role": "button",
+          "name": "Export",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "23",
+          "backend_dom_node_id": 23,
+          "ignored": false,
+          "role": "StaticText",
+          "name": "Assign owner",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "425",
+          "backend_dom_node_id": 425,
+          "ignored": false,
+          "role": "heading",
+          "name": "Ticket volume",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "446",
+          "backend_dom_node_id": 446,
+          "ignored": false,
+          "role": "heading",
+          "name": "Activity",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "-1000000146",
+          "backend_dom_node_id": null,
+          "ignored": false,
+          "role": "InlineTextBox",
+          "name": "Assign owner",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "313",
+          "backend_dom_node_id": 313,
+          "ignored": false,
+          "role": "checkbox",
+          "name": "Select ticket 8941",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "327",
+          "backend_dom_node_id": 327,
+          "ignored": false,
+          "role": "checkbox",
+          "name": "Select ticket 8937",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "341",
+          "backend_dom_node_id": 341,
+          "ignored": false,
+          "role": "checkbox",
+          "name": "Select ticket 8928",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "355",
+          "backend_dom_node_id": 355,
+          "ignored": false,
+          "role": "checkbox",
+          "name": "Select ticket 8919",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "369",
+          "backend_dom_node_id": 369,
+          "ignored": false,
+          "role": "checkbox",
+          "name": "Select ticket 8911",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "298",
+          "backend_dom_node_id": 298,
+          "ignored": false,
+          "role": "checkbox",
+          "name": "Select all tickets",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "assignment-loading",
+      "scope": "Browser accessibility-tree semantics only; this is not evidence of VoiceOver, NVDA, JAWS, TalkBack, or any spoken output.",
+      "total_nodes": 475,
+      "relevant_nodes": [
+        {
+          "node_id": "158",
+          "backend_dom_node_id": 158,
+          "ignored": false,
+          "role": "RootWebArea",
+          "name": "Operations overview — revised",
+          "description": null,
+          "properties": {
+            "focusable": true,
+            "focused": true
+          }
+        },
+        {
+          "node_id": "167",
+          "backend_dom_node_id": 167,
+          "ignored": false,
+          "role": "link",
+          "name": "Skip to operations",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "190",
+          "backend_dom_node_id": 190,
+          "ignored": false,
+          "role": "main",
+          "name": "",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "148",
+          "backend_dom_node_id": 148,
+          "ignored": false,
+          "role": "StaticText",
+          "name": "Skip to operations",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "169",
+          "backend_dom_node_id": 169,
+          "ignored": false,
+          "role": "heading",
+          "name": "Operations overview",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "156",
+          "backend_dom_node_id": 156,
+          "ignored": false,
+          "role": "search",
+          "name": "",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "178",
+          "backend_dom_node_id": 178,
+          "ignored": false,
+          "role": "button",
+          "name": "Create ticket",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "179",
+          "backend_dom_node_id": 179,
+          "ignored": false,
+          "role": "button",
+          "name": "Export",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "180",
+          "backend_dom_node_id": 180,
+          "ignored": false,
+          "role": "button",
+          "name": "Settings",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "-1000000321",
+          "backend_dom_node_id": null,
+          "ignored": false,
+          "role": "InlineTextBox",
+          "name": "Skip to operations",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "171",
+          "backend_dom_node_id": 171,
+          "ignored": false,
+          "role": "searchbox",
+          "name": "Search everything",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "193",
+          "backend_dom_node_id": 193,
+          "ignored": false,
+          "role": "heading",
+          "name": "Active incidents",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "220",
+          "backend_dom_node_id": 220,
+          "ignored": false,
+          "role": "heading",
+          "name": "Affected tickets",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "293",
+          "backend_dom_node_id": 293,
+          "ignored": false,
+          "role": "table",
+          "name": "",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "418",
+          "backend_dom_node_id": 418,
+          "ignored": false,
+          "role": "status",
+          "name": "",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "454",
+          "backend_dom_node_id": 454,
+          "ignored": false,
+          "role": "heading",
+          "name": "Operational metrics",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "199",
+          "backend_dom_node_id": 199,
+          "ignored": false,
+          "role": "heading",
+          "name": "Payments API",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "202",
+          "backend_dom_node_id": 202,
+          "ignored": false,
+          "role": "button",
+          "name": "Assigning…",
+          "description": "Assigning Maya to Payments API… Owner could not be assigned. Check permissions and retry.",
+          "properties": {
+            "disabled": true,
+            "busy": 1
+          }
+        },
+        {
+          "node_id": "203",
+          "backend_dom_node_id": 203,
+          "ignored": false,
+          "role": "button",
+          "name": "Open",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "506",
+          "backend_dom_node_id": 506,
+          "ignored": false,
+          "role": "status",
+          "name": "",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "207",
+          "backend_dom_node_id": 207,
+          "ignored": false,
+          "role": "heading",
+          "name": "Login latency",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "210",
+          "backend_dom_node_id": 210,
+          "ignored": false,
+          "role": "button",
+          "name": "Open",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "214",
+          "backend_dom_node_id": 214,
+          "ignored": false,
+          "role": "heading",
+          "name": "Webhooks delayed",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "217",
+          "backend_dom_node_id": 217,
+          "ignored": false,
+          "role": "button",
+          "name": "Open",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "223",
+          "backend_dom_node_id": 223,
+          "ignored": false,
+          "role": "searchbox",
+          "name": "Search tickets",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "290",
+          "backend_dom_node_id": 290,
+          "ignored": false,
+          "role": "button",
+          "name": "Apply",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "291",
+          "backend_dom_node_id": 291,
+          "ignored": false,
+          "role": "button",
+          "name": "Bulk edit",
+          "description": null,
+          "properties": {
+            "disabled": true
+          }
+        },
+        {
+          "node_id": "420",
+          "backend_dom_node_id": 420,
+          "ignored": false,
+          "role": "button",
+          "name": "Previous",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "421",
+          "backend_dom_node_id": 421,
+          "ignored": false,
+          "role": "button",
+          "name": "Next",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "422",
+          "backend_dom_node_id": 422,
+          "ignored": false,
+          "role": "button",
+          "name": "Export",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "511",
+          "backend_dom_node_id": 511,
+          "ignored": false,
+          "role": "StaticText",
+          "name": "Assigning…",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "425",
+          "backend_dom_node_id": 425,
+          "ignored": false,
+          "role": "heading",
+          "name": "Ticket volume",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "446",
+          "backend_dom_node_id": 446,
+          "ignored": false,
+          "role": "heading",
+          "name": "Activity",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "-1000000330",
+          "backend_dom_node_id": null,
+          "ignored": false,
+          "role": "InlineTextBox",
+          "name": "Assigning…",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "313",
+          "backend_dom_node_id": 313,
+          "ignored": false,
+          "role": "checkbox",
+          "name": "Select ticket 8941",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "327",
+          "backend_dom_node_id": 327,
+          "ignored": false,
+          "role": "checkbox",
+          "name": "Select ticket 8937",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "341",
+          "backend_dom_node_id": 341,
+          "ignored": false,
+          "role": "checkbox",
+          "name": "Select ticket 8928",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "355",
+          "backend_dom_node_id": 355,
+          "ignored": false,
+          "role": "checkbox",
+          "name": "Select ticket 8919",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "369",
+          "backend_dom_node_id": 369,
+          "ignored": false,
+          "role": "checkbox",
+          "name": "Select ticket 8911",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "298",
+          "backend_dom_node_id": 298,
+          "ignored": false,
+          "role": "checkbox",
+          "name": "Select all tickets",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "assignment-error",
+      "scope": "Browser accessibility-tree semantics only; this is not evidence of VoiceOver, NVDA, JAWS, TalkBack, or any spoken output.",
+      "total_nodes": 477,
+      "relevant_nodes": [
+        {
+          "node_id": "158",
+          "backend_dom_node_id": 158,
+          "ignored": false,
+          "role": "RootWebArea",
+          "name": "Operations overview — revised",
+          "description": null,
+          "properties": {
+            "focusable": true,
+            "focused": true
+          }
+        },
+        {
+          "node_id": "167",
+          "backend_dom_node_id": 167,
+          "ignored": false,
+          "role": "link",
+          "name": "Skip to operations",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "190",
+          "backend_dom_node_id": 190,
+          "ignored": false,
+          "role": "main",
+          "name": "",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "148",
+          "backend_dom_node_id": 148,
+          "ignored": false,
+          "role": "StaticText",
+          "name": "Skip to operations",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "169",
+          "backend_dom_node_id": 169,
+          "ignored": false,
+          "role": "heading",
+          "name": "Operations overview",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "156",
+          "backend_dom_node_id": 156,
+          "ignored": false,
+          "role": "search",
+          "name": "",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "178",
+          "backend_dom_node_id": 178,
+          "ignored": false,
+          "role": "button",
+          "name": "Create ticket",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "179",
+          "backend_dom_node_id": 179,
+          "ignored": false,
+          "role": "button",
+          "name": "Export",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "180",
+          "backend_dom_node_id": 180,
+          "ignored": false,
+          "role": "button",
+          "name": "Settings",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "-1000000321",
+          "backend_dom_node_id": null,
+          "ignored": false,
+          "role": "InlineTextBox",
+          "name": "Skip to operations",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "171",
+          "backend_dom_node_id": 171,
+          "ignored": false,
+          "role": "searchbox",
+          "name": "Search everything",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "193",
+          "backend_dom_node_id": 193,
+          "ignored": false,
+          "role": "heading",
+          "name": "Active incidents",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "220",
+          "backend_dom_node_id": 220,
+          "ignored": false,
+          "role": "heading",
+          "name": "Affected tickets",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "293",
+          "backend_dom_node_id": 293,
+          "ignored": false,
+          "role": "table",
+          "name": "",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "418",
+          "backend_dom_node_id": 418,
+          "ignored": false,
+          "role": "status",
+          "name": "",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "454",
+          "backend_dom_node_id": 454,
+          "ignored": false,
+          "role": "heading",
+          "name": "Operational metrics",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "199",
+          "backend_dom_node_id": 199,
+          "ignored": false,
+          "role": "heading",
+          "name": "Payments API",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "202",
+          "backend_dom_node_id": 202,
+          "ignored": false,
+          "role": "button",
+          "name": "Retry assignment",
+          "description": "Assigning Maya to Payments API… Owner could not be assigned. Check permissions and retry.",
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "203",
+          "backend_dom_node_id": 203,
+          "ignored": false,
+          "role": "button",
+          "name": "Open",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "507",
+          "backend_dom_node_id": 507,
+          "ignored": false,
+          "role": "alert",
+          "name": "",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "207",
+          "backend_dom_node_id": 207,
+          "ignored": false,
+          "role": "heading",
+          "name": "Login latency",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "210",
+          "backend_dom_node_id": 210,
+          "ignored": false,
+          "role": "button",
+          "name": "Open",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "214",
+          "backend_dom_node_id": 214,
+          "ignored": false,
+          "role": "heading",
+          "name": "Webhooks delayed",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "217",
+          "backend_dom_node_id": 217,
+          "ignored": false,
+          "role": "button",
+          "name": "Open",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "223",
+          "backend_dom_node_id": 223,
+          "ignored": false,
+          "role": "searchbox",
+          "name": "Search tickets",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "290",
+          "backend_dom_node_id": 290,
+          "ignored": false,
+          "role": "button",
+          "name": "Apply",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "291",
+          "backend_dom_node_id": 291,
+          "ignored": false,
+          "role": "button",
+          "name": "Bulk edit",
+          "description": null,
+          "properties": {
+            "disabled": true
+          }
+        },
+        {
+          "node_id": "420",
+          "backend_dom_node_id": 420,
+          "ignored": false,
+          "role": "button",
+          "name": "Previous",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "421",
+          "backend_dom_node_id": 421,
+          "ignored": false,
+          "role": "button",
+          "name": "Next",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "422",
+          "backend_dom_node_id": 422,
+          "ignored": false,
+          "role": "button",
+          "name": "Export",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "512",
+          "backend_dom_node_id": 512,
+          "ignored": false,
+          "role": "StaticText",
+          "name": "Retry assignment",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "425",
+          "backend_dom_node_id": 425,
+          "ignored": false,
+          "role": "heading",
+          "name": "Ticket volume",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "446",
+          "backend_dom_node_id": 446,
+          "ignored": false,
+          "role": "heading",
+          "name": "Activity",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "-1000000337",
+          "backend_dom_node_id": null,
+          "ignored": false,
+          "role": "InlineTextBox",
+          "name": "Retry assignment",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "313",
+          "backend_dom_node_id": 313,
+          "ignored": false,
+          "role": "checkbox",
+          "name": "Select ticket 8941",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "327",
+          "backend_dom_node_id": 327,
+          "ignored": false,
+          "role": "checkbox",
+          "name": "Select ticket 8937",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "341",
+          "backend_dom_node_id": 341,
+          "ignored": false,
+          "role": "checkbox",
+          "name": "Select ticket 8928",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "355",
+          "backend_dom_node_id": 355,
+          "ignored": false,
+          "role": "checkbox",
+          "name": "Select ticket 8919",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "369",
+          "backend_dom_node_id": 369,
+          "ignored": false,
+          "role": "checkbox",
+          "name": "Select ticket 8911",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "298",
+          "backend_dom_node_id": 298,
+          "ignored": false,
+          "role": "checkbox",
+          "name": "Select all tickets",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "assignment-success",
+      "scope": "Browser accessibility-tree semantics only; this is not evidence of VoiceOver, NVDA, JAWS, TalkBack, or any spoken output.",
+      "total_nodes": 475,
+      "relevant_nodes": [
+        {
+          "node_id": "158",
+          "backend_dom_node_id": 158,
+          "ignored": false,
+          "role": "RootWebArea",
+          "name": "Operations overview — revised",
+          "description": null,
+          "properties": {
+            "focusable": true,
+            "focused": true
+          }
+        },
+        {
+          "node_id": "167",
+          "backend_dom_node_id": 167,
+          "ignored": false,
+          "role": "link",
+          "name": "Skip to operations",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "190",
+          "backend_dom_node_id": 190,
+          "ignored": false,
+          "role": "main",
+          "name": "",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "148",
+          "backend_dom_node_id": 148,
+          "ignored": false,
+          "role": "StaticText",
+          "name": "Skip to operations",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "169",
+          "backend_dom_node_id": 169,
+          "ignored": false,
+          "role": "heading",
+          "name": "Operations overview",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "156",
+          "backend_dom_node_id": 156,
+          "ignored": false,
+          "role": "search",
+          "name": "",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "178",
+          "backend_dom_node_id": 178,
+          "ignored": false,
+          "role": "button",
+          "name": "Create ticket",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "179",
+          "backend_dom_node_id": 179,
+          "ignored": false,
+          "role": "button",
+          "name": "Export",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "180",
+          "backend_dom_node_id": 180,
+          "ignored": false,
+          "role": "button",
+          "name": "Settings",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "-1000000321",
+          "backend_dom_node_id": null,
+          "ignored": false,
+          "role": "InlineTextBox",
+          "name": "Skip to operations",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "171",
+          "backend_dom_node_id": 171,
+          "ignored": false,
+          "role": "searchbox",
+          "name": "Search everything",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "193",
+          "backend_dom_node_id": 193,
+          "ignored": false,
+          "role": "heading",
+          "name": "Active incidents",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "220",
+          "backend_dom_node_id": 220,
+          "ignored": false,
+          "role": "heading",
+          "name": "Affected tickets",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "293",
+          "backend_dom_node_id": 293,
+          "ignored": false,
+          "role": "table",
+          "name": "",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "418",
+          "backend_dom_node_id": 418,
+          "ignored": false,
+          "role": "status",
+          "name": "",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "454",
+          "backend_dom_node_id": 454,
+          "ignored": false,
+          "role": "heading",
+          "name": "Operational metrics",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "199",
+          "backend_dom_node_id": 199,
+          "ignored": false,
+          "role": "heading",
+          "name": "Payments API",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "202",
+          "backend_dom_node_id": 202,
+          "ignored": false,
+          "role": "button",
+          "name": "Assigned to Maya",
+          "description": "Payments API assigned to Maya. Owner could not be assigned. Check permissions and retry.",
+          "properties": {
+            "disabled": true
+          }
+        },
+        {
+          "node_id": "203",
+          "backend_dom_node_id": 203,
+          "ignored": false,
+          "role": "button",
+          "name": "Open",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "506",
+          "backend_dom_node_id": 506,
+          "ignored": false,
+          "role": "status",
+          "name": "",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "207",
+          "backend_dom_node_id": 207,
+          "ignored": false,
+          "role": "heading",
+          "name": "Login latency",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "210",
+          "backend_dom_node_id": 210,
+          "ignored": false,
+          "role": "button",
+          "name": "Open",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "214",
+          "backend_dom_node_id": 214,
+          "ignored": false,
+          "role": "heading",
+          "name": "Webhooks delayed",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "217",
+          "backend_dom_node_id": 217,
+          "ignored": false,
+          "role": "button",
+          "name": "Open",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "223",
+          "backend_dom_node_id": 223,
+          "ignored": false,
+          "role": "searchbox",
+          "name": "Search tickets",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "290",
+          "backend_dom_node_id": 290,
+          "ignored": false,
+          "role": "button",
+          "name": "Apply",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "291",
+          "backend_dom_node_id": 291,
+          "ignored": false,
+          "role": "button",
+          "name": "Bulk edit",
+          "description": null,
+          "properties": {
+            "disabled": true
+          }
+        },
+        {
+          "node_id": "420",
+          "backend_dom_node_id": 420,
+          "ignored": false,
+          "role": "button",
+          "name": "Previous",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "421",
+          "backend_dom_node_id": 421,
+          "ignored": false,
+          "role": "button",
+          "name": "Next",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "422",
+          "backend_dom_node_id": 422,
+          "ignored": false,
+          "role": "button",
+          "name": "Export",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "526",
+          "backend_dom_node_id": 526,
+          "ignored": false,
+          "role": "StaticText",
+          "name": "Assigned to Maya",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "425",
+          "backend_dom_node_id": 425,
+          "ignored": false,
+          "role": "heading",
+          "name": "Ticket volume",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "446",
+          "backend_dom_node_id": 446,
+          "ignored": false,
+          "role": "heading",
+          "name": "Activity",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "-1000000351",
+          "backend_dom_node_id": null,
+          "ignored": false,
+          "role": "InlineTextBox",
+          "name": "Assigned to Maya",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "313",
+          "backend_dom_node_id": 313,
+          "ignored": false,
+          "role": "checkbox",
+          "name": "Select ticket 8941",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "327",
+          "backend_dom_node_id": 327,
+          "ignored": false,
+          "role": "checkbox",
+          "name": "Select ticket 8937",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "341",
+          "backend_dom_node_id": 341,
+          "ignored": false,
+          "role": "checkbox",
+          "name": "Select ticket 8928",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "355",
+          "backend_dom_node_id": 355,
+          "ignored": false,
+          "role": "checkbox",
+          "name": "Select ticket 8919",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "369",
+          "backend_dom_node_id": 369,
+          "ignored": false,
+          "role": "checkbox",
+          "name": "Select ticket 8911",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "298",
+          "backend_dom_node_id": 298,
+          "ignored": false,
+          "role": "checkbox",
+          "name": "Select all tickets",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "mobile-menu-open",
+      "scope": "Browser accessibility-tree semantics only; this is not evidence of VoiceOver, NVDA, JAWS, TalkBack, or any spoken output.",
+      "total_nodes": 422,
+      "relevant_nodes": [
+        {
+          "node_id": "643",
+          "backend_dom_node_id": 643,
+          "ignored": false,
+          "role": "RootWebArea",
+          "name": "Operations overview — revised",
+          "description": null,
+          "properties": {
+            "focusable": true,
+            "focused": true
+          }
+        },
+        {
+          "node_id": "652",
+          "backend_dom_node_id": 652,
+          "ignored": false,
+          "role": "link",
+          "name": "Skip to operations",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "675",
+          "backend_dom_node_id": 675,
+          "ignored": false,
+          "role": "main",
+          "name": "",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "639",
+          "backend_dom_node_id": 639,
+          "ignored": false,
+          "role": "StaticText",
+          "name": "Skip to operations",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "654",
+          "backend_dom_node_id": 654,
+          "ignored": false,
+          "role": "heading",
+          "name": "Operations overview",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "641",
+          "backend_dom_node_id": 641,
+          "ignored": false,
+          "role": "search",
+          "name": "",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "663",
+          "backend_dom_node_id": 663,
+          "ignored": false,
+          "role": "button",
+          "name": "Create ticket",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "-1000000643",
+          "backend_dom_node_id": null,
+          "ignored": false,
+          "role": "InlineTextBox",
+          "name": "Skip to operations",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "656",
+          "backend_dom_node_id": 656,
+          "ignored": false,
+          "role": "searchbox",
+          "name": "Search everything",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "671",
+          "backend_dom_node_id": 671,
+          "ignored": false,
+          "role": "DisclosureTriangle",
+          "name": "More",
+          "description": null,
+          "properties": {
+            "focusable": true,
+            "focused": true,
+            "expanded": true
+          }
+        },
+        {
+          "node_id": "678",
+          "backend_dom_node_id": 678,
+          "ignored": false,
+          "role": "heading",
+          "name": "Active incidents",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "705",
+          "backend_dom_node_id": 705,
+          "ignored": false,
+          "role": "heading",
+          "name": "Affected tickets",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "903",
+          "backend_dom_node_id": 903,
+          "ignored": false,
+          "role": "status",
+          "name": "",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "939",
+          "backend_dom_node_id": 939,
+          "ignored": false,
+          "role": "heading",
+          "name": "Operational metrics",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "548",
+          "backend_dom_node_id": 548,
+          "ignored": false,
+          "role": "StaticText",
+          "name": "More",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "684",
+          "backend_dom_node_id": 684,
+          "ignored": false,
+          "role": "heading",
+          "name": "Payments API",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "687",
+          "backend_dom_node_id": 687,
+          "ignored": false,
+          "role": "button",
+          "name": "Assign owner",
+          "description": "Owner could not be assigned. Check permissions and retry.",
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "688",
+          "backend_dom_node_id": 688,
+          "ignored": false,
+          "role": "button",
+          "name": "Open",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "692",
+          "backend_dom_node_id": 692,
+          "ignored": false,
+          "role": "heading",
+          "name": "Login latency",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "695",
+          "backend_dom_node_id": 695,
+          "ignored": false,
+          "role": "button",
+          "name": "Open",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "699",
+          "backend_dom_node_id": 699,
+          "ignored": false,
+          "role": "heading",
+          "name": "Webhooks delayed",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "702",
+          "backend_dom_node_id": 702,
+          "ignored": false,
+          "role": "button",
+          "name": "Open",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "708",
+          "backend_dom_node_id": 708,
+          "ignored": false,
+          "role": "searchbox",
+          "name": "Search tickets",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "775",
+          "backend_dom_node_id": 775,
+          "ignored": false,
+          "role": "button",
+          "name": "Apply",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "776",
+          "backend_dom_node_id": 776,
+          "ignored": false,
+          "role": "button",
+          "name": "Bulk edit",
+          "description": null,
+          "properties": {
+            "disabled": true
+          }
+        },
+        {
+          "node_id": "905",
+          "backend_dom_node_id": 905,
+          "ignored": false,
+          "role": "button",
+          "name": "Previous",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "906",
+          "backend_dom_node_id": 906,
+          "ignored": false,
+          "role": "button",
+          "name": "Next",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "907",
+          "backend_dom_node_id": 907,
+          "ignored": false,
+          "role": "button",
+          "name": "Export",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "-1000000560",
+          "backend_dom_node_id": null,
+          "ignored": false,
+          "role": "InlineTextBox",
+          "name": "More",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "673",
+          "backend_dom_node_id": 673,
+          "ignored": false,
+          "role": "button",
+          "name": "Export",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "674",
+          "backend_dom_node_id": 674,
+          "ignored": false,
+          "role": "button",
+          "name": "Settings",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "553",
+          "backend_dom_node_id": 553,
+          "ignored": false,
+          "role": "StaticText",
+          "name": "Assign owner",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "867",
+          "backend_dom_node_id": 867,
+          "ignored": false,
+          "role": "checkbox",
+          "name": "Select ticket 8941",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "872",
+          "backend_dom_node_id": 872,
+          "ignored": false,
+          "role": "button",
+          "name": "Open",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "875",
+          "backend_dom_node_id": 875,
+          "ignored": false,
+          "role": "checkbox",
+          "name": "Select ticket 8937",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "879",
+          "backend_dom_node_id": 879,
+          "ignored": false,
+          "role": "button",
+          "name": "Open",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "882",
+          "backend_dom_node_id": 882,
+          "ignored": false,
+          "role": "checkbox",
+          "name": "Select ticket 8928",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "886",
+          "backend_dom_node_id": 886,
+          "ignored": false,
+          "role": "button",
+          "name": "Open",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "889",
+          "backend_dom_node_id": 889,
+          "ignored": false,
+          "role": "checkbox",
+          "name": "Select ticket 8919",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "893",
+          "backend_dom_node_id": 893,
+          "ignored": false,
+          "role": "button",
+          "name": "Open",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "896",
+          "backend_dom_node_id": 896,
+          "ignored": false,
+          "role": "checkbox",
+          "name": "Select ticket 8911",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "900",
+          "backend_dom_node_id": 900,
+          "ignored": false,
+          "role": "button",
+          "name": "Open",
+          "description": null,
+          "properties": {
+            "focusable": true
+          }
+        },
+        {
+          "node_id": "910",
+          "backend_dom_node_id": 910,
+          "ignored": false,
+          "role": "heading",
+          "name": "Ticket volume",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "931",
+          "backend_dom_node_id": 931,
+          "ignored": false,
+          "role": "heading",
+          "name": "Activity",
+          "description": null,
+          "properties": {}
+        },
+        {
+          "node_id": "-1000000566",
+          "backend_dom_node_id": null,
+          "ignored": false,
+          "role": "InlineTextBox",
+          "name": "Assign owner",
+          "description": null,
+          "properties": {}
+        }
+      ]
+    }
+  ]
+}

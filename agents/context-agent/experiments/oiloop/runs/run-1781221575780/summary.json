@@ -1,0 +1,35 @@
+{
+  "results_dir": "/Users/alex0nder/Projects/Oiloop/context-os/eval/results/run-1781221575780",
+  "paired_questions": 10,
+  "conditions": [
+    "A",
+    "B",
+    "C"
+  ],
+  "mean_accuracy_a": 1.4,
+  "mean_accuracy_b": 1.1,
+  "mean_accuracy_c": 2,
+  "mean_accuracy_delta_b_vs_a": -0.3,
+  "mean_accuracy_delta_c_vs_a": 0.6,
+  "mean_ccr_context_chars_b": 651.8330117651001,
+  "mean_ccr_context_chars_c": 12.065472331053485,
+  "mean_ccr_tokens_est_b": 651.7484811975751,
+  "mean_ccr_tokens_est_c": 12.064922012733351,
+  "mean_latency_a_ms": 7072.3,
+  "mean_latency_b_ms": 1892.4,
+  "mean_latency_c_ms": 3188.2,
+  "mean_tokens_in_a": 81228.4,
+  "mean_tokens_in_b": 663.6,
+  "mean_tokens_in_c": 8041,
+  "hallucination_rate_a": 0,
+  "hallucination_rate_b": 0.2,
+  "hallucination_rate_c": 0.2,
+  "hypothesis_supported": false,
+  "abc_ranking": {
+    "accuracy_best": "C",
+    "tokens_lowest": "B",
+    "quality_per_token_b": 0.0016576250753465944,
+    "quality_per_token_c": 0.0002487252829250093,
+    "quality_per_token_a": 0.00001723535118259131
+  }
+}

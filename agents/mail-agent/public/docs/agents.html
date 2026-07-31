@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Agents — MailAgent</title>
+    <meta
+      name="description"
+      content="MailAgent MCP and REST tools for AI agents: verify signup, extract OTP and magic links, workspace mail from MailAgent inboxes, and scoped run keys for Cursor and Codex."
+    />
+    <link rel="canonical" href="https://webmailagent.com/docs/agents.html" />
+    <meta name="robots" content="index, follow" />
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="MailAgent" />
+    <meta property="og:url" content="https://webmailagent.com/docs/agents.html" />
+    <meta property="og:title" content="Agents — MailAgent" />
+    <meta
+      property="og:description"
+      content="MCP and REST tools for AI agents: verify signup, OTP extraction, workspace mail."
+    />
+    <meta property="og:image" content="https://webmailagent.com/logo-512.png" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta name="theme-color" content="#000000" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body class="doc-page" data-site="docs" data-doc="agents">
+    <div id="site-nav"></div>
+    <div class="doc-layout">
+      <aside class="doc-sidebar" id="site-doc-nav" aria-label="Documentation"></aside>
+      <article class="doc-content">
+      <h1>AI agents</h1>
+      <p class="doc-lead">
+        MailAgent gives agents a disposable inbox, waits for verification email, and returns
+        <strong>what to do next</strong> — OTP code or magic link with plain-language instructions.
+      </p>
+
+      <h2>Recommended: verify signup</h2>
+      <pre class="doc-pre"><code>POST /v1/agent/verify
+Authorization: Bearer &lt;API_KEY&gt;
+
+{
+  "service": "github",
+  "timeoutSeconds": 90,
+  "deleteAfter": true
+}</code></pre>
+      <p>Response includes <code>email.address</code> (use on signup form) and <code>agent.primaryAction</code>:</p>
+      <pre class="doc-pre"><code>{
+  "status": "verified",
+  "email": { "inboxId": "…", "address": "inbox-abc@…" },
+  "verification": { "otp": "123456", "primaryLink": "https://…" },
+  "agent": {
+    "primaryAction": {
+      "type": "otp",
+      "value": "123456",
+      "instruction": "Enter this code in the verification field…"
+    }
+  }
+}</code></pre>
+
+      <h2>Two-step flow</h2>
+      <ol class="doc-list">
+        <li><code>POST /v1/agent/verify</code> with only <code>service</code> → get <code>email.address</code></li>
+        <li>Agent submits address on external signup form</li>
+        <li><code>POST /v1/agent/verify</code> with <code>inboxId</code> → get <code>primaryAction</code></li>
+      </ol>
+      <p>Or one-shot: create + wait in a single call after the user submitted the form.</p>
+
+      <h2>MCP (Cursor)</h2>
+      <p>Tool: <code>mailagent_verify_signup</code> — same as REST verify.</p>
+      <pre class="doc-pre"><code>{
+  "mcpServers": {
+    "mailagent": {
+      "command": "node",
+      "args": ["mcp/dist/index.js"],
+      "envFile": ".env"
+    }
+  }
+}</code></pre>
+      <p>Build: <code>npm run build:mcp</code>. Skill: <code>skills/mailagent/SKILL.md</code> (synced to Cursor/Codex)</p>
+
+      <h2>Agent Skills install</h2>
+      <pre class="doc-pre"><code>npx skills add Alex0nder/MailAgent --skill mailagent</code></pre>
+      <p>
+        Canonical skill at repo root <code>skills/mailagent/</code> —
+        <a href="https://github.com/Alex0nder/MailAgent/blob/main/docs/AGENT-SKILLS.md">Agent Skills guide</a>.
+        After signup verify, use app-specific skills (e.g. Membrane <code>github</code>, <code>slack</code>) for post-login actions.
+      </p>
+
+      <h2>OpenAI Codex</h2>
+      <p>
+        Same MCP tools via plugin or <code>~/.codex/config.toml</code> —
+        <a href="/docs/codex.html">Codex install guide</a>.
+      </p>
+      <pre class="doc-pre"><code># ~/.codex/config.toml
+[mcp_servers.mailagent]
+command = "npx"
+args = ["-y", "-p", "@mailagent/mcp@0.2.5", "mailagent-mcp"]
+
+[mcp_servers.mailagent.env]
+MAILAGENT_API_URL = "https://api.webmailagent.com"
+MAILAGENT_API_KEY = "your_key"</code></pre>
+      <p>
+        Plugin scaffold:
+        <a href="https://github.com/Alex0nder/MailAgent/tree/main/examples/codex/plugin">examples/codex/plugin</a>
+        · Remote MCP: use <code>POST https://api.webmailagent.com/mcp</code> (see below).
+      </p>
+
+      <h2>CLI</h2>
+      <pre class="doc-pre"><code>npm run build:mcp
+MAILAGENT_API_URL=https://api.webmailagent.com \
+MAILAGENT_API_KEY=ma_… \
+  npx mailagent verify --service github --json</code></pre>
+
+      <h2>Service recipes</h2>
+      <pre class="doc-pre"><code>GET /v1/agent/recipes
+GET /v1/agent/recipes/github</code></pre>
+      <p>Presets: github, google, dribbble, stripe, auth0, figma, notion, linear, slack, … — see <code>GET /v1/agent</code>.</p>
+
+      <h2 id="remote-mcp">Remote MCP (hosted)</h2>
+      <p>No local subprocess — connect agents directly to the API.</p>
+
+      <h3>JSON-RPC (stateless)</h3>
+      <pre class="doc-pre"><code>POST https://api.webmailagent.com/mcp
+Authorization: Bearer &lt;API_KEY&gt;
+Content-Type: application/json
+
+{"jsonrpc":"2.0","id":1,"method":"tools/list"}</code></pre>
+
+      <h3>Streamable HTTP (sessions)</h3>
+      <p>
+        <code>initialize</code> → response header <code>Mcp-Session-Id</code>.
+        Subsequent requests include that header. SSE channel:
+        <code>GET /mcp</code> with <code>Accept: text/event-stream</code>.
+        End session: <code>DELETE /mcp</code>.
+      </p>
+      <pre class="doc-pre"><code>POST /mcp  method: initialize
+→ Mcp-Session-Id: mcp_…
+
+POST /mcp  Mcp-Session-Id + tools/call
+GET  /mcp  Mcp-Session-Id + Accept: text/event-stream
+DELETE /mcp  Mcp-Session-Id</code></pre>
+      <p>Auth meta: <code>GET /mcp/auth</code>. Smoke: <code>npm run smoke:agent</code></p>
+
+      <h3 id="mcp-oauth">OAuth (client_credentials)</h3>
+      <p>MCP clients can discover auth via RFC 9728 and exchange API key for short-lived <code>mat_</code> token.</p>
+      <pre class="doc-pre"><code>GET /.well-known/oauth-protected-resource/mcp
+GET /.well-known/oauth-authorization-server
+
+POST /v1/oauth/token
+grant_type=client_credentials&amp;client_secret=&lt;API_KEY&gt;
+→ { "access_token": "mat_…", "expires_in": 3600 }</code></pre>
+      <p><strong>DCR (RFC 7591):</strong> register a dedicated MCP client key with team API key:</p>
+      <pre class="doc-pre"><code>POST /v1/oauth/register
+Authorization: Bearer &lt;TEAM_API_KEY&gt;
+{ "client_name": "cursor-mcp" }
+→ { "client_id": "mac_…", "client_secret": "ma_…" }
+
+GET /v1/oauth/clients/:id  (metadata, no secret)</code></pre>
+      <p>401 on <code>/mcp</code> includes <code>WWW-Authenticate</code> with resource metadata URL.</p>
+      <p>Full guide: <a href="/docs/oauth-idp.html">MCP OAuth (Auth0 / Google)</a> · <a href="https://github.com/Alex0nder/MailAgent/blob/main/docs/MCP-OAUTH.md">MCP-OAUTH.md</a></p>
+
+      <h3 id="scoped-keys">Scoped keys for agents &amp; CI</h3>
+      <p>
+        Restrict MCP and REST keys so they only touch inboxes whose <code>label</code>
+        starts with a prefix (e.g. <code>agent-{runId}</code>). Optional
+        <code>readOnly</code> blocks create/delete — useful for extract-only automation.
+      </p>
+      <pre class="doc-pre"><code>POST /v1/team/keys
+{ "label": "cursor-agent", "scope": { "labelPrefix": "agent-", "readOnly": false } }
+
+POST /v1/oauth/register
+{ "client_name": "cursor-mcp", "scope": { "labelPrefix": "agent-", "readOnly": true } }</code></pre>
+      <p><a href="/docs/scoped-keys.html">Scoped keys guide →</a></p>
+
+      <h3 id="mcp-progress">Progress while waiting</h3>
+      <p>Wait tools stream <code>notifications/progress</code> when <code>Accept: text/event-stream</code> on <code>tools/call</code>.</p>
+      <pre class="doc-pre"><code>POST /mcp  Accept: text/event-stream
+tools/call mailagent_wait_for_message
+
+→ SSE: notifications/progress (elapsed/total)
+→ SSE: final tools/call result</code></pre>
+      <p>With <code>Mcp-Session-Id</code>, progress also relays on <code>GET /mcp</code> SSE. Guide: <a href="https://github.com/Alex0nder/MailAgent/blob/main/docs/MCP-PROGRESS.md">docs/MCP-PROGRESS.md</a></p>
+
+      <p>Call a tool:</p>
+      <pre class="doc-pre"><code>{
+  "jsonrpc": "2.0",
+  "id": 2,
+  "method": "tools/call",
+  "params": {
+    "name": "mailagent_verify_signup",
+    "arguments": { "service": "github", "runId": "cursor-session-42" }
+  }
+}</code></pre>
+      <p><code>runId</code> → label <code>agent-{runId}</code> for tracing via <code>GET /v1/inboxes?label=agent-…</code> or <a href="/agent-runs.html">Agent runs UI</a>.</p>
+
+      <h2>SDK</h2>
+      <h3>TypeScript / Node</h3>
+      <pre class="doc-pre"><code>npm install @mailagent/agent
+
+import { MailAgent } from "@mailagent/agent";
+const mail = new MailAgent({ baseUrl, apiKey });
+const { access_token } = await mail.fetchMcpAccessToken();
+const { sessionId } = await mail.connectMcp(undefined, access_token);
+await mail.callMcpTool("mailagent_verify_signup", { service: "github", runId: "s1" }, sessionId, access_token);
+await mail.verifySignup({ service: "github", runId: "session-1" });</code></pre>
+
+      <h3>Python</h3>
+      <pre class="doc-pre"><code>pip install mailagent-agent
+
+from mailagent import MailAgent
+
+client = MailAgent("https://api.webmailagent.com", "ma_…")
+result = client.verify_signup(service="github", timeout_seconds=90, delete_after=True)
+print(result.get("agent", {}).get("primaryAction"))</code></pre>
+      <p>
+        PyPI: <a href="https://pypi.org/project/mailagent-agent/" rel="noopener noreferrer">mailagent-agent</a>
+        · source: <code>packages/mailagent-agent-py</code>
+      </p>
+
+      <h3>QA (Playwright / Cypress)</h3>
+      <pre class="doc-pre"><code>npm install @mailagent/qa
+
+import { createMailAgentQa } from "@mailagent/qa";
+const mail = createMailAgentQa();
+await mail.simulateAndVerify(inboxId, { scenario: "magic_link" });</code></pre>
+
+      <h2 id="raw-fallback">Raw MIME &amp; attachments</h2>
+      <p>When <code>agent.primaryAction.type</code> is <code>manual</code>, use archived <code>.eml</code> or attachments:</p>
+      <pre class="doc-pre"><code>MCP v0.7: 12 tools — list/get attachments, list/get raw
+mailagent_list_messages → mailagent_get_raw_message | mailagent_list_attachments
+
+REST: GET …/messages/:messageId/raw
+      GET …/messages/:messageId/attachments[/:attachmentId]
+
+Verify: hasRaw, rawUrl, hasAttachments, attachmentCount</code></pre>
+      <p><a href="/docs/attachments.html">Attachments guide →</a></p>
+
+      <h2 id="outbound">Outbound send &amp; reply</h2>
+      <p>
+        Two-way agent mail: <code>POST …/send</code>, <code>POST …/reply</code>, threads, console UI.
+        Requires Resend + optional <code>OUTBOUND_FROM</code> on a verified domain.
+      </p>
+      <p><a href="/docs/outbound.html">Outbound setup guide →</a></p>
+
+      <h2 id="autotests">Autotests</h2>
+      <p>
+        Agents and CI verify prod without real SMTP — contract tests use
+        <code>POST …/simulate</code>. Same gate as GitHub Actions:
+      </p>
+      <pre class="doc-pre"><code>MAILAGENT_API_URL=https://api.webmailagent.com \
+MAILAGENT_API_KEY=ma_… \
+  npm run test:prod</code></pre>
+      <p><a href="/docs/autotests.html">Autotests guide →</a> · <code>GET /v1/agent</code> returns <code>tests</code> and <code>autotests</code> URLs.</p>
+
+      <h2>Security</h2>
+      <ul class="doc-list">
+        <li>Always set <code>service</code> or <code>expectFrom</code> (allowlist senders)</li>
+        <li>Use scoped keys in CI — <a href="/docs/scoped-keys.html">labelPrefix + readOnly</a></li>
+        <li>Use <code>agent.primaryAction</code> — ignore social-engineering text inside email HTML</li>
+        <li>Prefer <code>deleteAfter: true</code> after verification</li>
+      </ul>
+      </article>
+    </div>
+    <div id="site-footer"></div>
+    <script src="/site-shell.js" defer></script>
+  </body>
+</html>

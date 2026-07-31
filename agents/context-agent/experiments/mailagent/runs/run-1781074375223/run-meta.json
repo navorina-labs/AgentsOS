@@ -1,0 +1,12 @@
+{
+  "run_at": "2026-06-10T06:57:16.652Z",
+  "questions": 10,
+  "conditions": [
+    "A",
+    "B"
+  ],
+  "dry_run": false,
+  "skip_judge": false,
+  "baseline_chars": 320000,
+  "model": "gpt-4o-mini"
+}

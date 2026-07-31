@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Verified transfer review</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 16px/1.5 system-ui, sans-serif; color: #172033; background: #eef1f6; }
+  main { width: min(720px, calc(100% - 32px)); margin: 40px auto; padding: clamp(20px, 5vw, 32px); background: white; border-radius: 18px; }
+  h1 { margin: 0 0 22px; font-size: 28px; }
+  dl { display: grid; grid-template-columns: minmax(120px, 180px) minmax(0, 1fr); gap: 12px 20px; margin: 0; }
+  dt { color: #667085; }
+  dd { min-width: 0; margin: 0; overflow-wrap: anywhere; }
+  .total-label, [data-field="total"] { margin-top: 4px; padding-top: 16px; border-top: 1px solid #d8dee9; font-size: 22px; font-weight: 750; }
+  .actions { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 28px; }
+  button, a { min-height: 44px; padding: 10px 16px; border-radius: 10px; }
+  button { border: 0; background: #2457d6; color: white; font: inherit; cursor: pointer; }
+  button:disabled { cursor: not-allowed; opacity: .62; }
+  button:focus-visible, a:focus-visible { outline: 3px solid #101828; outline-offset: 3px; }
+  .spinner { display: none; animation: spin 700ms linear infinite; }
+  .pending .spinner { display: inline-block; }
+  .result:empty, #retry[hidden] { display: none; }
+  .result { margin-top: 16px; padding: 12px; background: #fef3f2; color: #912018; border-left: 4px solid #d92d20; }
+  #retry { margin-top: 12px; background: #344054; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @media (max-width: 480px) {
+    main { margin-block: 16px; }
+    dl { grid-template-columns: 1fr; gap: 4px; }
+    dd { margin-bottom: 12px; }
+    .total-label, [data-field="total"] { margin-top: 0; }
+    .actions { align-items: stretch; }
+    .actions a, .actions button { flex: 1 1 100%; text-align: center; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .spinner { animation: none; }
+  }
+</style>
+<main id="review">
+  <h1>Review transfer</h1>
+  <dl>
+    <dt>Recipient</dt><dd class="recipient">Alexandra-Maria Konstantinopoulou International Foundation</dd>
+    <dt>Account</dt><dd>•••• 0284</dd>
+    <dt>Amount</dt><dd data-field="amount">$2,400.00</dd>
+    <dt>Fee</dt><dd>$8.00</dd>
+    <dt class="total-label">Total debit</dt><dd data-field="total">$2,408.00</dd>
+    <dt>Date</dt><dd>Today</dd>
+    <dt>Note</dt><dd>Quarterly project settlement</dd>
+  </dl>
+  <div class="actions">
+    <a href="#back">Back</a>
+    <button id="confirm" disabled><span class="spinner" aria-hidden="true">◌</span> Confirm transfer</button>
+  </div>
+  <p class="result" role="status" aria-live="polite"></p>
+  <button id="retry" data-action="retry" type="button" hidden>Retry transfer</button>
+</main>
+<script>
+  const review = document.querySelector('#review');
+  const confirm = document.querySelector('#confirm');
+  const result = document.querySelector('.result');
+  const retry = document.querySelector('#retry');
+  let complete = true;
+  let outcome = 'network';
+  let submissions = 0;
+
+  function renderReady() {
+    review.classList.remove('pending');
+    confirm.disabled = !complete;
+    confirm.removeAttribute('aria-busy');
+  }
+
+  function submit() {
+    if (!complete || confirm.disabled) return;
+    submissions += 1;
+    result.textContent = '';
+    retry.hidden = true;
+    review.classList.add('pending');
+    confirm.disabled = true;
+    confirm.setAttribute('aria-busy', 'true');
+    setTimeout(() => {
+      review.classList.remove('pending');
+      confirm.removeAttribute('aria-busy');
+      if (outcome === 'success') {
+        result.textContent = 'Transfer submitted successfully.';
+        confirm.disabled = true;
+      } else if (outcome === 'insufficient') {
+        result.textContent = 'Insufficient funds. Go back and reduce the amount.';
+        confirm.disabled = false;
+      } else if (outcome === 'limit') {
+        result.textContent = 'Daily transfer limit reached. Try again tomorrow or reduce the amount.';
+        confirm.disabled = false;
+      } else {
+        result.textContent = 'Network connection lost. Check your connection and retry.';
+        retry.hidden = false;
+        confirm.disabled = false;
+      }
+    }, 400);
+  }
+
+  confirm.addEventListener('click', submit);
+  retry.addEventListener('click', submit);
+  window.__transferLab = {
+    reset() {
+      complete = true;
+      outcome = 'network';
+      submissions = 0;
+      result.textContent = '';
+      retry.hidden = true;
+      renderReady();
+    },
+    setComplete(value) {
+      complete = Boolean(value);
+      renderReady();
+    },
+    setOutcome(value) {
+      outcome = value;
+    },
+    get submissionCount() {
+      return submissions;
+    }
+  };
+  window.__transferLab.reset();
+</script>
+</html>

@@ -1,0 +1,59 @@
+{
+  "results_dir": "/Users/alex0nder/Projects/Oiloop/context-os/eval/results/run-1781221575780",
+  "model": "gpt-4o-mini",
+  "paired_questions": 10,
+  "conditions": [
+    "A",
+    "B",
+    "C"
+  ],
+  "price_per_1m": {
+    "input_usd": 0.15,
+    "output_usd": 0.6
+  },
+  "per_condition": {
+    "A": {
+      "count": 10,
+      "tokens_in": 812284,
+      "tokens_out": 1481,
+      "tokens_all": 813765,
+      "cost_usd": 0.1227312,
+      "mean_in": 81228.4,
+      "mean_out": 148.1
+    },
+    "B": {
+      "count": 10,
+      "tokens_in": 6636,
+      "tokens_out": 716,
+      "tokens_all": 7352,
+      "cost_usd": 0.001425,
+      "mean_in": 663.6,
+      "mean_out": 71.6
+    },
+    "C": {
+      "count": 10,
+      "tokens_in": 80410,
+      "tokens_out": 1209,
+      "tokens_all": 81619,
+      "cost_usd": 0.012786899999999999,
+      "mean_in": 8041,
+      "mean_out": 120.9
+    }
+  },
+  "savings_vs_a": {
+    "B": {
+      "cost_saved_usd": 0.1213062,
+      "cost_savings_pct": 98.8389260432555,
+      "input_tokens_saved": 805648,
+      "input_savings_pct": 99.18304435394518,
+      "ccr_input_tokens": 122.40566606389392
+    },
+    "C": {
+      "cost_saved_usd": 0.1099443,
+      "cost_savings_pct": 89.58137784035355,
+      "input_tokens_saved": 731874,
+      "input_savings_pct": 90.10075293862738,
+      "ccr_input_tokens": 10.101778385772914
+    }
+  }
+}

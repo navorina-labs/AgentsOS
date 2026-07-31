@@ -1,0 +1,22 @@
+{
+  "name": "@context-os/schemas",
+  "version": "0.1.0",
+  "description": "JSON schemas for Context Cores and routing rules",
+  "type": "module",
+  "exports": {
+    "./core": "./src/core.mjs",
+    "./routing": "./src/routing.mjs",
+    "./manifest": "./src/manifest.mjs",
+    "./questions": "./src/questions.mjs"
+  },
+  "files": [
+    "*.json",
+    "src"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/navorina-labs/AI-Context-OS.git",
+    "directory": "packages/schemas"
+  }
+}

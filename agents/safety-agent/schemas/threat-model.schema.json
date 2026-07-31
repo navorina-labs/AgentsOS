@@ -1,0 +1,212 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://safetyos.local/schemas/threat-model.schema.json",
+  "title": "SafetyOS Threat Model",
+  "type": "object",
+  "required": ["version", "organization", "adversary", "data_flows"],
+  "additionalProperties": false,
+  "properties": {
+    "version": { "const": "1" },
+    "organization": {
+      "type": "object",
+      "required": ["name", "migration_years", "quantum_horizon_years"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "migration_years": { "type": "number", "minimum": 0 },
+        "quantum_horizon_years": { "type": "number", "minimum": 0 }
+      }
+    },
+    "adversary": {
+      "type": "object",
+      "required": ["classical", "quantum_record", "ai_implementation"],
+      "properties": {
+        "classical": { "type": "boolean" },
+        "quantum_record": { "type": "boolean" },
+        "ai_implementation": { "type": "boolean" }
+      }
+    },
+    "defaults": {
+      "type": "object",
+      "properties": {
+        "confidentiality_years": { "type": "number", "minimum": 0 }
+      }
+    },
+    "data_flows": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/dataFlow" }
+    },
+    "policies": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/policy" }
+    },
+    "ai_governance": { "$ref": "#/$defs/aiGovernance" }
+  },
+  "$defs": {
+    "crypto": {
+      "type": "object",
+      "properties": {
+        "key_exchange": { "type": "array", "items": { "type": "string" } },
+        "signatures": { "type": "array", "items": { "type": "string" } },
+        "symmetric": { "type": "array", "items": { "type": "string" } },
+        "hash": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "dataFlow": {
+      "type": "object",
+      "required": ["id", "name", "storage", "crypto"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "name": { "type": "string", "minLength": 1 },
+        "confidentiality_years": { "type": "number", "minimum": 0 },
+        "storage": {
+          "type": "string",
+          "enum": ["ephemeral", "short", "long", "permanent"]
+        },
+        "hndl_exposed": { "type": "boolean" },
+        "crypto": { "$ref": "#/$defs/crypto" },
+        "tags": { "type": "array", "items": { "type": "string" } },
+        "ai_context": { "$ref": "#/$defs/flowAiContext" }
+      }
+    },
+    "flowAiContext": {
+      "type": "object",
+      "required": ["channels"],
+      "properties": {
+        "channels": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "trust": {
+          "type": "string",
+          "enum": ["own", "foreign", "unknown"]
+        }
+      }
+    },
+    "aiGovernance": {
+      "type": "object",
+      "required": ["friend_or_foe", "ai_language"],
+      "properties": {
+        "friend_or_foe": { "$ref": "#/$defs/friendOrFoe" },
+        "ai_language": { "$ref": "#/$defs/aiLanguage" }
+      }
+    },
+    "friendOrFoe": {
+      "type": "object",
+      "required": ["own", "foreign"],
+      "properties": {
+        "own": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/iffParty" }
+        },
+        "foreign": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/iffParty" }
+        },
+        "rules": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/iffRule" }
+        }
+      }
+    },
+    "iffParty": {
+      "type": "object",
+      "required": ["id", "kind"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "kind": {
+          "type": "string",
+          "enum": ["team", "service", "model", "mcp", "user", "rag_source", "tool"]
+        },
+        "description": { "type": "string" }
+      }
+    },
+    "iffRule": {
+      "type": "object",
+      "required": ["id", "statement", "enforce"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "statement": { "type": "string", "minLength": 1 },
+        "enforce": { "type": "string", "enum": ["required", "recommended"] }
+      }
+    },
+    "aiLanguage": {
+      "type": "object",
+      "required": ["channels"],
+      "properties": {
+        "channels": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/aiChannel" }
+        },
+        "foreign_patterns": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/foreignPattern" }
+        },
+        "rules": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/aiLanguageRule" }
+        }
+      }
+    },
+    "aiChannel": {
+      "type": "object",
+      "required": ["id", "trust", "role"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "label": { "type": "string" },
+        "trust": { "type": "string", "enum": ["own", "foreign", "unknown"] },
+        "role": { "type": "string", "enum": ["instruction", "data", "tool_io"] },
+        "delimiter_start": { "type": "string" },
+        "delimiter_end": { "type": "string" },
+        "strip_instruction_like": { "type": "boolean" },
+        "sanitize": { "type": "boolean" }
+      }
+    },
+    "foreignPattern": {
+      "type": "object",
+      "required": ["pattern"],
+      "properties": {
+        "pattern": { "type": "string", "minLength": 1 },
+        "action": {
+          "type": "string",
+          "enum": ["strip", "strip_and_log", "reject", "block"]
+        }
+      }
+    },
+    "aiLanguageRule": {
+      "type": "object",
+      "required": ["id", "statement", "enforce"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "statement": { "type": "string", "minLength": 1 },
+        "enforce": { "type": "string", "enum": ["required", "recommended"] }
+      }
+    },
+    "policy": {
+      "type": "object",
+      "required": ["id", "when", "action"],
+      "properties": {
+        "id": { "type": "string" },
+        "when": {
+          "type": "object",
+          "properties": {
+            "retention_tier": { "type": "string", "enum": ["ephemeral", "short", "long", "permanent"] },
+            "has_algorithm": { "type": "string" }
+          }
+        },
+        "action": { "type": "string", "enum": ["block", "warn", "recommend"] },
+        "recommend": {
+          "type": "object",
+          "properties": {
+            "key_exchange": { "type": "string" },
+            "hybrid_with": { "type": "string" }
+          }
+        }
+      }
+    }
+  }
+}

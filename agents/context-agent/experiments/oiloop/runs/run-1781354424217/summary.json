@@ -1,0 +1,35 @@
+{
+  "results_dir": "context-os/eval/results/run-1781354424217",
+  "paired_questions": 20,
+  "conditions": [
+    "A",
+    "B",
+    "C"
+  ],
+  "mean_accuracy_a": 1,
+  "mean_accuracy_b": 1.2,
+  "mean_accuracy_c": 1.55,
+  "mean_accuracy_delta_b_vs_a": 0.2,
+  "mean_accuracy_delta_c_vs_a": 0.55,
+  "mean_ccr_context_chars_b": 108.61123828943353,
+  "mean_ccr_context_chars_c": 11.611402092290371,
+  "mean_ccr_tokens_est_b": 108.5410506939377,
+  "mean_ccr_tokens_est_c": 11.610766123476456,
+  "mean_latency_a_ms": 3920,
+  "mean_latency_b_ms": 1840.3,
+  "mean_latency_c_ms": 4294.3,
+  "mean_tokens_in_a": 80909.7,
+  "mean_tokens_in_b": 1043.6,
+  "mean_tokens_in_c": 8399.35,
+  "hallucination_rate_a": 0.2,
+  "hallucination_rate_b": 0.2,
+  "hallucination_rate_c": 0.15,
+  "hypothesis_supported": true,
+  "abc_ranking": {
+    "accuracy_best": "C",
+    "tokens_lowest": "B",
+    "quality_per_token_b": 0.0011498658489842851,
+    "quality_per_token_c": 0.00018453808925690678,
+    "quality_per_token_a": 0.00001235945751869059
+  }
+}

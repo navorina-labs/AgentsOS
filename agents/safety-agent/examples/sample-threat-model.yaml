@@ -1,0 +1,141 @@
+# Пример threat model для SafetyOS
+version: "1"
+
+organization:
+  name: Acme Finance
+  migration_years: 4
+  quantum_horizon_years: 8
+
+adversary:
+  classical: true
+  quantum_record: true
+  ai_implementation: true
+
+defaults:
+  confidentiality_years: 10
+
+data_flows:
+  - id: api-tls
+    name: Public API (TLS)
+    confidentiality_years: 7
+    storage: ephemeral
+    hndl_exposed: true
+    crypto:
+      key_exchange: [ECDHE-P256, RSA-2048]
+      signatures: []
+      symmetric: [AES-256-GCM]
+      hash: [SHA-256]
+    tags: [edge, tls]
+
+  - id: backup-archive
+    name: Encrypted backups (S3)
+    confidentiality_years: 25
+    storage: permanent
+    hndl_exposed: true
+    crypto:
+      key_exchange: [RSA-2048]
+      signatures: [ECDSA-P256]
+      symmetric: [AES-256-GCM]
+      hash: [SHA-256]
+    tags: [at-rest, compliance]
+
+  - id: internal-mtls
+    name: Service mesh mTLS
+    storage: short
+    crypto:
+      key_exchange: [ML-KEM-768, X25519]
+      signatures: [ML-DSA-65]
+      symmetric: [ChaCha20-Poly1305]
+      hash: [SHA-384]
+    tags: [mesh, pqc-ready]
+
+  - id: support-copilot
+    name: Support AI (RAG over tickets)
+    storage: short
+    crypto:
+      key_exchange: [ECDHE-P256]
+      signatures: []
+      symmetric: [AES-256-GCM]
+      hash: [SHA-256]
+    tags: [ai, rag, support]
+    ai_context:
+      channels: [user, rag]
+      trust: foreign
+
+ai_governance:
+  friend_or_foe:
+    own:
+      - id: platform
+        kind: service
+      - id: hsm-vault
+        kind: service
+      - id: approved-mcp
+        kind: mcp
+    foreign:
+      - id: end-user
+        kind: user
+      - id: external-rag
+        kind: rag_source
+      - id: third-party-model
+        kind: model
+    rules:
+      - id: iff-foreign-no-instruct
+        statement: Чужой не может задавать инструкции агенту
+        enforce: required
+      - id: iff-secrets-own-only
+        statement: Ключи не передаются в foreign-каналы
+        enforce: required
+      - id: iff-tools-own-only
+        statement: Опасные tools только от own orchestrator
+        enforce: required
+  ai_language:
+    channels:
+      - id: system
+        trust: own
+        role: instruction
+      - id: user
+        trust: foreign
+        role: data
+        delimiter_start: "<<USER>>"
+        delimiter_end: "<<END_USER>>"
+      - id: rag
+        trust: foreign
+        role: data
+        delimiter_start: "<<UNTRUSTED>>"
+        delimiter_end: "<<END_UNTRUSTED>>"
+        strip_instruction_like: true
+      - id: tool
+        trust: unknown
+        role: tool_io
+        sanitize: true
+    foreign_patterns:
+      - pattern: "ignore (all )?previous"
+        action: strip_and_log
+      - pattern: "system\\s*:"
+        action: strip_and_log
+    rules:
+      - id: lang-instruction-own-only
+        statement: instruction только у trust=own
+        enforce: required
+      - id: lang-foreign-delimited
+        statement: foreign data с delimiter
+        enforce: required
+
+policies:
+  - id: no-rsa-long-retention
+    when:
+      retention_tier: long
+      has_algorithm: RSA-2048
+    action: block
+    recommend:
+      key_exchange: ML-KEM-768
+      hybrid_with: X25519
+
+  - id: warn-rsa-permanent
+    when:
+      retention_tier: permanent
+      has_algorithm: RSA-2048
+    action: block
+    recommend:
+      key_exchange: ML-KEM-1024
+      hybrid_with: X25519

@@ -1,0 +1,27 @@
+{
+  "description": "Drift CI — map code paths to cores when Sources do not list every file",
+  "path_patterns": [
+    {
+      "patterns": ["src/**/billing/**", "src/**/stripe/**", "**/webhook*billing*"],
+      "cores": ["billing-core", "technical-core"]
+    },
+    {
+      "patterns": ["src/**/onboarding/**", "src/**/signup/**"],
+      "cores": ["onboarding-core", "product-core"]
+    },
+    {
+      "patterns": ["src/**", "lib/**", "app/**"],
+      "cores": ["technical-core"]
+    },
+    {
+      "patterns": [".github/workflows/**", "Dockerfile", "docker-compose*", "wrangler.*"],
+      "cores": ["operational-core"]
+    },
+    {
+      "patterns": ["docs/**", "README.md"],
+      "cores": ["product-core", "business-core"]
+    }
+  ],
+  "codePrefixes": ["src/", "lib/", "app/", "packages/", "docs/", ".github/"],
+  "warnUnmapped": true
+}

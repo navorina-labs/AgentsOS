@@ -1,0 +1,23 @@
+{
+  "version": "1.0.0",
+  "project": "{{PROJECT_SLUG}}",
+  "fallback_core": "technical-core",
+  "routes": [
+    {
+      "patterns": ["revenue", "mrr", "arr", "churn", "pricing", "ltv", "cac", "retention"],
+      "cores": ["business-core"]
+    },
+    {
+      "patterns": ["feature", "roadmap", "onboarding", "user flow", "product scope", "persona"],
+      "cores": ["product-core"]
+    },
+    {
+      "patterns": ["deploy", "release", "ci", "incident", "monitor", "on-call", "rollback"],
+      "cores": ["operational-core"]
+    },
+    {
+      "patterns": ["api", "database", "architecture", "implement", "bug", "refactor", "endpoint"],
+      "cores": ["technical-core"]
+    }
+  ]
+}

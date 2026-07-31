@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agentdesign.local/schemas/implementation-evidence.schema.json",
+  "title": "Design Agent implementation evidence",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "comparison_id", "specification", "implementation", "environment", "contract_results", "evidence_boundaries"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "comparison_id": {"type": "string", "minLength": 1},
+    "specification": {"$ref": "#/$defs/frozenSource"},
+    "implementation": {"$ref": "#/$defs/frozenSource"},
+    "environment": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["browser", "viewports"],
+      "properties": {
+        "browser": {"type": "string", "minLength": 1},
+        "viewports": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["width", "height", "device_scale_factor"],
+            "properties": {
+              "width": {"type": "integer", "minimum": 1},
+              "height": {"type": "integer", "minimum": 1},
+              "device_scale_factor": {"type": "number", "exclusiveMinimum": 0}
+            }
+          }
+        }
+      }
+    },
+    "contract_results": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/contractResult"}
+    },
+    "evidence_boundaries": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"type": "string", "minLength": 1}
+    }
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "frozenSource": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "assertion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "expected", "observed", "passed", "surface", "evidence"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "expected": {},
+        "observed": {},
+        "passed": {"type": ["boolean", "null"]},
+        "surface": {
+          "enum": ["source", "dom", "computed_style", "screenshot", "interaction_trace", "accessibility_tree", "named_assistive_technology", "performance_trace", "manual_inspection"]
+        },
+        "evidence": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "contractResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["contract_id", "status", "assertions", "notes"],
+      "properties": {
+        "contract_id": {"type": "string", "minLength": 1},
+        "status": {"enum": ["pass", "fail", "unverified"]},
+        "assertions": {"type": "array", "items": {"$ref": "#/$defs/assertion"}},
+        "notes": {"type": "string"}
+      }
+    }
+  }
+}

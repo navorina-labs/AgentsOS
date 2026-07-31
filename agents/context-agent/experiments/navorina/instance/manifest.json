@@ -1,0 +1,61 @@
+{
+  "version": "1.1.0",
+  "project": "navorina",
+  "updated": "2026-06-11",
+  "integrated": true,
+  "description": "AI Context OS — минимальные контекстные ядра для AI-агентов",
+  "canon": "context-os/CANON.md",
+  "maintenance": "context-os/MAINTENANCE.md",
+  "entry_point": "context-os/README.md",
+  "router": "context-os/router/question-router.md",
+  "routing_map": "context-os/router/routing-map.json",
+  "default_pipeline": "C+semantic",
+  "cores": {
+    "business-core": "context-os/cores/business-core.md",
+    "product-core": "context-os/cores/product-core.md",
+    "technical-core": "context-os/cores/technical-core.md",
+    "operational-core": "context-os/cores/operational-core.md"
+  },
+  "subcores": {
+    "revenue-core": "context-os/subcores/revenue-core.md",
+    "paywall-core": "context-os/subcores/paywall-core.md",
+    "billing-core": "context-os/subcores/billing-core.md",
+    "onboarding-core": "context-os/subcores/onboarding-core.md",
+    "nucleus-core": "context-os/subcores/nucleus-core.md",
+    "assistant-core": "context-os/subcores/assistant-core.md",
+    "release-core": "context-os/subcores/release-core.md"
+  },
+  "ops": {
+    "index": "context-os/ops/README.md",
+    "dev_and_release": "context-os/ops/dev-and-release.md",
+    "stripe_billing": "context-os/ops/stripe-billing.md",
+    "crypto_payments": "context-os/ops/crypto-payments.md",
+    "delivery": "context-os/ops/delivery.md",
+    "xero": "context-os/ops/xero.md",
+    "ops_v0": "context-os/ops/ops-v0.md",
+    "nucleus_misc": "context-os/ops/nucleus-misc.md"
+  },
+  "audit": {
+    "project_map": "context-os/audit/project-map.md",
+    "cleanup_candidates": "context-os/audit/cleanup-candidates.md",
+    "duplicate_or_stale_docs": "context-os/audit/duplicate-or-stale-docs.md",
+    "risks": "context-os/audit/risks.md"
+  },
+  "framework_repo": "https://github.com/navorina-labs/AI-Context-OS",
+  "implementation_type": "filled-instance",
+  "legacy_agent_docs": {
+    "agents_index": "AGENTS.md",
+    "ui_workflow": "docs/agents/AGENT_HUB.md"
+  },
+  "archived": {
+    "real_project_test": "docs/archive/real-project-test/",
+    "optimization_docs": "docs/archive/optimization/",
+    "planning_level_3": "docs/archive/planning/",
+    "theme_icons_review": "docs/archive/reviews/THEME_ICONS_REVIEW.md"
+  },
+  "package_name": "navorina",
+  "read_first_for_agents": [
+    "context-os/CANON.md",
+    "context-os/router/question-router.md"
+  ]
+}

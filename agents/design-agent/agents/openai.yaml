@@ -1,0 +1,4 @@
+interface:
+  display_name: "Design Agent"
+  short_description: "Design specs, UI composition, critique, and learning"
+  default_prompt: "Use $design-agent to turn this product brief into a coherent, accessible UI specification and critique."

@@ -1,0 +1,45 @@
+name: Publish packages
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: "Release tag matching package versions (for example v0.1.0)"
+        required: true
+        type: string
+  push:
+    tags:
+      - "v*"
+      - "cli-v*"
+
+jobs:
+  publish:
+    if: github.repository == 'navorina-labs/AI-Context-OS'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          registry-url: https://registry.npmjs.org
+      - run: npm ci
+      - name: Verify release version
+        env:
+          RELEASE_TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.release_tag || github.ref_name }}
+        run: npm run verify:release -- --tag "$RELEASE_TAG"
+      - run: npm run test:framework
+      - run: npm publish --access public --provenance
+        working-directory: packages/schemas
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - run: npm publish --access public --provenance
+        working-directory: packages/eval
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - run: npm publish --access public --provenance
+        working-directory: packages/cli
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

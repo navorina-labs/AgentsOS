@@ -1,0 +1,17 @@
+{
+  "description": "Condition A: scaffold-saas baseline for dry-run tests",
+  "includeRoots": [
+    "README.md"
+  ],
+  "includeDirs": [
+    { "dir": "context-os/cores", "extensions": [".md"] },
+    { "dir": "context-os/subcores", "extensions": [".md"] }
+  ],
+  "excludePathContains": [
+    "node_modules",
+    "context-os/eval/",
+    ".git/"
+  ],
+  "maxFileChars": 14000,
+  "maxTotalChars": 320000
+}

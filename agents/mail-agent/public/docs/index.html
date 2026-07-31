@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-41B4KG53D1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-41B4KG53D1");
+    </script>
+    <title>API docs — MailAgent</title>
+    <meta name="description" content="MailAgent REST API — inboxes, wait, extract, SSE, scoped keys." />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta name="theme-color" content="#000000" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body class="doc-page" data-site="docs" data-doc="api">
+    <div id="site-nav"></div>
+
+    <div class="doc-layout">
+      <aside class="doc-sidebar" id="site-doc-nav" aria-label="Documentation"></aside>
+
+      <article class="doc-content">
+        <h1>API documentation</h1>
+        <p class="doc-lead">
+          MailAgent is <strong>open source</strong> —
+          <a href="https://github.com/Alex0nder/MailAgent" rel="noopener noreferrer">GitHub</a>.
+          Self-host or use hosted API at <code>https://api.webmailagent.com</code> with
+          <code>Authorization: Bearer &lt;API_KEY&gt;</code>.
+          Get a key in the <a href="/dashboard.html">Dashboard</a> (no signup — API key only).
+          Gmail/Calendar workspace: <a href="/workspace.html">Workspace</a>.
+        </p>
+
+        <h2>Discovery</h2>
+        <pre class="doc-pre"><code>GET /v1</code></pre>
+        <p>
+          Returns endpoints, service presets, MCP tool names.
+          <a href="https://api.webmailagent.com/v1" rel="noopener noreferrer">Try it</a>
+          (requires API key).
+        </p>
+
+        <h2>Recommended: one-shot open</h2>
+        <pre class="doc-pre"><code>POST /v1/inboxes/open
+{
+  "service": "github",
+  "label": "ci-123",
+  "subjectContains": "verification",
+  "timeoutSeconds": 90,
+  "deleteAfter": false
+}</code></pre>
+        <p>Creates inbox → waits for allowed email → returns <code>verification.otp</code> and <code>verification.primaryLink</code>.</p>
+
+        <h2>Step-by-step flow</h2>
+        <table class="doc-table">
+          <thead>
+            <tr><th>Method</th><th>Path</th><th>Description</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>POST</code></td><td><code>/v1/inboxes</code></td><td>Create inbox (<code>ttlMinutes</code>, <code>service</code>, <code>label</code>, <code>callbackUrl</code>)</td></tr>
+            <tr><td><code>GET</code></td><td><code>/v1/inboxes?label=</code></td><td>List inboxes for a CI run</td></tr>
+            <tr><td><code>GET</code></td><td><code>/v1/inboxes/:id/wait</code></td><td>Wait for message (<code>subjectContains</code>, <code>timeout</code>)</td></tr>
+            <tr><td><code>GET</code></td><td><code>/v1/inboxes/:id/extract</code></td><td>OTP + links from latest message</td></tr>
+            <tr><td><code>GET</code></td><td><code>/v1/inboxes/:id/messages/:msgId/raw</code></td><td>Full .eml from R2 (<code>hasRaw</code> on list)</td></tr>
+            <tr><td><code>GET</code></td><td><code>/v1/inboxes/:id/messages/:msgId/attachments</code></td><td>List attachments (<code>attachmentCount</code> on list)</td></tr>
+            <tr><td><code>GET</code></td><td><code>/v1/inboxes/:id/events</code></td><td>SSE stream</td></tr>
+            <tr><td><code>DELETE</code></td><td><code>/v1/inboxes/:id</code></td><td>Delete inbox</td></tr>
+          </tbody>
+        </table>
+
+        <h2>Service presets</h2>
+        <p>
+          Set <code>service</code> to apply sender allowlists: <code>github</code>,
+          <code>stripe</code>, <code>auth0</code>, <code>google</code>, <code>vercel</code>,
+          <code>supabase</code>, <code>clerk</code>, and others — see
+          <code>GET /v1</code> for the full list.
+        </p>
+
+        <h2>Scoped API keys</h2>
+        <p>
+          Limit CI and agent keys with <code>labelPrefix</code> and optional
+          <code>readOnly</code>. Create via <code>POST /v1/team/keys</code> (admin key) or
+          DCR with scope. <code>GET /v1/me</code> returns your current scope.
+        </p>
+        <pre class="doc-pre"><code>POST /v1/team/keys
+{ "label": "ci-bot", "scope": { "labelPrefix": "ci-", "readOnly": false } }</code></pre>
+        <p><a href="/docs/scoped-keys.html">Scoped keys guide →</a></p>
+
+        <h2>More</h2>
+        <ul class="doc-list">
+          <li><a href="/docs/integrate.html">Integrate in your project (self-host, MCP)</a></li>
+          <li><a href="/docs/agents.html">AI agents &amp; remote MCP</a></li>
+          <li><a href="/docs/scoped-keys.html">Scoped API keys</a></li>
+          <li><a href="/docs/raw-mime.html">Raw MIME (R2)</a></li>
+          <li><a href="/docs/attachments.html">Attachments</a></li>
+          <li><a href="/docs/autotests.html">Autotests for agents</a></li>
+          <li><a href="/docs/qa.html">QA / Playwright guide</a></li>
+          <li><a href="/docs/enterprise.html">Enterprise</a> · <a href="/docs/security.html">Security</a></li>
+          <li><a href="https://api.webmailagent.com/v1/openapi.json" rel="noopener noreferrer">OpenAPI 3.0</a></li>
+          <li><a href="/#mcp">MCP tools (landing)</a></li>
+        </ul>
+
+        <p class="doc-note">
+          <strong>Self-host:</strong> clone
+          <a href="https://github.com/Alex0nder/MailAgent" rel="noopener noreferrer">the repo</a>
+          and follow SETUP in README.
+          <strong>Hosted API:</strong>
+          <a
+            href="mailto:hello@webmailagent.com?subject=MailAgent%20hosted%20API%20key"
+            title="Email hello@webmailagent.com"
+            >Hosted API key</a
+          >
+          for <code>api.webmailagent.com</code>.
+        </p>
+      </article>
+    </div>
+
+    <div id="site-footer"></div>
+    <script src="/site-shell.js" defer></script>
+  </body>
+</html>

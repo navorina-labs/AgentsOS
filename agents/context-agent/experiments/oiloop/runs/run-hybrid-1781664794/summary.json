@@ -1,0 +1,47 @@
+{
+  "results_dir": "context-os/eval/results/run-hybrid-1781664794",
+  "paired_questions": 8,
+  "conditions": [
+    "B",
+    "C",
+    "D"
+  ],
+  "mean_accuracy_a": null,
+  "mean_accuracy_b": 2.875,
+  "mean_accuracy_c": 2.375,
+  "mean_accuracy_d": 2.5,
+  "mean_accuracy_delta_b_vs_a": null,
+  "mean_accuracy_delta_c_vs_a": null,
+  "mean_accuracy_delta_d_vs_b": -0.375,
+  "mean_ccr_context_chars_b": null,
+  "mean_ccr_context_chars_c": null,
+  "mean_ccr_context_chars_d": null,
+  "mean_ccr_tokens_est_b": null,
+  "mean_ccr_tokens_est_c": null,
+  "mean_ccr_tokens_est_d": null,
+  "mean_latency_a_ms": null,
+  "mean_latency_b_ms": 1870.875,
+  "mean_latency_c_ms": 3403.5,
+  "mean_latency_d_ms": 3131.75,
+  "mean_tokens_in_a": null,
+  "mean_tokens_in_b": 8546.5,
+  "mean_tokens_in_c": 7905,
+  "mean_tokens_in_d": 11983.625,
+  "hallucination_rate_a": null,
+  "hallucination_rate_b": 0,
+  "hallucination_rate_c": 0.25,
+  "hallucination_rate_d": 0.125,
+  "hypothesis_supported": null,
+  "abc_ranking": {
+    "accuracy_best": "B",
+    "tokens_lowest": "A",
+    "quality_per_token_b": 0.00033639501550342246,
+    "quality_per_token_c": 0.0003004427577482606,
+    "quality_per_token_a": 0
+  },
+  "hybrid_ranking": {
+    "accuracy_best": "B",
+    "mean_tokens_ratio_d_vs_b": 1.4021675539694611,
+    "mean_accuracy_delta_d_vs_b": -0.375
+  }
+}

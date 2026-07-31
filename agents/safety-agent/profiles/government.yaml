@@ -1,0 +1,58 @@
+# Профиль: госсектор / CNSA-oriented (консервативный z, ML-KEM-1024)
+id: government
+name: Government / NSS-oriented
+description: Госданные, CNSA 2.0 — консервативный горизонт CRQC, усиленные параметры PQC
+
+organization_defaults:
+  migration_years: 4
+  quantum_horizon_years: 7
+
+adversary:
+  classical: true
+  quantum_record: true
+  ai_implementation: true
+
+defaults:
+  confidentiality_years: 25
+
+apply_ai_governance_template: true
+
+starter_flows:
+  - id: classified-archive
+    name: Classified / long-term archive
+    confidentiality_years: 25
+    storage: permanent
+    hndl_exposed: true
+    crypto:
+      key_exchange: [RSA-4096]
+      signatures: [ECDSA-P384]
+      symmetric: [AES-256-GCM]
+      hash: [SHA-384]
+    tags: [classified, archive, todo-review]
+  - id: agency-mtls
+    name: Agency inter-service mTLS
+    storage: short
+    hndl_exposed: true
+    crypto:
+      key_exchange: [ECDHE-P384]
+      signatures: []
+      symmetric: [AES-256-GCM]
+      hash: [SHA-384]
+    tags: [mtls, government, todo-review]
+
+recommended_policies:
+  - id: gov-no-classical-kex-long
+    when:
+      retention_tier: long
+      has_algorithm: RSA-2048
+    action: block
+    recommend:
+      key_exchange: ML-KEM-1024
+      hybrid_with: X25519
+  - id: gov-no-ecdsa-archive
+    when:
+      retention_tier: permanent
+      has_algorithm: ECDSA-P256
+    action: warn
+    recommend:
+      key_exchange: ML-DSA-87

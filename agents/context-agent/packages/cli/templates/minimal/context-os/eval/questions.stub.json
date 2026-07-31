@@ -1,0 +1,22 @@
+[
+  {
+    "id": "Q01",
+    "question": "Why did revenue drop last month?",
+    "expected_cores": ["business-core"]
+  },
+  {
+    "id": "Q02",
+    "question": "How do we deploy to production?",
+    "expected_cores": ["operational-core"]
+  },
+  {
+    "id": "Q03",
+    "question": "What is the product scope for {{PROJECT_NAME}}?",
+    "expected_cores": ["product-core"]
+  },
+  {
+    "id": "Q04",
+    "question": "Where is the API authentication implemented?",
+    "expected_cores": ["technical-core"]
+  }
+]

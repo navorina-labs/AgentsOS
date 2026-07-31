@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ai-context-os.dev/schemas/manifest.schema.json",
+  "title": "Context OS Manifest",
+  "description": "Schema for context-os/manifest.json",
+  "type": "object",
+  "required": ["version", "project", "entry_point", "router", "routing_map", "cores"],
+  "additionalProperties": true,
+  "properties": {
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "project": {
+      "type": "string",
+      "minLength": 1
+    },
+    "updated": {
+      "type": "string",
+      "format": "date"
+    },
+    "description": {
+      "type": "string"
+    },
+    "entry_point": {
+      "type": "string"
+    },
+    "canon": {
+      "type": "string"
+    },
+    "maintenance": {
+      "type": "string"
+    },
+    "router": {
+      "type": "string"
+    },
+    "routing_map": {
+      "type": "string"
+    },
+    "default_pipeline": {
+      "type": "string",
+      "enum": ["A", "B", "C", "AB", "ABC", "both"]
+    },
+    "cores": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "string",
+        "pattern": "^context-os/.+\\.md$"
+      }
+    },
+    "subcores": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string",
+        "pattern": "^context-os/.+\\.md$"
+      }
+    },
+    "framework_repo": {
+      "type": "string"
+    },
+    "implementation_type": {
+      "type": "string"
+    },
+    "read_first_for_agents": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  }
+}

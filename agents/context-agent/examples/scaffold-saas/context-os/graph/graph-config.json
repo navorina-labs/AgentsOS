@@ -1,0 +1,21 @@
+{
+  "description": "Graph index builder config — scaffold-saas example",
+  "includeRoots": [
+    "README.md"
+  ],
+  "includeDirs": [
+    { "dir": "context-os/cores", "extensions": [".md"] },
+    { "dir": "context-os/subcores", "extensions": [".md"] },
+    { "dir": "context-os/router", "extensions": [".md", ".json"] }
+  ],
+  "excludeDirNames": [
+    "node_modules",
+    ".git",
+    "context-os/eval/results"
+  ],
+  "excludePathContains": [
+    "context-os/eval/results/"
+  ],
+  "maxPreviewChars": 2000,
+  "keywordLinkThreshold": 3
+}

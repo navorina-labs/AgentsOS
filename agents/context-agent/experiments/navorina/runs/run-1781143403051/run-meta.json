@@ -1,0 +1,543 @@
+{
+  "run_at": "2026-06-11T02:34:09.632Z",
+  "questions": 42,
+  "conditions": [
+    "A",
+    "B",
+    "C"
+  ],
+  "dry_run": false,
+  "skip_judge": false,
+  "baseline_chars": 89218,
+  "model": "gpt-4o-mini",
+  "router_mode": "keyword",
+  "router_mean_f1": 0.784,
+  "routing": [
+    {
+      "question_id": "NV01",
+      "expected": [
+        "revenue-core",
+        "business-core",
+        "billing-core"
+      ],
+      "routed": [
+        "revenue-core",
+        "business-core",
+        "billing-core"
+      ],
+      "f1": 1
+    },
+    {
+      "question_id": "NV02",
+      "expected": [
+        "revenue-core",
+        "business-core"
+      ],
+      "routed": [
+        "revenue-core",
+        "business-core",
+        "billing-core"
+      ],
+      "f1": 0.8
+    },
+    {
+      "question_id": "NV03",
+      "expected": [
+        "revenue-core",
+        "paywall-core",
+        "billing-core"
+      ],
+      "routed": [
+        "revenue-core",
+        "business-core",
+        "billing-core"
+      ],
+      "f1": 0.667
+    },
+    {
+      "question_id": "NV04",
+      "expected": [
+        "billing-core",
+        "technical-core",
+        "paywall-core"
+      ],
+      "routed": [
+        "billing-core",
+        "technical-core",
+        "paywall-core"
+      ],
+      "f1": 1
+    },
+    {
+      "question_id": "NV05",
+      "expected": [
+        "billing-core",
+        "operational-core"
+      ],
+      "routed": [
+        "billing-core",
+        "technical-core",
+        "paywall-core"
+      ],
+      "f1": 0.4
+    },
+    {
+      "question_id": "NV06",
+      "expected": [
+        "paywall-core",
+        "billing-core"
+      ],
+      "routed": [
+        "paywall-core",
+        "revenue-core",
+        "billing-core"
+      ],
+      "f1": 0.8
+    },
+    {
+      "question_id": "NV07",
+      "expected": [
+        "product-core",
+        "business-core"
+      ],
+      "routed": [
+        "product-core",
+        "business-core"
+      ],
+      "f1": 1
+    },
+    {
+      "question_id": "NV08",
+      "expected": [
+        "product-core"
+      ],
+      "routed": [
+        "product-core",
+        "business-core"
+      ],
+      "f1": 0.667
+    },
+    {
+      "question_id": "NV09",
+      "expected": [
+        "product-core",
+        "nucleus-core"
+      ],
+      "routed": [
+        "product-core",
+        "business-core"
+      ],
+      "f1": 0.5
+    },
+    {
+      "question_id": "NV10",
+      "expected": [
+        "onboarding-core",
+        "product-core"
+      ],
+      "routed": [
+        "onboarding-core",
+        "product-core"
+      ],
+      "f1": 1
+    },
+    {
+      "question_id": "NV11",
+      "expected": [
+        "onboarding-core",
+        "product-core"
+      ],
+      "routed": [
+        "onboarding-core",
+        "product-core"
+      ],
+      "f1": 1
+    },
+    {
+      "question_id": "NV12",
+      "expected": [
+        "onboarding-core",
+        "technical-core"
+      ],
+      "routed": [
+        "onboarding-core",
+        "product-core"
+      ],
+      "f1": 0.5
+    },
+    {
+      "question_id": "NV13",
+      "expected": [
+        "release-core",
+        "operational-core"
+      ],
+      "routed": [
+        "release-core",
+        "operational-core"
+      ],
+      "f1": 1
+    },
+    {
+      "question_id": "NV14",
+      "expected": [
+        "release-core"
+      ],
+      "routed": [
+        "release-core",
+        "operational-core"
+      ],
+      "f1": 0.667
+    },
+    {
+      "question_id": "NV15",
+      "expected": [
+        "operational-core",
+        "release-core"
+      ],
+      "routed": [
+        "release-core",
+        "operational-core"
+      ],
+      "f1": 1
+    },
+    {
+      "question_id": "NV16",
+      "expected": [
+        "nucleus-core",
+        "technical-core"
+      ],
+      "routed": [
+        "nucleus-core",
+        "technical-core"
+      ],
+      "f1": 1
+    },
+    {
+      "question_id": "NV17",
+      "expected": [
+        "nucleus-core",
+        "technical-core"
+      ],
+      "routed": [
+        "nucleus-core",
+        "technical-core"
+      ],
+      "f1": 1
+    },
+    {
+      "question_id": "NV18",
+      "expected": [
+        "nucleus-core"
+      ],
+      "routed": [
+        "nucleus-core",
+        "technical-core"
+      ],
+      "f1": 0.667
+    },
+    {
+      "question_id": "NV19",
+      "expected": [
+        "nucleus-core",
+        "assistant-core"
+      ],
+      "routed": [
+        "nucleus-core",
+        "technical-core"
+      ],
+      "f1": 0.5
+    },
+    {
+      "question_id": "NV20",
+      "expected": [
+        "business-core",
+        "product-core"
+      ],
+      "routed": [
+        "business-core",
+        "product-core"
+      ],
+      "f1": 1
+    },
+    {
+      "question_id": "NV21",
+      "expected": [
+        "business-core",
+        "product-core"
+      ],
+      "routed": [
+        "business-core",
+        "product-core"
+      ],
+      "f1": 1
+    },
+    {
+      "question_id": "NV22",
+      "expected": [
+        "business-core",
+        "product-core",
+        "revenue-core"
+      ],
+      "routed": [
+        "business-core",
+        "product-core",
+        "revenue-core"
+      ],
+      "f1": 1
+    },
+    {
+      "question_id": "NV23",
+      "expected": [
+        "business-core",
+        "product-core"
+      ],
+      "routed": [
+        "business-core",
+        "product-core",
+        "revenue-core"
+      ],
+      "f1": 0.8
+    },
+    {
+      "question_id": "NV24",
+      "expected": [
+        "technical-core",
+        "operational-core"
+      ],
+      "routed": [
+        "technical-core",
+        "operational-core"
+      ],
+      "f1": 1
+    },
+    {
+      "question_id": "NV25",
+      "expected": [
+        "technical-core"
+      ],
+      "routed": [
+        "technical-core",
+        "operational-core"
+      ],
+      "f1": 0.667
+    },
+    {
+      "question_id": "NV26",
+      "expected": [
+        "operational-core",
+        "technical-core"
+      ],
+      "routed": [
+        "operational-core",
+        "release-core"
+      ],
+      "f1": 0.5
+    },
+    {
+      "question_id": "NV27",
+      "expected": [
+        "paywall-core",
+        "revenue-core",
+        "billing-core"
+      ],
+      "routed": [
+        "paywall-core",
+        "revenue-core",
+        "billing-core"
+      ],
+      "f1": 1
+    },
+    {
+      "question_id": "NV28",
+      "expected": [
+        "paywall-core",
+        "billing-core"
+      ],
+      "routed": [
+        "paywall-core",
+        "revenue-core",
+        "billing-core"
+      ],
+      "f1": 0.8
+    },
+    {
+      "question_id": "NV29",
+      "expected": [
+        "paywall-core",
+        "assistant-core"
+      ],
+      "routed": [
+        "technical-core"
+      ],
+      "f1": 0
+    },
+    {
+      "question_id": "NV30",
+      "expected": [
+        "paywall-core",
+        "billing-core"
+      ],
+      "routed": [
+        "paywall-core",
+        "revenue-core",
+        "billing-core"
+      ],
+      "f1": 0.8
+    },
+    {
+      "question_id": "NV31",
+      "expected": [
+        "assistant-core",
+        "paywall-core"
+      ],
+      "routed": [
+        "assistant-core",
+        "paywall-core",
+        "technical-core"
+      ],
+      "f1": 0.8
+    },
+    {
+      "question_id": "NV32",
+      "expected": [
+        "assistant-core",
+        "technical-core"
+      ],
+      "routed": [
+        "assistant-core",
+        "paywall-core",
+        "technical-core"
+      ],
+      "f1": 0.8
+    },
+    {
+      "question_id": "NV33",
+      "expected": [
+        "assistant-core",
+        "product-core"
+      ],
+      "routed": [
+        "assistant-core",
+        "paywall-core",
+        "technical-core"
+      ],
+      "f1": 0.4
+    },
+    {
+      "question_id": "NV34",
+      "expected": [
+        "product-core",
+        "nucleus-core"
+      ],
+      "routed": [
+        "product-core",
+        "nucleus-core"
+      ],
+      "f1": 1
+    },
+    {
+      "question_id": "NV35",
+      "expected": [
+        "product-core"
+      ],
+      "routed": [
+        "product-core",
+        "nucleus-core"
+      ],
+      "f1": 0.667
+    },
+    {
+      "question_id": "NV36",
+      "expected": [
+        "product-core",
+        "nucleus-core"
+      ],
+      "routed": [
+        "product-core",
+        "nucleus-core"
+      ],
+      "f1": 1
+    },
+    {
+      "question_id": "NV37",
+      "expected": [
+        "operational-core",
+        "release-core"
+      ],
+      "routed": [
+        "operational-core",
+        "release-core"
+      ],
+      "f1": 1
+    },
+    {
+      "question_id": "NV38",
+      "expected": [
+        "operational-core"
+      ],
+      "routed": [
+        "operational-core",
+        "release-core"
+      ],
+      "f1": 0.667
+    },
+    {
+      "question_id": "NV39",
+      "expected": [
+        "operational-core",
+        "technical-core"
+      ],
+      "routed": [
+        "operational-core",
+        "release-core"
+      ],
+      "f1": 0.5
+    },
+    {
+      "question_id": "NV40",
+      "expected": [
+        "nucleus-core",
+        "business-core",
+        "technical-core"
+      ],
+      "routed": [
+        "nucleus-core",
+        "business-core",
+        "technical-core"
+      ],
+      "f1": 1
+    },
+    {
+      "question_id": "NV41",
+      "expected": [
+        "nucleus-core",
+        "business-core"
+      ],
+      "routed": [
+        "nucleus-core",
+        "business-core",
+        "technical-core"
+      ],
+      "f1": 0.8
+    },
+    {
+      "question_id": "NV42",
+      "expected": [
+        "nucleus-core",
+        "paywall-core",
+        "billing-core",
+        "technical-core"
+      ],
+      "routed": [
+        "nucleus-core",
+        "business-core",
+        "technical-core"
+      ],
+      "f1": 0.571
+    }
+  ],
+  "exported_at": "2026-06-11T02:50:39.367Z",
+  "paired_questions": 42,
+  "source_repo": "Alex0nder/navorina",
+  "navorina_commit": "413acd41a556cc11be07f2ae994bab6219c353ed"
+}

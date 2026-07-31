@@ -1,0 +1,11 @@
+question_id,accuracy_a,accuracy_b,accuracy_delta,hallucination_a,hallucination_b,latency_a,latency_b,tokens_in_a,tokens_in_b,context_chars_a,context_chars_b,ccr_context_chars,ccr_tokens_est
+MA01,1,1,0,true,true,0,0,,,,,,
+MA02,1,2,1,false,false,0,0,,,,,,
+MA03,1,3,2,false,false,0,0,,,,,,
+MA04,3,2,-1,false,false,0,0,,,,,,
+MA05,2,2,0,false,false,0,0,,,,,,
+MA06,2,1,-1,false,false,0,0,,,,,,
+MA07,1,1,0,true,true,0,0,,,,,,
+MA08,1,2,1,false,false,0,0,,,,,,
+MA09,1,1,0,false,true,0,0,,,,,,
+MA10,1,3,2,true,false,0,0,,,,,,

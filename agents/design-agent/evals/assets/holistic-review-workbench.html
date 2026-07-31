@@ -1,0 +1,506 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Access review workbench</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --canvas: #f3f5f8;
+      --surface: #ffffff;
+      --text: #1e2530;
+      --muted: #9aa3b2;
+      --line: #d8dde6;
+      --accent: #2463d4;
+      --danger: #d23b42;
+      --danger-soft: #fff2f3;
+      --radius: 14px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-width: 0;
+      color: var(--text);
+      background: var(--canvas);
+      font: 14px/1.45 Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    button {
+      min-height: 40px;
+      padding: 8px 14px;
+      border: 0;
+      border-radius: 10px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 260ms ease;
+    }
+
+    button:focus {
+      outline: none;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      min-height: 72px;
+      padding: 14px 28px;
+      background: var(--surface);
+      border-block-end: 1px solid var(--line);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+    }
+
+    .brand-mark {
+      width: 30px;
+      height: 30px;
+      border-radius: 10px;
+      background: var(--accent);
+    }
+
+    .topbar nav {
+      display: flex;
+      gap: 6px;
+    }
+
+    .nav-link {
+      color: #576173;
+      background: transparent;
+      font-weight: 600;
+    }
+
+    .nav-link.active {
+      color: var(--accent);
+      background: #edf3ff;
+    }
+
+    main {
+      width: min(1120px, 100%);
+      margin-inline: auto;
+      padding: 32px 28px 56px;
+    }
+
+    .page-heading {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 24px;
+      margin-block-end: 20px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 28px;
+      line-height: 1.1;
+      letter-spacing: -.02em;
+    }
+
+    .lede {
+      max-width: 780px;
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 300;
+      line-height: 14px;
+    }
+
+    .review-meta {
+      flex: 0 0 auto;
+      color: var(--muted);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .review-card {
+      overflow: hidden;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: 0 1px 2px rgba(29, 38, 53, .06);
+    }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 14px 16px;
+      border-block-end: 1px solid var(--line);
+    }
+
+    .search {
+      width: 290px;
+      min-height: 40px;
+      padding: 8px 11px;
+      border: 1px solid #b9c0cc;
+      border-radius: 10px;
+    }
+
+    .toolbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .selection-copy {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .danger {
+      color: #fff;
+      background: var(--danger);
+    }
+
+    .secondary {
+      color: var(--text);
+      background: var(--surface);
+      border: 1px solid #aeb6c3;
+    }
+
+    .member-table {
+      display: grid;
+      grid-template-columns: 48px 240px 210px 160px 150px 170px;
+      min-width: 978px;
+    }
+
+    .member-table > * {
+      display: flex;
+      min-width: 0;
+      align-items: center;
+      min-height: 58px;
+      padding: 10px 12px;
+      border-block-end: 1px solid var(--line);
+    }
+
+    .member-table > * > div {
+      width: 100%;
+      min-width: 0;
+    }
+
+    .member-table .head {
+      min-height: 42px;
+      color: #667185;
+      background: #f7f8fa;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+
+    .member-table .row-selected {
+      background: #fff2f3;
+    }
+
+    .member-name,
+    .member-email {
+      display: block;
+      overflow: hidden;
+      max-width: 100%;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .member-name {
+      font-weight: 800;
+    }
+
+    .member-email {
+      margin-block-start: 2px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .status {
+      color: #8a2630;
+      font-weight: 700;
+    }
+
+    .role-note {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .table-scroll {
+      overflow: visible;
+    }
+
+    .help-panel {
+      margin-block-start: 18px;
+      padding: 16px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+    }
+
+    .help-panel h2 {
+      margin: 0;
+      font-size: 16px;
+    }
+
+    .help-panel p {
+      max-width: 92ch;
+      margin: 7px 0 0;
+      color: #596273;
+    }
+
+    .backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 10;
+      display: none;
+      place-items: center;
+      padding: 24px;
+      background: rgba(19, 26, 38, .52);
+    }
+
+    .backdrop.open {
+      display: grid;
+    }
+
+    .dialog {
+      width: min(460px, 100%);
+      padding: 14px;
+      background: var(--surface);
+      border-radius: var(--radius);
+      box-shadow: 0 20px 60px rgba(10, 18, 31, .25);
+    }
+
+    .dialog-inner {
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+    }
+
+    .dialog-head {
+      display: flex;
+      align-items: start;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .dialog h2 {
+      margin: 0;
+      font-size: 22px;
+      line-height: 1.15;
+    }
+
+    .icon-button {
+      display: grid;
+      flex: 0 0 24px;
+      width: 24px;
+      min-height: 24px;
+      padding: 0;
+      place-items: center;
+      color: #737d8e;
+      background: transparent;
+      font-size: 20px;
+      line-height: 1;
+    }
+
+    .dialog p {
+      margin: 12px 0 0;
+      color: #596273;
+    }
+
+    .dialog-actions {
+      display: flex;
+      justify-content: end;
+      gap: 8px;
+      margin-block-start: 22px;
+    }
+
+    .error {
+      display: none;
+      margin-block-start: 14px;
+      padding: 10px 12px;
+      color: #a22c34;
+      background: var(--danger-soft);
+      border-radius: 8px;
+    }
+
+    .error.visible {
+      display: block;
+    }
+
+    @media (max-width: 640px) {
+      .topbar {
+        align-items: start;
+        padding: 12px 14px;
+      }
+
+      .topbar nav {
+        display: none;
+      }
+
+      main {
+        padding: 22px 14px 40px;
+      }
+
+      .page-heading,
+      .toolbar {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .search {
+        width: 100%;
+      }
+
+      .toolbar-actions {
+        justify-content: space-between;
+      }
+
+      .member-table {
+        grid-template-columns: 48px 240px 210px 160px 150px 170px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar" id="page-header">
+    <div class="brand"><span class="brand-mark" aria-hidden="true"></span>Northstar Admin</div>
+    <nav aria-label="Primary">
+      <button class="nav-link" type="button">Overview</button>
+      <button class="nav-link active" type="button">People</button>
+      <button class="nav-link" type="button">Billing</button>
+    </nav>
+  </header>
+
+  <main id="page-main">
+    <div class="page-heading">
+      <div>
+        <h1>Review team access</h1>
+        <p class="lede">Review accounts that have not signed in recently and make sure access still matches each person’s responsibilities across your organization.</p>
+      </div>
+      <span class="review-meta">Last reviewed 96 days ago</span>
+    </div>
+
+    <section class="review-card" aria-labelledby="member-list-title">
+      <div class="toolbar">
+        <div>
+          <strong id="member-list-title">12 people need review</strong>
+          <div class="selection-copy">4 selected</div>
+        </div>
+        <input class="search" type="search" placeholder="Search people">
+        <div class="toolbar-actions">
+          <button class="secondary" type="button">Export</button>
+          <button class="danger" id="deactivate-trigger" type="button">Continue</button>
+        </div>
+      </div>
+
+      <div class="table-scroll">
+        <div class="member-table" role="table" aria-label="People requiring access review">
+          <div class="head" role="columnheader"></div>
+          <div class="head" role="columnheader">Person</div>
+          <div class="head" role="columnheader">Role</div>
+          <div class="head" role="columnheader">Last sign-in</div>
+          <div class="head" role="columnheader">Access</div>
+          <div class="head" role="columnheader">Owner</div>
+
+          <div class="row-selected"><input type="checkbox" checked aria-label="Select Alexandra Montgomery"></div>
+          <div class="row-selected"><div><span class="member-name">Alexandra Montgomery-Sutherland</span><span class="member-email">alexandra.montgomery-sutherland-finance@example-enterprise.com</span></div></div>
+          <div class="row-selected"><div>Finance administrator<div class="role-note">All payment settings</div></div></div>
+          <div class="row-selected">104 days ago</div>
+          <div class="row-selected"><span class="status">At risk</span></div>
+          <div class="row-selected">Priya</div>
+
+          <div class="row-selected"><input type="checkbox" checked aria-label="Select Morgan Chen"></div>
+          <div class="row-selected"><div><span class="member-name">Morgan Chen</span><span class="member-email">morgan.chen@example.com</span></div></div>
+          <div class="row-selected"><div>Support lead<div class="role-note">Customer records</div></div></div>
+          <div class="row-selected">98 days ago</div>
+          <div class="row-selected"><span class="status">At risk</span></div>
+          <div class="row-selected">Devon</div>
+
+          <div><input type="checkbox" checked aria-label="Select Emmanuel Okafor"></div>
+          <div><div><span class="member-name">Emmanuel Okafor</span><span class="member-email">emmanuel.okafor@example.com</span></div></div>
+          <div><div>Developer<div class="role-note">Production logs</div></div></div>
+          <div>91 days ago</div>
+          <div><span class="status">At risk</span></div>
+          <div>Lee</div>
+
+          <div><input type="checkbox" checked aria-label="Select Lucía Fernández"></div>
+          <div><div><span class="member-name">Lucía Fernández de la Vega</span><span class="member-email">lucia.fernandez-delavega@example.com</span></div></div>
+          <div><div>Workspace manager<div class="role-note">People and groups</div></div></div>
+          <div>89 days ago</div>
+          <div><span class="status">At risk</span></div>
+          <div>Maya</div>
+        </div>
+      </div>
+    </section>
+
+    <aside class="help-panel">
+      <h2>How access reviews work</h2>
+      <p>Reviewing access regularly helps reduce unnecessary permissions. Account history and audit logs remain available after access changes.</p>
+    </aside>
+  </main>
+
+  <div class="backdrop" id="dialog-backdrop">
+    <section class="dialog" role="dialog">
+      <div class="dialog-inner">
+        <div class="dialog-head">
+          <h2>Deactivate selected accounts?</h2>
+          <button class="icon-button" id="dialog-close" type="button">×</button>
+        </div>
+        <p>Four people will immediately lose access to Northstar Admin. Their account history will remain available.</p>
+        <div class="error" id="dialog-error">Oops! Something went wrong.</div>
+        <div class="dialog-actions">
+          <button class="secondary" id="dialog-cancel" type="button">Cancel</button>
+          <button class="danger" id="dialog-confirm" type="button">OK</button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const trigger = document.querySelector('#deactivate-trigger');
+    const backdrop = document.querySelector('#dialog-backdrop');
+    const closeButton = document.querySelector('#dialog-close');
+    const cancelButton = document.querySelector('#dialog-cancel');
+    const confirmButton = document.querySelector('#dialog-confirm');
+    const error = document.querySelector('#dialog-error');
+
+    function openDialog() {
+      backdrop.classList.add('open');
+    }
+
+    function closeDialog() {
+      backdrop.classList.remove('open');
+      error.classList.remove('visible');
+      trigger.focus();
+    }
+
+    trigger.addEventListener('click', openDialog);
+    closeButton.addEventListener('click', closeDialog);
+    cancelButton.addEventListener('click', closeDialog);
+    confirmButton.addEventListener('click', () => {
+      error.classList.add('visible');
+    });
+
+    window.__holisticLab = {
+      get state() {
+        return {
+          dialogOpen: backdrop.classList.contains('open'),
+          errorVisible: error.classList.contains('visible'),
+          activeElement: document.activeElement.id || document.activeElement.tagName
+        };
+      }
+    };
+  </script>
+</body>
+</html>

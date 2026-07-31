@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ai-context-os.dev/schemas/routing.schema.json",
+  "title": "Context OS Routing Map",
+  "description": "Schema for keyword routing maps used by the Context OS CLI",
+  "type": "object",
+  "required": ["version", "routes"],
+  "additionalProperties": true,
+  "properties": {
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "project": {
+      "type": "string",
+      "description": "Project these rules apply to, or 'generic' for defaults"
+    },
+    "fallback_core": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*$",
+      "description": "Core id used when no route pattern matches"
+    },
+    "routes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["patterns", "cores"],
+        "additionalProperties": true,
+        "properties": {
+          "patterns": {
+            "type": "array",
+            "items": { "type": "string", "minLength": 1 },
+            "minItems": 1,
+            "description": "Literal keyword or phrase patterns matched against a question"
+          },
+          "cores": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9-]*$"
+            },
+            "minItems": 1,
+            "description": "Core ids to load when any route pattern matches"
+          }
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "last_updated": { "type": "string", "format": "date" },
+        "author": { "type": "string" }
+      }
+    }
+  }
+}

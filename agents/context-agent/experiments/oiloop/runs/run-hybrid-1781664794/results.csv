@@ -1,0 +1,165 @@
+question_id,domain,condition,question,context_chars,tokens_in_context_est,context_files,cores_used,answer,latency_ms,tokens_in,tokens_out,model,accuracy,hallucination,completeness,reasoning,judge_notes,routed_cores,router_mode
+OL07,workspace,B,How does Oiloop enforce 'don't touch' rules?,45738,11435,context-os/cores/workspace-core.md;Core/Proactive/UserRuleParser.swift (structure);context-os/cores/personal-core.md;Core/Memory/MemoryStore.swift (structure);Core/Persona/PersonaSettings.swift (structure);Core/Persona/SystemPromptBuilder.swift (structure);Core/Voice/VoiceService.swift (structure);Core/Proactive/DeveloperProactiveMonitor.swift (structure);Core/Memory/UserDataService.swift (structure);Core/Memory/EpisodeSummarizer.swift (structure);Core/Orchestrator/ChatOrchestrator.swift (structure),workspace-core;personal-core,"Oiloop enforces 'don't touch' rules through the following chain of processes:
+
+- **UserRuleParser**: Parses natural language rules into SQLite `user_rules` with a specific kind (`dontTouch`).
+- **RuleEnforcer**: 
+  - Contains static methods (`shouldSkipFile`, `shouldSkipMail`, `shouldSkipMessage`) to determine if a file, mail, or message should be skipped based on the parsed rules.
+- **FileOrganizer**: 
+  - Calls `RuleEnforcer.shouldSkipFile` to skip matching paths before proposing file moves.
+- **MailService / MessagesService**: 
+  - Filters messages using `shouldSkipMail` and `shouldSkipMessage` to avoid processing those that match the rules.
+- **FilePreviewSheet**: 
+  - Requires user confirmation (Apply / Cancel) for any proposed file moves, ensuring no silent moves occur.
+- **ScheduledDigestBuilder**: 
+  - Includes a section in routine digests that lists active `dontTouch` rule patterns, keeping users informed.
+
+This enforcement chain ensures that files or messages that match the 'don't touch' criteria are not moved or processed without explicit user consent.",3720,13955,239,gpt-4o-mini,3,false,2,5,The answer accurately covers all aspects of the gold criteria with clear reasoning.,workspace-core;personal-core,gold
+OL07,workspace,C,How does Oiloop enforce 'don't touch' rules?,27454,6864,Tests/OiloopTests/UserRuleParserTests.swift;Core/Proactive/UserRuleParser.swift;Resources/cores/workspace-core.md;context-os/cores/workspace-core.md;App/GlobalShortcutManager.swift;docs/PROACTIVITY.md;Tests/OiloopTests/HybridRoutingTests.swift;Tests/OiloopTests/MemoryStoreTests.swift,,"Oiloop enforces 'don't touch' rules through the following process:
+
+- **UserRuleParser**: Parses natural language rules into SQLite `user_rules` with the kind set to `dontTouch`.
+- **RuleEnforcer**: Contains static methods (`shouldSkipFile`, `shouldSkipMail`, `shouldSkipMessage`) that check if a file, email, or message should be skipped based on the defined rules.
+- **FileOrganizer**: Calls `RuleEnforcer.shouldSkipFile` to skip proposing moves for files that match the 'don't touch' rules.
+- **MailService / MessagesService**: Uses `shouldSkipMail` and `shouldSkipMessage` to filter out emails and messages that match the rules.
+- **FilePreviewSheet**: Requires user confirmation for any proposed file moves, ensuring no silent moves occur.
+- **ScheduledDigestBuilder**: Includes a section in routine digests that lists active 'don't touch' rule patterns.
+
+This enforcement chain ensures that files matching the 'don't touch' criteria are not moved or processed without explicit user consent.",2798,6278,216,gpt-4o-mini,3,false,2,5,The answer accurately covers all aspects of the gold criteria with clear reasoning.,,
+OL07,workspace,D,How does Oiloop enforce 'don't touch' rules?,60774,15194,context-os/cores/workspace-core.md;Core/Proactive/UserRuleParser.swift (structure);context-os/cores/personal-core.md;Core/Memory/MemoryStore.swift (structure);Core/Persona/PersonaSettings.swift (structure);Core/Persona/SystemPromptBuilder.swift (structure);Core/Voice/VoiceService.swift (structure);Core/Proactive/DeveloperProactiveMonitor.swift (structure);Core/Memory/UserDataService.swift (structure);Core/Memory/EpisodeSummarizer.swift (structure);Core/Orchestrator/ChatOrchestrator.swift (structure);graph:Tests/OiloopTests/UserRuleParserTests.swift;graph:Core/Proactive/UserRuleParser.swift;graph:Resources/cores/workspace-core.md;graph:context-os/cores/workspace-core.md;graph:App/GlobalShortcutManager.swift (partial),workspace-core;personal-core,"Oiloop enforces 'don't touch' rules through the following chain of operations:
+
+- **UserRuleParser**: Parses natural language rules into SQLite `user_rules` with a specific kind of `dontTouch`.
+- **RuleEnforcer**: 
+  - Contains static methods (`shouldSkipFile`, `shouldSkipMail`, `shouldSkipMessage`) that check if a file, email, or message matches any `dontTouch` rules.
+- **FileOrganizer**: 
+  - Calls `RuleEnforcer.shouldSkipFile` to skip proposing moves for files that match the `dontTouch` rules.
+- **MailService / MessagesService**: 
+  - Filters incoming emails and messages using `shouldSkipMail` and `shouldSkipMessage` to avoid processing those that match `dontTouch` rules.
+- **FilePreviewSheet**: 
+  - Requires user confirmation for any proposed file moves, ensuring no silent moves occur.
+- **ScheduledDigestBuilder**: 
+  - Includes a section in routine digests that lists active `dontTouch` rule patterns, keeping users informed.
+
+This enforcement chain ensures that files or messages that match the specified rules are not moved or processed without explicit user consent.",5082,17365,242,gpt-4o-mini,3,false,2,5,Answer accurately covers all aspects of the gold criteria with clear reasoning.,workspace-core;personal-core,gold
+OL09,communication,B,How does Oiloop read inbox headers from Apple Mail?,26130,6533,context-os/cores/communication-core.md;Core/Orchestrator/MailService.swift (structure);Tools/MailTools/CustomMailReader.swift (structure);Core/Orchestrator/MessagesService.swift (structure);Core/Routine/RoutineConnectorService.swift (structure);Tools/MailTools/MailReader.swift (structure);context-os/cores/system-control-core.md;Tools/RemindersTools/RemindersReader.swift (structure),communication-core;system-control-core,"Oiloop reads inbox headers from Apple Mail using the following process:
+
+- **MailService**: Coordinates the automation.
+- **MailReader**: Executes JXA/AppleScript scripting to read recent inbox headers.
+- **System Settings Automation Permission**: Requires permission for Mail to function.
+- **Toggle Option**: The feature is bypassed if ""Use Apple Mail"" is toggled off in Settings.",1343,7800,82,gpt-4o-mini,3,false,2,5,The answer accurately reflects the gold criteria with no gaps or inaccuracies.,communication-core;system-control-core,gold
+OL09,communication,C,How does Oiloop read inbox headers from Apple Mail?,36877,9220,Core/Orchestrator/MailService.swift;Resources/cores/communication-core.md;context-os/cores/communication-core.md;Tools/MailTools/MailReader.swift;Tools/MailTools/MailModels.swift;docs/DEVELOPMENT.md;docs/PRIVACY.md;docs/ROUTINE-AUTOMATION.md,,"Oiloop reads inbox headers from Apple Mail using the following process:
+
+- The `MailService` class utilizes the `MailReader` to execute JXA/AppleScript scripting.
+- The `MailReader` fetches recent inbox headers by running a JavaScript function that interacts with the Mail application.
+- It retrieves messages from the inbox, limiting the number of messages fetched based on user settings.
+- The fetched messages are then processed and returned as `MailMessageSummary` objects.
+
+This process requires System Settings Automation permission for Mail and can be bypassed if ""Use Apple Mail"" is toggled off in the settings.",4799,9012,124,gpt-4o-mini,2,false,2,4,The answer is mostly correct but has minor gaps regarding the specifics of the MailReader's interaction with AppleScript.,,
+OL09,communication,D,How does Oiloop read inbox headers from Apple Mail?,41166,10292,context-os/cores/communication-core.md;Core/Orchestrator/MailService.swift (structure);Tools/MailTools/CustomMailReader.swift (structure);Core/Orchestrator/MessagesService.swift (structure);Core/Routine/RoutineConnectorService.swift (structure);Tools/MailTools/MailReader.swift (structure);context-os/cores/system-control-core.md;Tools/RemindersTools/RemindersReader.swift (structure);graph:Core/Orchestrator/MailService.swift;graph:Resources/cores/communication-core.md;graph:context-os/cores/communication-core.md;graph:Tools/MailTools/MailReader.swift (partial),communication-core;system-control-core,"Oiloop reads inbox headers from Apple Mail using the following process:
+
+- **MailService**: Utilizes the `MailReader` to execute JXA/AppleScript scripting.
+- **MailReader**: 
+  - Fetches recent inbox messages by running a JavaScript function that interacts with the Mail application.
+  - The function retrieves messages from the inbox, limits the number of messages fetched, and extracts details such as ID, subject, sender, and a snippet of the message body.
+- **Permissions**: Requires System Settings Automation permission for Mail, and this functionality is bypassed if ""Use Apple Mail"" is toggled off in Settings.",3181,11290,131,gpt-4o-mini,2,false,2,4,The answer is mostly correct but has minor gaps in detailing the use of AppleScript/JXA as a wrapper.,communication-core;system-control-core,gold
+OL12,communication,B,Why can Oiloop not directly send Apple Messages via an API?,26130,6533,context-os/cores/communication-core.md;Core/Orchestrator/MailService.swift (structure);Tools/MailTools/CustomMailReader.swift (structure);Core/Orchestrator/MessagesService.swift (structure);Core/Routine/RoutineConnectorService.swift (structure);Tools/MailTools/MailReader.swift (structure);context-os/cores/system-control-core.md;Tools/RemindersTools/RemindersReader.swift (structure),communication-core;system-control-core,"Oiloop cannot directly send Apple Messages via an API due to the following reason:
+
+- **Lack of Public API**: There is no public API available for background silent sends of iMessages on macOS, which restricts automated sending without user interaction.",1209,7802,52,gpt-4o-mini,2,false,1,3,The answer correctly identifies the lack of a public API but misses details about how Oiloop stages drafts and the manual sending process.,communication-core;system-control-core,gold
+OL12,communication,C,Why can Oiloop not directly send Apple Messages via an API?,30970,7743,docs/PRIVACY.md;docs/RELEASE.md;Resources/cores/communication-core.md;context-os/cores/communication-core.md;App/AppWindowActivation.swift;Tools/MailTools/MailModels.swift;Tools/MessagesTools/MessagesModels.swift;docs/DEVELOPMENT.md,,"Oiloop cannot directly send Apple Messages via an API due to the following reason:
+
+- **Sandboxing restrictions on macOS** prevent direct API insertion of sent iMessages, requiring Oiloop to stage drafts on the system pasteboard/clipboard instead.",1840,7615,51,gpt-4o-mini,2,false,1,3,The answer identifies a major reason but misses details about opening the Messages app and the manual send requirement.,,
+OL12,communication,D,Why can Oiloop not directly send Apple Messages via an API?,41166,10292,context-os/cores/communication-core.md;Core/Orchestrator/MailService.swift (structure);Tools/MailTools/CustomMailReader.swift (structure);Core/Orchestrator/MessagesService.swift (structure);Core/Routine/RoutineConnectorService.swift (structure);Tools/MailTools/MailReader.swift (structure);context-os/cores/system-control-core.md;Tools/RemindersTools/RemindersReader.swift (structure);graph:docs/PRIVACY.md;graph:docs/RELEASE.md;graph:Resources/cores/communication-core.md;graph:context-os/cores/communication-core.md;graph:App/AppWindowActivation.swift (partial),communication-core;system-control-core,Oiloop cannot directly send Apple Messages via an API due to the lack of a public API for background silent sends on macOS. This limitation necessitates that Oiloop stages drafts on the system pasteboard/clipboard and requires user interaction to manually paste and send the message.,4949,11395,56,gpt-4o-mini,3,false,2,5,The answer accurately covers all key points from the gold criteria.,communication-core;system-control-core,gold
+OL13,systemControl,B,How does Oiloop safely run terminal shell commands?,47081,11771,context-os/cores/system-control-core.md;Tools/RemindersTools/RemindersReader.swift (structure);Core/Spatial/GestureEngine.swift (structure);Tools/ScreenshotTools/ScreenshotCapturer.swift (structure);Core/Spatial/InputFusion.swift (structure);context-os/cores/personal-core.md;Core/Memory/MemoryStore.swift (structure);Core/Persona/PersonaSettings.swift (structure);Core/Persona/SystemPromptBuilder.swift (structure);Core/Voice/VoiceService.swift (structure);Core/Proactive/DeveloperProactiveMonitor.swift (structure);Core/Memory/UserDataService.swift (structure);Core/Memory/EpisodeSummarizer.swift (structure);Core/Orchestrator/ChatOrchestrator.swift (structure),system-control-core;personal-core,"Oiloop safely runs terminal shell commands through the following mechanisms:
+
+- **Shell Execution Validation**: 
+  - Utilizes `ShellExecutor` to spawn a `/bin/zsh` subprocess.
+  - Requires explicit user confirmation in `ShellPreviewSheet` before execution.
+  - Limits commands to user-level execution privileges.
+
+- **Logging**: 
+  - Logs all executed commands in an SQLite `audit_log` under the `shell_exec` action.
+
+These measures ensure that commands are validated, confirmed by the user, and logged for accountability.",1816,14402,109,gpt-4o-mini,3,false,2,5,Answer fully aligns with gold criteria and explains mechanisms clearly.,system-control-core;personal-core,gold
+OL13,systemControl,C,How does Oiloop safely run terminal shell commands?,36492,9123,Core/Routine/ScheduledDigestBuilder.swift;Resources/cores/system-control-core.md;context-os/cores/system-control-core.md;docs/RELEASE.md;App/GlobalShortcutManager.swift;Resources/cores/workspace-core.md;context-os/cores/workspace-core.md;Tests/OiloopTests/ContextRouterTests.swift,,"Oiloop safely runs terminal shell commands through the following mechanisms:
+
+- **Shell Execution Validation**: 
+  - Utilizes `ShellExecutor` to spawn a subprocess with `/bin/zsh`.
+  - Requires explicit user confirmation via `ShellPreviewSheet` before executing any command.
+  - Limits commands to user-level execution privileges.
+
+- **Logging**: 
+  - Logs all executed commands in an SQLite `audit_log` under the `shell_exec` action for accountability.
+
+These measures ensure that shell commands are executed securely and with user consent.",2632,8240,109,gpt-4o-mini,3,false,2,5,Answer fully aligns with gold criteria and provides clear reasoning.,,
+OL13,systemControl,D,How does Oiloop safely run terminal shell commands?,62117,15530,context-os/cores/system-control-core.md;Tools/RemindersTools/RemindersReader.swift (structure);Core/Spatial/GestureEngine.swift (structure);Tools/ScreenshotTools/ScreenshotCapturer.swift (structure);Core/Spatial/InputFusion.swift (structure);context-os/cores/personal-core.md;Core/Memory/MemoryStore.swift (structure);Core/Persona/PersonaSettings.swift (structure);Core/Persona/SystemPromptBuilder.swift (structure);Core/Voice/VoiceService.swift (structure);Core/Proactive/DeveloperProactiveMonitor.swift (structure);Core/Memory/UserDataService.swift (structure);Core/Memory/EpisodeSummarizer.swift (structure);Core/Orchestrator/ChatOrchestrator.swift (structure);graph:Core/Routine/ScheduledDigestBuilder.swift;graph:Resources/cores/system-control-core.md;graph:context-os/cores/system-control-core.md;graph:docs/RELEASE.md (partial),system-control-core;personal-core,"Oiloop safely runs terminal shell commands through the following mechanisms:
+
+- **Shell Execution Validation**: 
+  - Utilizes `ShellExecutor` to spawn a `/bin/zsh` subprocess.
+  - Requires explicit user confirmation in `ShellPreviewSheet` before execution.
+  - Limits commands to user-level execution privileges.
+  - Logs all runs in an SQLite `audit_log` under the `shell_exec` action. 
+
+These measures ensure that commands are validated, confirmed, and logged, enhancing security and accountability.",3886,17813,103,gpt-4o-mini,3,false,2,5,Answer is fully correct and well-reasoned.,system-control-core;personal-core,gold
+OL15,systemControl,B,How does EventKit Reminders authorization avoid freezing Oiloop in background mode?,12772,3193,context-os/cores/system-control-core.md;Tools/RemindersTools/RemindersReader.swift (structure);context-os/cores/workspace-core.md;Tools/FileTools/FileModels.swift (structure),system-control-core;workspace-core,"EventKit Reminders authorization avoids freezing Oiloop in background mode by implementing the following:
+
+- **Headless Mode Check**: The `RemindersReader` checks for the `--headless` command line argument.
+- **Immediate Return**: If the authorization status is `notDetermined` and the application is running in headless mode, it returns `false` (or empty) immediately.
+- **No Prompting**: This approach prevents prompting the user for permissions, which can block the application and cause freezes when running as a background agent.",2286,3192,112,gpt-4o-mini,3,false,2,5,The answer accurately covers all key points from the gold criteria.,system-control-core;workspace-core,gold
+OL15,systemControl,C,How does EventKit Reminders authorization avoid freezing Oiloop in background mode?,48901,12226,context-os/cores/system-control-core.md;App/GlobalShortcutManager.swift;Resources/cores/system-control-core.md;docs/PRD-DEVELOPER-ASSISTANT-UPGRADE.md;Core/Reminders/ReminderService.swift;Core/Reminders/RemindersService.swift;Tools/RemindersTools/RemindersReader.swift;Tools/RemindersTools/RemindersModels.swift;Core/Proactive/CalendarService.swift;context-os/cores/workspace-core.md;context-os/cores/browsing-core.md,,"EventKit Reminders authorization avoids freezing Oiloop in background mode by implementing the following strategy:
+
+- **Headless Mode Check**: The `RemindersReader` checks for the `--headless` command line argument.
+- **Immediate Return**: If the application is running in headless mode and the authorization status is `notDetermined`, it returns `false` (or empty) immediately without prompting the user for permissions.
+- **Prevention of Blocking**: This approach prevents the application from being blocked by macOS permissions popups, which can occur when background agents request access without user interaction.",6218,11039,122,gpt-4o-mini,3,false,2,5,The answer accurately reflects the gold criteria and provides a clear explanation.,,
+OL15,systemControl,D,How does EventKit Reminders authorization avoid freezing Oiloop in background mode?,27808,6952,context-os/cores/system-control-core.md;Tools/RemindersTools/RemindersReader.swift (structure);context-os/cores/workspace-core.md;Tools/FileTools/FileModels.swift (structure);graph:context-os/cores/system-control-core.md;graph:App/GlobalShortcutManager.swift;graph:Resources/cores/system-control-core.md;graph:docs/PRD-DEVELOPER-ASSISTANT-UPGRADE.md (partial),system-control-core;workspace-core,"EventKit Reminders authorization avoids freezing Oiloop in background mode by implementing the following mechanism:
+
+- **Headless Mode Detection**: The `RemindersReader` checks for the `--headless` command line argument.
+- **Immediate Return**: If the permission status is `notDetermined` and the application is running in headless mode, it returns `false` (or empty) immediately.
+- **Avoiding Prompts**: This approach prevents the application from prompting the user for permissions, which can block the process and lead to freezes when running as a background agent.",1957,6619,118,gpt-4o-mini,2,false,2,4,The answer is mostly correct but misses the fullAccess checks.,system-control-core;workspace-core,gold
+OL16,systemControl,B,How does the hand gesture camera stream recognize confirm or cancel commands?,45271,11318,context-os/cores/system-control-core.md;Core/Spatial/GestureEngine.swift (structure);Core/Spatial/InputFusion.swift (structure);context-os/cores/personal-core.md;Core/Memory/MemoryStore.swift (structure);Core/Persona/PersonaSettings.swift (structure);Core/Persona/SystemPromptBuilder.swift (structure);Core/Voice/VoiceService.swift (structure);Core/Proactive/DeveloperProactiveMonitor.swift (structure);Core/Memory/UserDataService.swift (structure);Core/Memory/EpisodeSummarizer.swift (structure);Core/Orchestrator/ChatOrchestrator.swift (structure),system-control-core;personal-core,"The hand gesture camera stream recognizes confirm or cancel commands through the following process:
+
+- **Gesture Detection**: The `GestureEngine` captures local camera frames using `AVCaptureSession`.
+- **Pose Analysis**: It analyzes hand poses via `VNDetectHumanHandPoseRequest`.
+- **Gesture Mapping**:
+  - An open palm gesture is mapped to a ""pause"" command.
+  - A fist-to-open gesture is mapped to a ""confirm"" command.
+- **Event Routing**: The `InputFusion` component routes the detected gesture events to activate SwiftUI sheets for confirmation or cancellation actions.",1813,13822,120,gpt-4o-mini,3,false,2,5,The answer is fully correct and well-reasoned.,system-control-core;personal-core,gold
+OL16,systemControl,C,How does the hand gesture camera stream recognize confirm or cancel commands?,28754,7189,docs/COMPANION.md;Resources/cores/system-control-core.md;context-os/cores/system-control-core.md;Core/Spatial/GestureEngine.swift;docs/PRIVACY.md;docs/GESTURES.md;Core/Spatial/InputFusion.swift;SpatialKit/HandGestureClassifier.swift,,"The hand gesture camera stream recognizes confirm or cancel commands through the following process:
+
+- **Gesture Detection**: The `GestureEngine` captures camera frames using `AVCaptureSession` and analyzes hand poses with `VNDetectHumanHandPoseRequest`.
+- **Hand Gesture Classification**: The `HandGestureClassifier` processes the detected hand poses to classify gestures:
+  - **Open Palm**: If the hand is detected as an open palm for a specified duration, it triggers the ""stopSpeaking"" command.
+  - **Fist Gesture**: If a closed fist is detected, it triggers the ""cancel"" command.
+  - **Transition from Fist to Open Palm**: If a transition from a fist to an open palm is detected, it triggers the ""confirm"" command.
+- **Gesture Handling**: The `InputFusion` class routes the recognized gestures to appropriate actions, such as confirming or canceling operations based on the detected gestures.
+
+This process ensures that gestures are processed locally, with no video data being sent to the cloud.",4992,6615,208,gpt-4o-mini,1,true,1,3,Candidate introduces 'HandGestureClassifier' and 'stopSpeaking' command not in gold.,,
+OL16,systemControl,D,How does the hand gesture camera stream recognize confirm or cancel commands?,60307,15077,context-os/cores/system-control-core.md;Core/Spatial/GestureEngine.swift (structure);Core/Spatial/InputFusion.swift (structure);context-os/cores/personal-core.md;Core/Memory/MemoryStore.swift (structure);Core/Persona/PersonaSettings.swift (structure);Core/Persona/SystemPromptBuilder.swift (structure);Core/Voice/VoiceService.swift (structure);Core/Proactive/DeveloperProactiveMonitor.swift (structure);Core/Memory/UserDataService.swift (structure);Core/Memory/EpisodeSummarizer.swift (structure);Core/Orchestrator/ChatOrchestrator.swift (structure);graph:docs/COMPANION.md;graph:Resources/cores/system-control-core.md;graph:context-os/cores/system-control-core.md;graph:Core/Spatial/GestureEngine.swift;graph:docs/PRIVACY.md (partial),system-control-core;personal-core,"The hand gesture camera stream recognizes confirm or cancel commands through the following process:
+
+- **Gesture Detection**: The `GestureEngine` captures local camera frames using `AVCaptureSession`.
+- **Pose Analysis**: It analyzes hand poses via `VNDetectHumanHandPoseRequest`.
+- **Mapping Gestures**:
+  - An open palm gesture is mapped to a ""pause"" action.
+  - A fist-to-open gesture is mapped to a ""confirm"" action.
+- **Event Routing**: The `InputFusion` component routes these gesture events to activate SwiftUI sheets for confirmation (like confirming or cancelling open previews).",2450,17236,124,gpt-4o-mini,3,false,2,5,"The answer is fully correct and well-reasoned, covering all aspects of the gold criteria.",system-control-core;personal-core,gold
+OL17,systemControl,B,What is used to parse natural language deadlines like 'tomorrow at 5pm'?,12998,3250,context-os/cores/system-control-core.md;Tools/RemindersTools/RemindersReader.swift (structure);context-os/cores/workspace-core.md;Core/Proactive/UserRuleParser.swift (structure),system-control-core;workspace-core,"The `RemindersReader.parseDate(from:)` function is used to parse natural language deadlines like ""tomorrow at 5pm"" or ""завтра в 17:00"". It utilizes `NSDataDetector(types: NSTextCheckingResult.CheckingType.date.rawValue)` for this purpose.",1390,3261,59,gpt-4o-mini,3,false,1,4,The answer is mostly correct but does not mention the return type of the function.,system-control-core;workspace-core,gold
+OL17,systemControl,C,What is used to parse natural language deadlines like 'tomorrow at 5pm'?,35520,8880,Resources/cores/system-control-core.md;context-os/cores/system-control-core.md;Tests/OiloopTests/RemindersTests.swift;Core/Proactive/UserRuleParser.swift;Core/Orchestrator/SystemHealthService.swift;Tests/OiloopTests/MacroTests.swift;Core/Orchestrator/GitInspectorService.swift;Core/Routine/RoutineMacroParser.swift,,"The `RemindersReader.parseDate(from:)` method is used to parse natural language deadlines like ""tomorrow at 5pm"". It utilizes `NSDataDetector(types: NSTextCheckingResult.CheckingType.date.rawValue)` to achieve this functionality.",1272,8137,49,gpt-4o-mini,3,false,1,4,The answer is accurate and mentions key components but lacks mention of localized expressions and return type.,,
+OL17,systemControl,D,What is used to parse natural language deadlines like 'tomorrow at 5pm'?,28009,7003,context-os/cores/system-control-core.md;Tools/RemindersTools/RemindersReader.swift (structure);context-os/cores/workspace-core.md;Core/Proactive/UserRuleParser.swift (structure);graph:Resources/cores/system-control-core.md;graph:context-os/cores/system-control-core.md;graph:Tests/OiloopTests/RemindersTests.swift;graph:Core/Proactive/UserRuleParser.swift,system-control-core;workspace-core,"The `RemindersReader.parseDate(from:)` function is used to parse natural language deadlines like ""tomorrow at 5pm."" It utilizes `NSDataDetector(types: NSTextCheckingResult.CheckingType.date.rawValue)` to provide robust, offline, multi-lingual parsing of relative dates.",1243,6663,59,gpt-4o-mini,3,false,2,4,"Answer is accurate and complete, but lacks mention of localized expressions and return type.",system-control-core;workspace-core,gold
+OL19,browsing,B,How does Oiloop group browser tabs into new windows?,15083,3771,context-os/cores/browsing-core.md;Tools/SafariTools/SafariReader.swift (structure);Tools/SafariTools/ChromeReader.swift (structure);Core/Orchestrator/SafariService.swift (structure);Tools/SafariTools/BrowserContextReader.swift (structure);context-os/cores/system-control-core.md;Tools/RemindersTools/RemindersReader.swift (structure),browsing-core;system-control-core,"Oiloop groups browser tabs into new windows using the following process:
+
+- **Tab Grouping Logic**: Managed by the `SafariService`, which handles the regrouping of open tabs by domain or category.
+- **AppleScript Execution**: It executes AppleScript commands to create new browser windows with the grouped tabs.
+- **Browser Integration**: This process requires Safari Automation permissions to function correctly.
+- **Grouping Functionality**: The `groupTabs` function in the `SafariService` organizes tabs and the `moveTabsToNewWindows` function facilitates the actual creation of new windows with the grouped tabs.",1390,4138,123,gpt-4o-mini,3,false,2,5,The answer accurately reflects the gold criteria and provides additional relevant details.,browsing-core;system-control-core,gold
+OL19,browsing,C,How does Oiloop group browser tabs into new windows?,27817,6955,Resources/cores/browsing-core.md;context-os/cores/browsing-core.md;Tools/SafariTools/ChromeReader.swift;Core/Orchestrator/TabArchiverService.swift;Tools/SafariTools/SafariModels.swift;App/GlobalShortcutManager.swift;Tests/OiloopTests/TabArchiverTests.swift;Tests/OiloopTests/FocusModeServiceTests.swift,,"Oiloop groups browser tabs into new windows using the following process:
+
+- **Tab Grouping Logic**: The `SafariService` manages the logic for regrouping open tabs by domain or category.
+- **AppleScript Execution**: It executes AppleScript commands to create new browser windows and move the grouped tabs into them.
+- **New Window Creation**: A new window is created for each group of tabs, and the tabs are added to this new window.
+- **Automation Permissions**: This process requires Safari Automation permissions to function correctly.
+
+This functionality is part of the browsing core's scope, specifically designed for both Safari and Google Chrome.",2677,6304,129,gpt-4o-mini,2,true,2,4,"Candidate mentions Google Chrome, which is not in the gold criteria.",,
+OL19,browsing,D,How does Oiloop group browser tabs into new windows?,30119,7530,context-os/cores/browsing-core.md;Tools/SafariTools/SafariReader.swift (structure);Tools/SafariTools/ChromeReader.swift (structure);Core/Orchestrator/SafariService.swift (structure);Tools/SafariTools/BrowserContextReader.swift (structure);context-os/cores/system-control-core.md;Tools/RemindersTools/RemindersReader.swift (structure);graph:Resources/cores/browsing-core.md;graph:context-os/cores/browsing-core.md;graph:Tools/SafariTools/ChromeReader.swift;graph:Core/Orchestrator/TabArchiverService.swift (partial),browsing-core;system-control-core,"Oiloop groups browser tabs into new windows using the following process:
+
+- **Grouping Logic**: The `SafariService` manages the logic for regrouping open tabs by domain or category.
+- **AppleScript Execution**: It executes AppleScript commands to create new browser windows based on the grouped tabs.
+- **Functionality**: The `moveTabsToNewWindows` function in the `ChromeReader` handles moving tabs to new windows for Google Chrome.
+- **Input**: The grouping is based on an array of `BrowserTabGroup` objects, which contain the tabs to be grouped.
+- **Permissions**: This operation requires Safari Automation permissions to execute successfully.",2306,7488,135,gpt-4o-mini,1,true,1,3,"Mentions ChromeReader, which is not relevant to Oiloop's Safari functionality.",browsing-core;system-control-core,gold

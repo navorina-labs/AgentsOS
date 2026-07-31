@@ -1,0 +1,509 @@
+question_id,domain,condition,question,context_chars,tokens_in_context_est,context_files,cores_used,answer,latency_ms,tokens_in,tokens_out,model,accuracy,hallucination,completeness,reasoning,judge_notes
+MA01,technical,A,How does OTP extraction work in MailAgent?,320000,80000,AGENTS.md;README.md;SETUP.md;docs/AGENT-SKILLS.md;docs/ATTACHMENTS.md;docs/AUTOTESTS.md;docs/BILLING.md;docs/CATALOG-SUBMIT.md;docs/CI.md;docs/CODEX-DIRECTORY-SUBMIT.md;docs/CODEX.md;docs/DEDICATED-DOMAINS.md;docs/DISTRIBUTION-STATUS.md;docs/ENTERPRISE.md;docs/HOSTING-CLOUDFLARE.md;docs/INTEGRATE.md;docs/MCP-OAUTH-IDP.md;docs/MCP-OAUTH.md;docs/MCP-PROGRESS.md;docs/OPERATOR-ACCESS.md;docs/OPERATOR.md;docs/PENTEST-PREP.md;docs/PUBLISH.md;docs/QA-CALLBACK.md;docs/QA-CI-ALERTS.md;docs/QA-LOCAL-SMTP.md;docs/QA-MIGRATION.md;docs/QA-ONBOARDING.md;docs/QA-PILOT.md;docs/QA-PRESETS.md;docs/QA-RELEASE.md;docs/QA-ROADMAP.md;docs/QA-SIMULATE.md;docs/QA-TROUBLESHOOTING.md;docs/QA.md;docs/RAW-MIME-R2.md;docs/ROADMAP.md;docs/SCOPED-API-KEYS.md;docs/SKILLS-SUBMIT.md;docs/SLA.md;docs/SOC2.md;docs/STRIPE-SETUP.md;docs/TEAMS.md;docs/V1-PLATFORM.md;docs/YOUR-TURN.md;migrations/001_init.sql;migrations/002_allowed_senders.sql;migrations/003_qa_fields.sql;migrations/004_api_key_hint.sql;migrations/005_callback_deliveries.sql;migrations/006_teams_api_keys.sql;migrations/007_oidc_identities.sql;migrations/008_api_key_scopes.sql;migrations/009_message_raw_r2.sql;migrations/010_message_attachments.sql;migrations/011_outbound_threads.sql;migrations/012_custom_domains.sql;migrations/013_message_search.sql;migrations/014_audit_log.sql;migrations/015_agent_run_sessions.sql;migrations/016_team_dedicated_resend.sql;package.json;src/db/client.ts;src/durable-objects/inbox-wait.ts;src/env.ts;src/index.ts;src/lib/agent-recipes.ts;src/lib/api-context.ts;src/lib/api-key-hint.ts;src/lib/api-keys.ts;src/lib/auth.ts;src/lib/callback-url.ts;src/lib/generate-api-key.ts;src/lib/key-scope.ts;src/lib/mcp-jwt.ts;src/lib/mcp-signing-secret.ts;src/lib/npm-versions.ts;src/lib/oidc-flow-jwt.ts;src/lib/outbound-capabilities.ts;src/lib/plans.ts;src/lib/public-origin.ts;src/lib/rate-limit.ts;src/lib/scope-guard.ts;src/lib/sender-allowlist.ts;src/lib/service-presets.ts;src/lib/team-secrets.ts;src/lib/validate-run-id.ts;src/mcp/handlers.ts;src/mcp/manifest.ts;src/mcp/progress.ts;src/mcp/session-progress.ts;src/mcp/session.ts;src/mcp/sse-response.ts;src/openapi/spec.ts;src/queue/consumer.ts;src/routes/agent.ts;src/routes/api-meta.ts;src/routes/audit.ts;src/routes/billing.ts;src/routes/console.ts;src/routes/domains.ts;src/routes/health.ts;src/routes/inboxes.ts;src/routes/mcp-http.ts;src/routes/me.ts;src/routes/oauth.ts;src/routes/openapi.ts;src/routes/stats.ts;src/routes/team.ts (partial),,"OTP extraction in MailAgent works as follows:
+
+- **Inbox Creation**: A temporary inbox is created using the API, specifying parameters such as `service`, `label`, and `callbackUrl`.
+- **Email Reception**: The inbox waits for an email that matches the specified criteria (e.g., from a specific sender or containing certain subjects).
+- **Extraction**: Once an email is received, the inbox can extract the OTP and any links from the latest message using the `GET /v1/inboxes/:id/extract` endpoint.
+- **Verification**: The extracted OTP or primary link can then be used to complete the signup or verification process.
+
+### Key API Tools:
+- **`mailagent_verify_signup`**: Preferred method to wait for verification email and return the OTP or magic link.
+- **`mailagent_wait_and_extract`**: A one-shot flow that creates an inbox, waits for a message, extracts the OTP, and optionally deletes the inbox.
+- **`mailagent_extract_verification`**: Specifically extracts OTP and links from the latest message in the inbox.
+
+### Example Flow:
+1. Create an inbox.
+2. Submit the email address to a signup form.
+3. Wait for the email to arrive.
+4. Extract the OTP or primary link from the email.
+5. Use the OTP or link to complete the signup process.",21213,87756,276,gpt-4o-mini,1,true,1,2,Candidate provides a general overview of OTP extraction but misses key details from the gold criteria.
+MA01,technical,B,How does OTP extraction work in MailAgent?,3281,821,context-os/subcores/otp-core.md,otp-core,"OTP extraction in MailAgent works as follows:
+
+### Extraction Process
+1. **Combine Content**:
+   - Merges `text` and `html` from the Resend receiving API.
+
+2. **Extract OTP**:
+   - Uses `extractOtp(combined)` function with regex patterns:
+     - Looks for keywords: `code:`, `verification:`, `one-time password:`
+     - Matches 6-digit and 4-digit numbers, skipping 4-digit years starting with `20`.
+   - Fallback to `parse-otp-message` npm package if regex fails.
+
+3. **Extract Links**:
+   - Uses `extractLinks(combined)` function:
+     - Applies URL regex, deduplicates, and filters out noise (e.g., unsubscribe links).
+     - Ranks verify-like URLs higher and limits to a maximum of 5 links.
+
+4. **Determine Primary Link**:
+   - Uses `primaryLink(links)` to select the best magic link from the extracted links.
+
+### Storage
+- Extracted data is stored in:
+  - `messages.otp`
+  - `messages.links_json`
+- This occurs during the `insertMessage()` in the queue consumer.
+
+### Processing Context
+- OTP extraction is performed during queue processing for reliability, not in the webhook.
+
+### API Endpoints for OTP
+- `GET /v1/inboxes/:id/extract`: Returns the latest message verification.
+- `GET /v1/inboxes/:id/messages`: Returns per-message OTP and primary link.
+- `POST /v1/inboxes/open`: Waits and returns verification.
+- `POST /v1/agent/verify`: Agent-oriented verification.
+
+### Debugging and Fallbacks
+- If regex fails, a structured extract can be attempted using `POST …/messages/:id/extract` with a preset for 2FA.
+
+### Dependencies
+- Relies on the `parse-otp-message` package and successful processing of messages from the Resend API.",10432,982,403,gpt-4o-mini,1,true,1,3,"Candidate incorrectly states that extraction merges content from Resend API, while it should combine text and html from the email. Also includes unnecessary details about link extraction."
+MA02,operational,A,How do I deploy MailAgent to production?,320000,80000,AGENTS.md;README.md;SETUP.md;docs/AGENT-SKILLS.md;docs/ATTACHMENTS.md;docs/AUTOTESTS.md;docs/BILLING.md;docs/CATALOG-SUBMIT.md;docs/CI.md;docs/CODEX-DIRECTORY-SUBMIT.md;docs/CODEX.md;docs/DEDICATED-DOMAINS.md;docs/DISTRIBUTION-STATUS.md;docs/ENTERPRISE.md;docs/HOSTING-CLOUDFLARE.md;docs/INTEGRATE.md;docs/MCP-OAUTH-IDP.md;docs/MCP-OAUTH.md;docs/MCP-PROGRESS.md;docs/OPERATOR-ACCESS.md;docs/OPERATOR.md;docs/PENTEST-PREP.md;docs/PUBLISH.md;docs/QA-CALLBACK.md;docs/QA-CI-ALERTS.md;docs/QA-LOCAL-SMTP.md;docs/QA-MIGRATION.md;docs/QA-ONBOARDING.md;docs/QA-PILOT.md;docs/QA-PRESETS.md;docs/QA-RELEASE.md;docs/QA-ROADMAP.md;docs/QA-SIMULATE.md;docs/QA-TROUBLESHOOTING.md;docs/QA.md;docs/RAW-MIME-R2.md;docs/ROADMAP.md;docs/SCOPED-API-KEYS.md;docs/SKILLS-SUBMIT.md;docs/SLA.md;docs/SOC2.md;docs/STRIPE-SETUP.md;docs/TEAMS.md;docs/V1-PLATFORM.md;docs/YOUR-TURN.md;migrations/001_init.sql;migrations/002_allowed_senders.sql;migrations/003_qa_fields.sql;migrations/004_api_key_hint.sql;migrations/005_callback_deliveries.sql;migrations/006_teams_api_keys.sql;migrations/007_oidc_identities.sql;migrations/008_api_key_scopes.sql;migrations/009_message_raw_r2.sql;migrations/010_message_attachments.sql;migrations/011_outbound_threads.sql;migrations/012_custom_domains.sql;migrations/013_message_search.sql;migrations/014_audit_log.sql;migrations/015_agent_run_sessions.sql;migrations/016_team_dedicated_resend.sql;package.json;src/db/client.ts;src/durable-objects/inbox-wait.ts;src/env.ts;src/index.ts;src/lib/agent-recipes.ts;src/lib/api-context.ts;src/lib/api-key-hint.ts;src/lib/api-keys.ts;src/lib/auth.ts;src/lib/callback-url.ts;src/lib/generate-api-key.ts;src/lib/key-scope.ts;src/lib/mcp-jwt.ts;src/lib/mcp-signing-secret.ts;src/lib/npm-versions.ts;src/lib/oidc-flow-jwt.ts;src/lib/outbound-capabilities.ts;src/lib/plans.ts;src/lib/public-origin.ts;src/lib/rate-limit.ts;src/lib/scope-guard.ts;src/lib/sender-allowlist.ts;src/lib/service-presets.ts;src/lib/team-secrets.ts;src/lib/validate-run-id.ts;src/mcp/handlers.ts;src/mcp/manifest.ts;src/mcp/progress.ts;src/mcp/session-progress.ts;src/mcp/session.ts;src/mcp/sse-response.ts;src/openapi/spec.ts;src/queue/consumer.ts;src/routes/agent.ts;src/routes/api-meta.ts;src/routes/audit.ts;src/routes/billing.ts;src/routes/console.ts;src/routes/domains.ts;src/routes/health.ts;src/routes/inboxes.ts;src/routes/mcp-http.ts;src/routes/me.ts;src/routes/oauth.ts;src/routes/openapi.ts;src/routes/stats.ts;src/routes/team.ts (partial),,"To deploy MailAgent to production, follow these steps:
+
+1. **Set Up Neon Postgres:**
+   - Create a project on [neon.tech](https://neon.tech) and copy the connection string.
+   - Create a `.env` file from `.env.example` and fill in the `DATABASE_URL`.
+   - Run database migrations:
+     ```bash
+     DATABASE_URL=""postgresql://..."" npm run db:migrate
+     ```
+
+2. **Set Up Resend:**
+   - Obtain your API key from [resend.com](https://resend.com) and set it as `RESEND_API_KEY`.
+   - Copy the domain from the Resend dashboard (e.g., `xxxx.resend.app`) and set it as `INBOX_DOMAIN`.
+   - Configure webhooks in Resend to point to your MailAgent worker URL.
+
+3. **Configure Worker Secrets:**
+   - Use the following commands to set the necessary secrets in Cloudflare Workers:
+     ```bash
+     npx wrangler secret put DATABASE_URL
+     npx wrangler secret put RESEND_API_KEY
+     npx wrangler secret put RESEND_WEBHOOK_SECRET
+     npx wrangler secret put API_KEY
+     npx wrangler secret put INBOX_DOMAIN
+     ```
+
+4. **Deploy the Worker:**
+   - Run the deployment command:
+     ```bash
+     npm run deploy
+     ```
+
+5. **Verify Deployment:**
+   - Check the health of your deployment:
+     ```bash
+     curl https://api.webmailagent.com/health
+     ```
+
+6. **Set Up Custom Domain (Optional):**
+   - If using a custom domain, configure it in Cloudflare and ensure it points to your worker.
+
+7. **Run Post-Deployment Checks:**
+   - After deployment, run the following commands to ensure everything is functioning correctly:
+     ```bash
+     npm run smoke:qa
+     npm run smoke:agent
+     ```
+
+8. **Monitor and Maintain:**
+   - Regularly check the logs and performance metrics to ensure the service is running smoothly.
+
+For detailed instructions, refer to the relevant sections in the provided documentation files, especially `SETUP.md` and `YOUR-TURN.md`.",21678,87756,457,gpt-4o-mini,1,false,1,3,The answer covers most steps but misses the specific Resend webhook URL configuration and CI deployment details.
+MA02,operational,B,How do I deploy MailAgent to production?,3504,876,context-os/subcores/deployment-core.md,deployment-core,"To deploy MailAgent to production, follow these steps:
+
+1. **Login to Wrangler**:
+   ```bash
+   npx wrangler login
+   ```
+
+2. **Set Secrets**:
+   ```bash
+   npx wrangler secret put DATABASE_URL
+   npx wrangler secret put RESEND_API_KEY
+   npx wrangler secret put RESEND_WEBHOOK_SECRET
+   npx wrangler secret put API_KEY
+   npx wrangler secret put INBOX_DOMAIN
+   ```
+
+3. **Create R2 Bucket**:
+   ```bash
+   npx wrangler r2 bucket create mailagent-raw-mime
+   ```
+
+4. **Deploy the Application**:
+   ```bash
+   npm run deploy
+   ```
+
+5. **Run Database Migrations**:
+   ```bash
+   npm run db:migrate
+   ```
+
+6. **Update Resend Webhook**:
+   - Change the webhook URL to the production URL.
+
+7. **(Optional)**: Set up a custom domain for the API (e.g., `api.webmailagent.com`).
+
+Make sure you have completed the prerequisites and configured the necessary environment variables before deploying.",3774,1078,242,gpt-4o-mini,2,false,1,3,Missing CI deployment step and specific webhook URL configuration.
+MA03,technical,A,Why are users not receiving emails in their MailAgent inbox?,320000,80000,AGENTS.md;README.md;SETUP.md;docs/AGENT-SKILLS.md;docs/ATTACHMENTS.md;docs/AUTOTESTS.md;docs/BILLING.md;docs/CATALOG-SUBMIT.md;docs/CI.md;docs/CODEX-DIRECTORY-SUBMIT.md;docs/CODEX.md;docs/DEDICATED-DOMAINS.md;docs/DISTRIBUTION-STATUS.md;docs/ENTERPRISE.md;docs/HOSTING-CLOUDFLARE.md;docs/INTEGRATE.md;docs/MCP-OAUTH-IDP.md;docs/MCP-OAUTH.md;docs/MCP-PROGRESS.md;docs/OPERATOR-ACCESS.md;docs/OPERATOR.md;docs/PENTEST-PREP.md;docs/PUBLISH.md;docs/QA-CALLBACK.md;docs/QA-CI-ALERTS.md;docs/QA-LOCAL-SMTP.md;docs/QA-MIGRATION.md;docs/QA-ONBOARDING.md;docs/QA-PILOT.md;docs/QA-PRESETS.md;docs/QA-RELEASE.md;docs/QA-ROADMAP.md;docs/QA-SIMULATE.md;docs/QA-TROUBLESHOOTING.md;docs/QA.md;docs/RAW-MIME-R2.md;docs/ROADMAP.md;docs/SCOPED-API-KEYS.md;docs/SKILLS-SUBMIT.md;docs/SLA.md;docs/SOC2.md;docs/STRIPE-SETUP.md;docs/TEAMS.md;docs/V1-PLATFORM.md;docs/YOUR-TURN.md;migrations/001_init.sql;migrations/002_allowed_senders.sql;migrations/003_qa_fields.sql;migrations/004_api_key_hint.sql;migrations/005_callback_deliveries.sql;migrations/006_teams_api_keys.sql;migrations/007_oidc_identities.sql;migrations/008_api_key_scopes.sql;migrations/009_message_raw_r2.sql;migrations/010_message_attachments.sql;migrations/011_outbound_threads.sql;migrations/012_custom_domains.sql;migrations/013_message_search.sql;migrations/014_audit_log.sql;migrations/015_agent_run_sessions.sql;migrations/016_team_dedicated_resend.sql;package.json;src/db/client.ts;src/durable-objects/inbox-wait.ts;src/env.ts;src/index.ts;src/lib/agent-recipes.ts;src/lib/api-context.ts;src/lib/api-key-hint.ts;src/lib/api-keys.ts;src/lib/auth.ts;src/lib/callback-url.ts;src/lib/generate-api-key.ts;src/lib/key-scope.ts;src/lib/mcp-jwt.ts;src/lib/mcp-signing-secret.ts;src/lib/npm-versions.ts;src/lib/oidc-flow-jwt.ts;src/lib/outbound-capabilities.ts;src/lib/plans.ts;src/lib/public-origin.ts;src/lib/rate-limit.ts;src/lib/scope-guard.ts;src/lib/sender-allowlist.ts;src/lib/service-presets.ts;src/lib/team-secrets.ts;src/lib/validate-run-id.ts;src/mcp/handlers.ts;src/mcp/manifest.ts;src/mcp/progress.ts;src/mcp/session-progress.ts;src/mcp/session.ts;src/mcp/sse-response.ts;src/openapi/spec.ts;src/queue/consumer.ts;src/routes/agent.ts;src/routes/api-meta.ts;src/routes/audit.ts;src/routes/billing.ts;src/routes/console.ts;src/routes/domains.ts;src/routes/health.ts;src/routes/inboxes.ts;src/routes/mcp-http.ts;src/routes/me.ts;src/routes/oauth.ts;src/routes/openapi.ts;src/routes/stats.ts;src/routes/team.ts (partial),,"Users may not be receiving emails in their MailAgent inbox due to several potential issues:
+
+- **Staging Not Sending Mail**: Ensure that the application is configured to send emails to the MailAgent inbox. Check application logs and mail queues.
+  
+- **Resend Webhook Issues**: Verify that the Resend webhook is correctly set up and functioning. Use the health check endpoint to confirm the webhook is active.
+
+- **Incorrect Inbox Domain**: The email address used must match the expected inbox domain (e.g., `@your-inbox-domain`), not a random email provider like Gmail.
+
+- **Sender Allowlist**: Ensure that the email is coming from an allowed sender. The `service` preset or `expectFrom` must be correctly configured to accept emails from the specified domains.
+
+- **Quota Limits**: Check if the inbox limit has been reached. If the maximum number of active inboxes for the API key has been exceeded, new inboxes will not receive emails.
+
+- **Callback URL Issues**: If using a callback URL, ensure it is valid and reachable. If the callback fails, it may prevent the inbox from processing incoming messages.
+
+- **Message Extraction Issues**: If messages are present but the expected content (like OTP or links) is not extracted, check the message format and ensure it is compatible with the extraction logic.
+
+To troubleshoot, you can:
+- Use the debug UI to inspect the inbox and see if any messages are present.
+- Check the delivery logs for callbacks to see if they were successfully received.
+- Review the configuration for allowed senders and ensure the application is sending emails correctly.",17930,87759,328,gpt-4o-mini,1,false,1,3,The answer covers some relevant points but misses key details from the gold criteria.
+MA03,technical,B,Why are users not receiving emails in their MailAgent inbox?,10647,2662,context-os/subcores/email-core.md;context-os/cores/technical-core.md,email-core;technical-core,"Users may not be receiving emails in their MailAgent inbox due to the following reasons:
+
+1. **Resend Webhook Issues**:
+   - Check Resend webhook events in the dashboard for any errors.
+   
+2. **Domain Mismatch**:
+   - Ensure that the `INBOX_DOMAIN` matches the address suffix of the incoming emails.
+
+3. **Allowed Senders Configuration**:
+   - Verify that the `allowed_senders` or service preset is correctly configured; emails from unauthorized senders are dropped silently.
+
+4. **Queue or DLQ Problems**:
+   - Inspect the Cloudflare dashboard for any issues with the queue or dead-letter queue (DLQ).
+
+5. **Diagnostic Tools**:
+   - Use the `GET …/diagnose` endpoint or `mailagent_diagnose_inbox` for further troubleshooting.
+
+These steps can help identify and resolve the issue of missing emails.",7602,3124,181,gpt-4o-mini,3,false,2,4,Answer covers all key points from the gold criteria accurately.
+MA04,business,A,What is MailAgent and who is it for?,320000,80000,AGENTS.md;README.md;SETUP.md;docs/AGENT-SKILLS.md;docs/ATTACHMENTS.md;docs/AUTOTESTS.md;docs/BILLING.md;docs/CATALOG-SUBMIT.md;docs/CI.md;docs/CODEX-DIRECTORY-SUBMIT.md;docs/CODEX.md;docs/DEDICATED-DOMAINS.md;docs/DISTRIBUTION-STATUS.md;docs/ENTERPRISE.md;docs/HOSTING-CLOUDFLARE.md;docs/INTEGRATE.md;docs/MCP-OAUTH-IDP.md;docs/MCP-OAUTH.md;docs/MCP-PROGRESS.md;docs/OPERATOR-ACCESS.md;docs/OPERATOR.md;docs/PENTEST-PREP.md;docs/PUBLISH.md;docs/QA-CALLBACK.md;docs/QA-CI-ALERTS.md;docs/QA-LOCAL-SMTP.md;docs/QA-MIGRATION.md;docs/QA-ONBOARDING.md;docs/QA-PILOT.md;docs/QA-PRESETS.md;docs/QA-RELEASE.md;docs/QA-ROADMAP.md;docs/QA-SIMULATE.md;docs/QA-TROUBLESHOOTING.md;docs/QA.md;docs/RAW-MIME-R2.md;docs/ROADMAP.md;docs/SCOPED-API-KEYS.md;docs/SKILLS-SUBMIT.md;docs/SLA.md;docs/SOC2.md;docs/STRIPE-SETUP.md;docs/TEAMS.md;docs/V1-PLATFORM.md;docs/YOUR-TURN.md;migrations/001_init.sql;migrations/002_allowed_senders.sql;migrations/003_qa_fields.sql;migrations/004_api_key_hint.sql;migrations/005_callback_deliveries.sql;migrations/006_teams_api_keys.sql;migrations/007_oidc_identities.sql;migrations/008_api_key_scopes.sql;migrations/009_message_raw_r2.sql;migrations/010_message_attachments.sql;migrations/011_outbound_threads.sql;migrations/012_custom_domains.sql;migrations/013_message_search.sql;migrations/014_audit_log.sql;migrations/015_agent_run_sessions.sql;migrations/016_team_dedicated_resend.sql;package.json;src/db/client.ts;src/durable-objects/inbox-wait.ts;src/env.ts;src/index.ts;src/lib/agent-recipes.ts;src/lib/api-context.ts;src/lib/api-key-hint.ts;src/lib/api-keys.ts;src/lib/auth.ts;src/lib/callback-url.ts;src/lib/generate-api-key.ts;src/lib/key-scope.ts;src/lib/mcp-jwt.ts;src/lib/mcp-signing-secret.ts;src/lib/npm-versions.ts;src/lib/oidc-flow-jwt.ts;src/lib/outbound-capabilities.ts;src/lib/plans.ts;src/lib/public-origin.ts;src/lib/rate-limit.ts;src/lib/scope-guard.ts;src/lib/sender-allowlist.ts;src/lib/service-presets.ts;src/lib/team-secrets.ts;src/lib/validate-run-id.ts;src/mcp/handlers.ts;src/mcp/manifest.ts;src/mcp/progress.ts;src/mcp/session-progress.ts;src/mcp/session.ts;src/mcp/sse-response.ts;src/openapi/spec.ts;src/queue/consumer.ts;src/routes/agent.ts;src/routes/api-meta.ts;src/routes/audit.ts;src/routes/billing.ts;src/routes/console.ts;src/routes/domains.ts;src/routes/health.ts;src/routes/inboxes.ts;src/routes/mcp-http.ts;src/routes/me.ts;src/routes/oauth.ts;src/routes/openapi.ts;src/routes/stats.ts;src/routes/team.ts (partial),,"MailAgent is a service that provides temporary inboxes for AI agents and quality assurance (QA) or end-to-end (E2E) testing. It facilitates the verification of email signups through mechanisms like one-time passwords (OTP) and magic links.
+
+### Target Users:
+- **AI Agents**: For automating email verification processes during signup flows.
+- **QA/E2E Testers**: For testing applications that require email verification without manual checks or shared mailboxes.",7752,87757,96,gpt-4o-mini,3,false,2,4,"The answer accurately describes MailAgent and its target users, but does not mention the specific web addresses or the exclusion of human privacy burners."
+MA04,business,B,What is MailAgent and who is it for?,9646,2412,context-os/cores/business-core.md;context-os/cores/product-core.md,business-core;product-core,"- **MailAgent**: A service for **temporary email inboxes** designed for **AI agents** and **QA/E2E testing**. It allows programmatic retrieval of OTP codes and magic links during registration/login without manual HTML parsing or using shared test email accounts.
+
+- **Target Users**:
+  1. **QA Engineers**: Utilizing tools like Playwright/Cypress in CI environments.
+  2. **AI Agents**: Such as Codex and other coding agents using MCP clients.
+  3. **Integration Developers**: Working with the REST SDK for self-hosting.
+  4. **Teams**: Requiring scoped API keys, billing, and custom domains.
+  5. **Operators**: Performing one-time secret setups. 
+
+- **Not Target Users**: Individuals seeking privacy-focused temporary email services.",4390,2830,170,gpt-4o-mini,2,false,2,4,The answer is mostly correct but includes additional user categories not specified in the gold criteria.
+MA05,product,A,Why is OTP empty but a message exists in the inbox?,320000,80000,AGENTS.md;README.md;SETUP.md;docs/AGENT-SKILLS.md;docs/ATTACHMENTS.md;docs/AUTOTESTS.md;docs/BILLING.md;docs/CATALOG-SUBMIT.md;docs/CI.md;docs/CODEX-DIRECTORY-SUBMIT.md;docs/CODEX.md;docs/DEDICATED-DOMAINS.md;docs/DISTRIBUTION-STATUS.md;docs/ENTERPRISE.md;docs/HOSTING-CLOUDFLARE.md;docs/INTEGRATE.md;docs/MCP-OAUTH-IDP.md;docs/MCP-OAUTH.md;docs/MCP-PROGRESS.md;docs/OPERATOR-ACCESS.md;docs/OPERATOR.md;docs/PENTEST-PREP.md;docs/PUBLISH.md;docs/QA-CALLBACK.md;docs/QA-CI-ALERTS.md;docs/QA-LOCAL-SMTP.md;docs/QA-MIGRATION.md;docs/QA-ONBOARDING.md;docs/QA-PILOT.md;docs/QA-PRESETS.md;docs/QA-RELEASE.md;docs/QA-ROADMAP.md;docs/QA-SIMULATE.md;docs/QA-TROUBLESHOOTING.md;docs/QA.md;docs/RAW-MIME-R2.md;docs/ROADMAP.md;docs/SCOPED-API-KEYS.md;docs/SKILLS-SUBMIT.md;docs/SLA.md;docs/SOC2.md;docs/STRIPE-SETUP.md;docs/TEAMS.md;docs/V1-PLATFORM.md;docs/YOUR-TURN.md;migrations/001_init.sql;migrations/002_allowed_senders.sql;migrations/003_qa_fields.sql;migrations/004_api_key_hint.sql;migrations/005_callback_deliveries.sql;migrations/006_teams_api_keys.sql;migrations/007_oidc_identities.sql;migrations/008_api_key_scopes.sql;migrations/009_message_raw_r2.sql;migrations/010_message_attachments.sql;migrations/011_outbound_threads.sql;migrations/012_custom_domains.sql;migrations/013_message_search.sql;migrations/014_audit_log.sql;migrations/015_agent_run_sessions.sql;migrations/016_team_dedicated_resend.sql;package.json;src/db/client.ts;src/durable-objects/inbox-wait.ts;src/env.ts;src/index.ts;src/lib/agent-recipes.ts;src/lib/api-context.ts;src/lib/api-key-hint.ts;src/lib/api-keys.ts;src/lib/auth.ts;src/lib/callback-url.ts;src/lib/generate-api-key.ts;src/lib/key-scope.ts;src/lib/mcp-jwt.ts;src/lib/mcp-signing-secret.ts;src/lib/npm-versions.ts;src/lib/oidc-flow-jwt.ts;src/lib/outbound-capabilities.ts;src/lib/plans.ts;src/lib/public-origin.ts;src/lib/rate-limit.ts;src/lib/scope-guard.ts;src/lib/sender-allowlist.ts;src/lib/service-presets.ts;src/lib/team-secrets.ts;src/lib/validate-run-id.ts;src/mcp/handlers.ts;src/mcp/manifest.ts;src/mcp/progress.ts;src/mcp/session-progress.ts;src/mcp/session.ts;src/mcp/sse-response.ts;src/openapi/spec.ts;src/queue/consumer.ts;src/routes/agent.ts;src/routes/api-meta.ts;src/routes/audit.ts;src/routes/billing.ts;src/routes/console.ts;src/routes/domains.ts;src/routes/health.ts;src/routes/inboxes.ts;src/routes/mcp-http.ts;src/routes/me.ts;src/routes/oauth.ts;src/routes/openapi.ts;src/routes/stats.ts;src/routes/team.ts (partial),,"When a message exists in the inbox but the OTP is empty, it could be due to the following reasons:
+
+- **HTML-Only Email**: The email may be formatted in HTML only, and the extraction process may not be able to parse it correctly for the OTP.
+- **Magic Link**: The message might contain a magic link instead of an OTP. In this case, the extraction would return the link but not an OTP.
+- **Incorrect Extraction Logic**: The extraction logic may not be correctly identifying the OTP in the message content.
+- **Message Format**: The message may not conform to the expected format for OTP extraction, leading to an empty result.
+
+To troubleshoot, you can:
+- Check the raw MIME of the message to see its content.
+- Verify if the message contains a magic link or if the OTP is present in a different format.
+- Use the `GET /v1/inboxes/:id/messages/:messageId/raw` endpoint to inspect the full message content.",8739,87759,200,gpt-4o-mini,2,false,2,4,"The answer covers several potential reasons for the issue and suggests troubleshooting steps, but misses some specific details from the gold criteria."
+MA05,product,B,Why is OTP empty but a message exists in the inbox?,3281,821,context-os/subcores/otp-core.md,otp-core,"If the OTP is empty but a message exists in the inbox, consider the following checks:
+
+- **Check the message content**: Use `GET …/messages/:id/raw` to inspect the raw message. It may be HTML-only, which could prevent OTP extraction.
+- **Magic link only**: The message might contain only a magic link. Use `primaryLink` or `links[]` to retrieve it.
+- **Regex extraction issue**: The extraction process may have failed. Ensure that the regex patterns are correctly matching the OTP format in the message.
+- **Wrong service preset**: Verify that the `service` matches the actual ""From"" domain of the email.",5297,985,137,gpt-4o-mini,2,false,2,4,The answer is mostly correct but misses some specific checks from the gold criteria.
+MA06,product,A,How does inbox creation work?,320000,80000,AGENTS.md;README.md;SETUP.md;docs/AGENT-SKILLS.md;docs/ATTACHMENTS.md;docs/AUTOTESTS.md;docs/BILLING.md;docs/CATALOG-SUBMIT.md;docs/CI.md;docs/CODEX-DIRECTORY-SUBMIT.md;docs/CODEX.md;docs/DEDICATED-DOMAINS.md;docs/DISTRIBUTION-STATUS.md;docs/ENTERPRISE.md;docs/HOSTING-CLOUDFLARE.md;docs/INTEGRATE.md;docs/MCP-OAUTH-IDP.md;docs/MCP-OAUTH.md;docs/MCP-PROGRESS.md;docs/OPERATOR-ACCESS.md;docs/OPERATOR.md;docs/PENTEST-PREP.md;docs/PUBLISH.md;docs/QA-CALLBACK.md;docs/QA-CI-ALERTS.md;docs/QA-LOCAL-SMTP.md;docs/QA-MIGRATION.md;docs/QA-ONBOARDING.md;docs/QA-PILOT.md;docs/QA-PRESETS.md;docs/QA-RELEASE.md;docs/QA-ROADMAP.md;docs/QA-SIMULATE.md;docs/QA-TROUBLESHOOTING.md;docs/QA.md;docs/RAW-MIME-R2.md;docs/ROADMAP.md;docs/SCOPED-API-KEYS.md;docs/SKILLS-SUBMIT.md;docs/SLA.md;docs/SOC2.md;docs/STRIPE-SETUP.md;docs/TEAMS.md;docs/V1-PLATFORM.md;docs/YOUR-TURN.md;migrations/001_init.sql;migrations/002_allowed_senders.sql;migrations/003_qa_fields.sql;migrations/004_api_key_hint.sql;migrations/005_callback_deliveries.sql;migrations/006_teams_api_keys.sql;migrations/007_oidc_identities.sql;migrations/008_api_key_scopes.sql;migrations/009_message_raw_r2.sql;migrations/010_message_attachments.sql;migrations/011_outbound_threads.sql;migrations/012_custom_domains.sql;migrations/013_message_search.sql;migrations/014_audit_log.sql;migrations/015_agent_run_sessions.sql;migrations/016_team_dedicated_resend.sql;package.json;src/db/client.ts;src/durable-objects/inbox-wait.ts;src/env.ts;src/index.ts;src/lib/agent-recipes.ts;src/lib/api-context.ts;src/lib/api-key-hint.ts;src/lib/api-keys.ts;src/lib/auth.ts;src/lib/callback-url.ts;src/lib/generate-api-key.ts;src/lib/key-scope.ts;src/lib/mcp-jwt.ts;src/lib/mcp-signing-secret.ts;src/lib/npm-versions.ts;src/lib/oidc-flow-jwt.ts;src/lib/outbound-capabilities.ts;src/lib/plans.ts;src/lib/public-origin.ts;src/lib/rate-limit.ts;src/lib/scope-guard.ts;src/lib/sender-allowlist.ts;src/lib/service-presets.ts;src/lib/team-secrets.ts;src/lib/validate-run-id.ts;src/mcp/handlers.ts;src/mcp/manifest.ts;src/mcp/progress.ts;src/mcp/session-progress.ts;src/mcp/session.ts;src/mcp/sse-response.ts;src/openapi/spec.ts;src/queue/consumer.ts;src/routes/agent.ts;src/routes/api-meta.ts;src/routes/audit.ts;src/routes/billing.ts;src/routes/console.ts;src/routes/domains.ts;src/routes/health.ts;src/routes/inboxes.ts;src/routes/mcp-http.ts;src/routes/me.ts;src/routes/oauth.ts;src/routes/openapi.ts;src/routes/stats.ts;src/routes/team.ts (partial),,"Inbox creation in the MailAgent project works as follows:
+
+1. **API Endpoint**: 
+   - The primary endpoint for creating an inbox is `POST /v1/inboxes`.
+
+2. **Request Body**: 
+   - The request body can include the following parameters:
+     - `ttlMinutes`: Time-to-live for the inbox in minutes.
+     - `service`: Preset allowlist (e.g., `github`, `google`).
+     - `expectFrom`: Expected sender(s) for the inbox.
+     - `allowedSenders`: List of allowed senders.
+     - `label`: Optional label for the inbox.
+     - `callbackUrl`: Optional URL for webhook callbacks.
+     - `username`: Local part for custom domain inbox (if applicable).
+     - `domainId`: Verified domain ID for custom domains.
+
+3. **Validation**:
+   - The API checks if the user has permission to create an inbox based on their API key scope.
+   - It validates the `callbackUrl` to ensure it is a valid HTTPS URL.
+   - It checks the quota for active inboxes to ensure the limit is not exceeded.
+
+4. **Inbox Creation**:
+   - If all validations pass, the inbox is created using the provided parameters.
+   - The API returns the inbox details, including its ID and address.
+
+5. **Response**:
+   - On successful creation, the response includes:
+     - `id`: The unique identifier for the inbox.
+     - `address`: The email address of the created inbox.
+     - Other relevant metadata (e.g., expiration time, allowed senders).
+
+6. **Error Handling**:
+   - If any validation fails, appropriate error messages are returned, such as `invalid_callback_url`, `inbox_limit_reached`, or `domain_not_found`.
+
+This process allows for the dynamic creation of temporary inboxes for various services, facilitating email verification and other workflows.",13489,87753,389,gpt-4o-mini,2,false,2,4,The answer is mostly correct but misses the specific mention of the inbox address format and the quota enforcement by plan.
+MA06,product,B,How does inbox creation work?,2778,695,context-os/subcores/inbox-core.md,inbox-core,"Inbox creation works as follows:
+
+- **Methods:**
+  - `POST /v1/inboxes`: Full create.
+  - `POST /v1/inboxes/open`: Create + wait + extract + optional delete.
+  - MCP: `mailagent_create_inbox` with the same options.
+
+- **Body Options:**
+  - `ttlMinutes`: Duration before expiration (default 30 minutes, max 1440 minutes).
+  - `service`: Resolves `expectFrom` via presets.
+  - `expectFrom` / `allowedSenders`: Sender allowlist.
+  - `label`: Up to 128 characters for QA tracing.
+  - `callbackUrl`: HTTPS webhook for message notifications.
+  - `username` + `domainId`: Custom domain (must be verified).
+
+- **Errors:**
+  - `domain_not_found`
+  - `domain_not_verified`
+  - `username_requires_domain`
+  - `429 inbox_limit_reached`
+
+- **Quota:**
+  - Managed by `countActiveInboxesForTeam/Hint` vs `PLAN_LIMITS[plan].maxActiveInboxes`.",4474,915,227,gpt-4o-mini,1,false,1,3,The answer has major gaps in accuracy regarding the specific return values and the exact method of inbox creation.
+MA07,technical,A,What REST API endpoints exist for inboxes?,320000,80000,AGENTS.md;README.md;SETUP.md;docs/AGENT-SKILLS.md;docs/ATTACHMENTS.md;docs/AUTOTESTS.md;docs/BILLING.md;docs/CATALOG-SUBMIT.md;docs/CI.md;docs/CODEX-DIRECTORY-SUBMIT.md;docs/CODEX.md;docs/DEDICATED-DOMAINS.md;docs/DISTRIBUTION-STATUS.md;docs/ENTERPRISE.md;docs/HOSTING-CLOUDFLARE.md;docs/INTEGRATE.md;docs/MCP-OAUTH-IDP.md;docs/MCP-OAUTH.md;docs/MCP-PROGRESS.md;docs/OPERATOR-ACCESS.md;docs/OPERATOR.md;docs/PENTEST-PREP.md;docs/PUBLISH.md;docs/QA-CALLBACK.md;docs/QA-CI-ALERTS.md;docs/QA-LOCAL-SMTP.md;docs/QA-MIGRATION.md;docs/QA-ONBOARDING.md;docs/QA-PILOT.md;docs/QA-PRESETS.md;docs/QA-RELEASE.md;docs/QA-ROADMAP.md;docs/QA-SIMULATE.md;docs/QA-TROUBLESHOOTING.md;docs/QA.md;docs/RAW-MIME-R2.md;docs/ROADMAP.md;docs/SCOPED-API-KEYS.md;docs/SKILLS-SUBMIT.md;docs/SLA.md;docs/SOC2.md;docs/STRIPE-SETUP.md;docs/TEAMS.md;docs/V1-PLATFORM.md;docs/YOUR-TURN.md;migrations/001_init.sql;migrations/002_allowed_senders.sql;migrations/003_qa_fields.sql;migrations/004_api_key_hint.sql;migrations/005_callback_deliveries.sql;migrations/006_teams_api_keys.sql;migrations/007_oidc_identities.sql;migrations/008_api_key_scopes.sql;migrations/009_message_raw_r2.sql;migrations/010_message_attachments.sql;migrations/011_outbound_threads.sql;migrations/012_custom_domains.sql;migrations/013_message_search.sql;migrations/014_audit_log.sql;migrations/015_agent_run_sessions.sql;migrations/016_team_dedicated_resend.sql;package.json;src/db/client.ts;src/durable-objects/inbox-wait.ts;src/env.ts;src/index.ts;src/lib/agent-recipes.ts;src/lib/api-context.ts;src/lib/api-key-hint.ts;src/lib/api-keys.ts;src/lib/auth.ts;src/lib/callback-url.ts;src/lib/generate-api-key.ts;src/lib/key-scope.ts;src/lib/mcp-jwt.ts;src/lib/mcp-signing-secret.ts;src/lib/npm-versions.ts;src/lib/oidc-flow-jwt.ts;src/lib/outbound-capabilities.ts;src/lib/plans.ts;src/lib/public-origin.ts;src/lib/rate-limit.ts;src/lib/scope-guard.ts;src/lib/sender-allowlist.ts;src/lib/service-presets.ts;src/lib/team-secrets.ts;src/lib/validate-run-id.ts;src/mcp/handlers.ts;src/mcp/manifest.ts;src/mcp/progress.ts;src/mcp/session-progress.ts;src/mcp/session.ts;src/mcp/sse-response.ts;src/openapi/spec.ts;src/queue/consumer.ts;src/routes/agent.ts;src/routes/api-meta.ts;src/routes/audit.ts;src/routes/billing.ts;src/routes/console.ts;src/routes/domains.ts;src/routes/health.ts;src/routes/inboxes.ts;src/routes/mcp-http.ts;src/routes/me.ts;src/routes/oauth.ts;src/routes/openapi.ts;src/routes/stats.ts;src/routes/team.ts (partial),,"The following REST API endpoints exist for managing inboxes:
+
+1. **List Inboxes**
+   - **Method:** `GET`
+   - **Path:** `/v1/inboxes`
+   - **Description:** List inboxes (can filter by label or labelPrefix).
+
+2. **Create Inbox**
+   - **Method:** `POST`
+   - **Path:** `/v1/inboxes`
+   - **Description:** Create a new inbox.
+
+3. **Get Inbox**
+   - **Method:** `GET`
+   - **Path:** `/v1/inboxes/:id`
+   - **Description:** Get details of a specific inbox by its ID.
+
+4. **Delete Inbox**
+   - **Method:** `DELETE`
+   - **Path:** `/v1/inboxes/:id`
+   - **Description:** Delete a specific inbox by its ID.
+
+5. **Open Inbox (One-shot)**
+   - **Method:** `POST`
+   - **Path:** `/v1/inboxes/open`
+   - **Description:** Create an inbox, wait for a message, extract verification details, and optionally delete the inbox.
+
+6. **Wait for Message**
+   - **Method:** `GET`
+   - **Path:** `/v1/inboxes/:id/wait`
+   - **Description:** Block until a message arrives in the specified inbox.
+
+7. **Extract Verification Details**
+   - **Method:** `GET`
+   - **Path:** `/v1/inboxes/:id/extract`
+   - **Description:** Extract OTP and links from the latest message in the specified inbox.
+
+8. **List Messages**
+   - **Method:** `GET`
+   - **Path:** `/v1/inboxes/:id/messages`
+   - **Description:** List messages in a specific inbox.
+
+9. **Simulate Message**
+   - **Method:** `POST`
+   - **Path:** `/v1/inboxes/:id/simulate`
+   - **Description:** Inject a test OTP email into an inbox without real SMTP.
+
+10. **Send Message**
+    - **Method:** `POST`
+    - **Path:** `/v1/inboxes/:id/send`
+    - **Description:** Send an outbound email from the specified inbox.
+
+11. **List Threads**
+    - **Method:** `GET`
+    - **Path:** `/v1/inboxes/:id/threads`
+    - **Description:** List email threads in a specific inbox.
+
+12. **List Messages in a Thread**
+    - **Method:** `GET`
+    - **Path:** `/v1/inboxes/:id/threads/:threadId/messages`
+    - **Description:** List messages in a specific thread within an inbox.
+
+13. **Search Messages**
+    - **Method:** `GET`
+    - **Path:** `/v1/inboxes/:id/search`
+    - **Description:** Search messages in a specific inbox by keyword.
+
+14. **Diagnose Inbox**
+    - **Method:** `GET`
+    - **Path:** `/v1/inboxes/:id/diagnose`
+    - **Description:** Get diagnostic information for a specific inbox.
+
+These endpoints allow for comprehensive management of inboxes, including creation, retrieval, deletion, and message handling.",15891,87756,648,gpt-4o-mini,1,true,1,3,"The answer includes several correct endpoints but introduces additional ones not in the gold criteria, leading to hallucination."
+MA07,technical,B,What REST API endpoints exist for inboxes?,4309,1078,context-os/subcores/api-core.md,api-core,"The REST API endpoints for inboxes (`/v1/inboxes`) are:
+
+- **POST** `/open`
+- **GET/POST/DELETE** `/`
+- **GET/DELETE** `/:id`
+- **POST** `/:id/simulate`
+- **POST** `/:id/send`
+- **POST** `/:id/messages/:messageId/reply`
+- **GET** `/:id/threads`
+- **GET** `/:id/threads/:threadId/messages`
+- **GET** `/:id/search`
+- **GET** `/:id/diagnose`
+- **GET** `/:id/callbacks`
+- **GET** `/:id/messages`
+- **GET** `/:id/messages/:messageId/raw`
+- **GET** `/:id/messages/:messageId/attachments`
+- **GET** `/:id/messages/:messageId/attachments/:attachmentId`
+- **GET** `/:id/extract`
+- **GET** `/:id/extract/presets`
+- **POST** `/:id/messages/:messageId/extract`
+- **GET** `/:id/events`
+- **GET** `/:id/wait`",7282,1402,241,gpt-4o-mini,1,true,1,2,Candidate includes incorrect endpoints and lacks specific details from gold criteria.
+MA08,technical,A,How is the Cloudflare Worker structured?,320000,80000,AGENTS.md;README.md;SETUP.md;docs/AGENT-SKILLS.md;docs/ATTACHMENTS.md;docs/AUTOTESTS.md;docs/BILLING.md;docs/CATALOG-SUBMIT.md;docs/CI.md;docs/CODEX-DIRECTORY-SUBMIT.md;docs/CODEX.md;docs/DEDICATED-DOMAINS.md;docs/DISTRIBUTION-STATUS.md;docs/ENTERPRISE.md;docs/HOSTING-CLOUDFLARE.md;docs/INTEGRATE.md;docs/MCP-OAUTH-IDP.md;docs/MCP-OAUTH.md;docs/MCP-PROGRESS.md;docs/OPERATOR-ACCESS.md;docs/OPERATOR.md;docs/PENTEST-PREP.md;docs/PUBLISH.md;docs/QA-CALLBACK.md;docs/QA-CI-ALERTS.md;docs/QA-LOCAL-SMTP.md;docs/QA-MIGRATION.md;docs/QA-ONBOARDING.md;docs/QA-PILOT.md;docs/QA-PRESETS.md;docs/QA-RELEASE.md;docs/QA-ROADMAP.md;docs/QA-SIMULATE.md;docs/QA-TROUBLESHOOTING.md;docs/QA.md;docs/RAW-MIME-R2.md;docs/ROADMAP.md;docs/SCOPED-API-KEYS.md;docs/SKILLS-SUBMIT.md;docs/SLA.md;docs/SOC2.md;docs/STRIPE-SETUP.md;docs/TEAMS.md;docs/V1-PLATFORM.md;docs/YOUR-TURN.md;migrations/001_init.sql;migrations/002_allowed_senders.sql;migrations/003_qa_fields.sql;migrations/004_api_key_hint.sql;migrations/005_callback_deliveries.sql;migrations/006_teams_api_keys.sql;migrations/007_oidc_identities.sql;migrations/008_api_key_scopes.sql;migrations/009_message_raw_r2.sql;migrations/010_message_attachments.sql;migrations/011_outbound_threads.sql;migrations/012_custom_domains.sql;migrations/013_message_search.sql;migrations/014_audit_log.sql;migrations/015_agent_run_sessions.sql;migrations/016_team_dedicated_resend.sql;package.json;src/db/client.ts;src/durable-objects/inbox-wait.ts;src/env.ts;src/index.ts;src/lib/agent-recipes.ts;src/lib/api-context.ts;src/lib/api-key-hint.ts;src/lib/api-keys.ts;src/lib/auth.ts;src/lib/callback-url.ts;src/lib/generate-api-key.ts;src/lib/key-scope.ts;src/lib/mcp-jwt.ts;src/lib/mcp-signing-secret.ts;src/lib/npm-versions.ts;src/lib/oidc-flow-jwt.ts;src/lib/outbound-capabilities.ts;src/lib/plans.ts;src/lib/public-origin.ts;src/lib/rate-limit.ts;src/lib/scope-guard.ts;src/lib/sender-allowlist.ts;src/lib/service-presets.ts;src/lib/team-secrets.ts;src/lib/validate-run-id.ts;src/mcp/handlers.ts;src/mcp/manifest.ts;src/mcp/progress.ts;src/mcp/session-progress.ts;src/mcp/session.ts;src/mcp/sse-response.ts;src/openapi/spec.ts;src/queue/consumer.ts;src/routes/agent.ts;src/routes/api-meta.ts;src/routes/audit.ts;src/routes/billing.ts;src/routes/console.ts;src/routes/domains.ts;src/routes/health.ts;src/routes/inboxes.ts;src/routes/mcp-http.ts;src/routes/me.ts;src/routes/oauth.ts;src/routes/openapi.ts;src/routes/stats.ts;src/routes/team.ts (partial),,"The Cloudflare Worker for the MailAgent project is structured as follows:
+
+- **Main Application**: Uses the Hono framework to handle HTTP requests.
+- **Routes**: The application defines various routes for different functionalities:
+  - **Health Check**: `/health` for checking the service status.
+  - **API Meta**: `/v1` for discovery and API metadata.
+  - **Inboxes**: `/v1/inboxes` for creating, listing, and managing inboxes.
+  - **Messages**: Endpoints for retrieving and managing messages associated with inboxes.
+  - **Webhooks**: `/webhooks` for handling incoming email notifications.
+  - **Billing**: `/v1/billing` for managing billing-related actions.
+  - **Audit Logs**: `/v1/audit` for accessing audit logs.
+  - **Team Management**: `/v1/team` for managing team-related actions and API keys.
+  - **Domains**: `/v1/domains` for managing custom domains.
+  - **Agent Routes**: `/v1/agent` for agent-specific functionalities, including verification and recipes.
+
+- **Durable Objects**: Utilizes Durable Objects for managing stateful interactions, such as waiting for messages.
+
+- **Middleware**: Implements middleware for:
+  - **CORS**: To handle cross-origin requests.
+  - **Authentication**: Validates API keys and manages access control.
+  - **Rate Limiting**: Controls the number of requests per minute based on the API key.
+
+- **Error Handling**: Provides responses for various error scenarios, including unauthorized access and not found errors.
+
+- **SSE Support**: Supports Server-Sent Events (SSE) for real-time updates, particularly for long-running operations.
+
+- **Environment Variables**: Configured to use environment variables for sensitive information and settings, such as API keys and database URLs.
+
+This structure allows the MailAgent to efficiently handle email verification and management tasks while providing a robust API for clients and agents.",13408,87755,411,gpt-4o-mini,1,false,1,3,The answer covers some aspects of the structure but misses key details from the gold criteria.
+MA08,technical,B,How is the Cloudflare Worker structured?,3674,919,context-os/subcores/worker-core.md,worker-core,"The Cloudflare Worker is structured as follows:
+
+- **Configuration File:** `wrangler.jsonc`
+  - Name: `mailagent`
+  - Main Entry: `src/index.ts`
+  - Account ID: `42ae092824ce3429ee3f914b43603273`
+  - Compatibility Date: `2026-01-15`, `nodejs_compat_v2`
+
+- **Bindings:**
+  - `ASSETS`: Assets for static site (`public/`)
+  - `DATABASE_URL`: Secret for Neon database
+  - `MAIL_QUEUE`: Queue for `mailagent-email`
+  - `INBOX_WAIT`: Durable Object for SSE wait
+  - `RATE_LIMIT`: KV for rate limiting
+  - `RAW_MIME`: R2 for `.eml` archive
+  - `AI`: Workers AI for embeddings and extraction
+  - `RESEND_*`, `API_KEY`, `INBOX_DOMAIN`: Secrets for email and authentication
+
+- **Entry Export (`src/index.ts`):**
+  - `fetch`: Handles API vs static routing
+  - `queue`: Handles queue batch processing
+  - `scheduled`: Cron job for purging
+
+- **Routing (`handleFetch`):**
+  1. Redirects HTTP to HTTPS (for production hosts)
+  2. Redirects www to apex domain
+  3. Routes API paths to `Hono app.fetch`
+  4. Serves static assets for other requests
+
+- **Business Logic:**
+  - **Routes (HTTP layer):** Located in `src/routes/`
+  - **Services (business logic):** Located in `src/services/`
+  - **Lib (shared utilities):** Located in `src/lib/`
+  - **Queue:** Email ingest bridge in `src/queue/consumer.ts`
+  - **Durable Objects:** State management in `src/durable-objects/inbox-wait.ts`
+  - **MCP:** Tool dispatch in `src/mcp/`
+  - **Database Client:** Neon serverless SQL client in `src/db/client.ts`
+
+- **Cron Jobs:**
+  - Scheduled tasks for purging expired inboxes and audit events.
+
+- **Local Development and Deployment:**
+  - Local dev command: `npm run dev`
+  - Deployment command: `npm run deploy`
+  - CI for deployment on push to main branch.",12456,1112,487,gpt-4o-mini,2,false,2,4,"The answer is mostly correct but misses some specific details from the gold criteria, such as the fetch queue scheduled handlers and the exact structure of the Durable Object InboxWait."
+MA09,technical,A,What database tables are critical in MailAgent?,320000,80000,AGENTS.md;README.md;SETUP.md;docs/AGENT-SKILLS.md;docs/ATTACHMENTS.md;docs/AUTOTESTS.md;docs/BILLING.md;docs/CATALOG-SUBMIT.md;docs/CI.md;docs/CODEX-DIRECTORY-SUBMIT.md;docs/CODEX.md;docs/DEDICATED-DOMAINS.md;docs/DISTRIBUTION-STATUS.md;docs/ENTERPRISE.md;docs/HOSTING-CLOUDFLARE.md;docs/INTEGRATE.md;docs/MCP-OAUTH-IDP.md;docs/MCP-OAUTH.md;docs/MCP-PROGRESS.md;docs/OPERATOR-ACCESS.md;docs/OPERATOR.md;docs/PENTEST-PREP.md;docs/PUBLISH.md;docs/QA-CALLBACK.md;docs/QA-CI-ALERTS.md;docs/QA-LOCAL-SMTP.md;docs/QA-MIGRATION.md;docs/QA-ONBOARDING.md;docs/QA-PILOT.md;docs/QA-PRESETS.md;docs/QA-RELEASE.md;docs/QA-ROADMAP.md;docs/QA-SIMULATE.md;docs/QA-TROUBLESHOOTING.md;docs/QA.md;docs/RAW-MIME-R2.md;docs/ROADMAP.md;docs/SCOPED-API-KEYS.md;docs/SKILLS-SUBMIT.md;docs/SLA.md;docs/SOC2.md;docs/STRIPE-SETUP.md;docs/TEAMS.md;docs/V1-PLATFORM.md;docs/YOUR-TURN.md;migrations/001_init.sql;migrations/002_allowed_senders.sql;migrations/003_qa_fields.sql;migrations/004_api_key_hint.sql;migrations/005_callback_deliveries.sql;migrations/006_teams_api_keys.sql;migrations/007_oidc_identities.sql;migrations/008_api_key_scopes.sql;migrations/009_message_raw_r2.sql;migrations/010_message_attachments.sql;migrations/011_outbound_threads.sql;migrations/012_custom_domains.sql;migrations/013_message_search.sql;migrations/014_audit_log.sql;migrations/015_agent_run_sessions.sql;migrations/016_team_dedicated_resend.sql;package.json;src/db/client.ts;src/durable-objects/inbox-wait.ts;src/env.ts;src/index.ts;src/lib/agent-recipes.ts;src/lib/api-context.ts;src/lib/api-key-hint.ts;src/lib/api-keys.ts;src/lib/auth.ts;src/lib/callback-url.ts;src/lib/generate-api-key.ts;src/lib/key-scope.ts;src/lib/mcp-jwt.ts;src/lib/mcp-signing-secret.ts;src/lib/npm-versions.ts;src/lib/oidc-flow-jwt.ts;src/lib/outbound-capabilities.ts;src/lib/plans.ts;src/lib/public-origin.ts;src/lib/rate-limit.ts;src/lib/scope-guard.ts;src/lib/sender-allowlist.ts;src/lib/service-presets.ts;src/lib/team-secrets.ts;src/lib/validate-run-id.ts;src/mcp/handlers.ts;src/mcp/manifest.ts;src/mcp/progress.ts;src/mcp/session-progress.ts;src/mcp/session.ts;src/mcp/sse-response.ts;src/openapi/spec.ts;src/queue/consumer.ts;src/routes/agent.ts;src/routes/api-meta.ts;src/routes/audit.ts;src/routes/billing.ts;src/routes/console.ts;src/routes/domains.ts;src/routes/health.ts;src/routes/inboxes.ts;src/routes/mcp-http.ts;src/routes/me.ts;src/routes/oauth.ts;src/routes/openapi.ts;src/routes/stats.ts;src/routes/team.ts (partial),,"The critical database tables in MailAgent are:
+
+- **inboxes**
+  - Stores temporary inboxes with fields like `id`, `address`, `expires_at`, `created_at`, `allowed_senders`, `label`, and `callback_url`.
+
+- **messages**
+  - Contains email messages with fields such as `id`, `inbox_id`, `provider_id`, `from_addr`, `subject`, `text_preview`, `html_preview`, `otp`, `links_json`, and `received_at`.
+
+- **teams**
+  - Manages team information with fields like `id`, `name`, `plan`, `stripe_customer_id`, and `created_at`.
+
+- **api_keys**
+  - Stores API keys associated with teams, including `id`, `team_id`, `key_hash`, `key_hint`, and `label`.
+
+- **oidc_identities**
+  - Records OIDC login information with fields such as `id`, `team_id`, `issuer`, `sub`, and `email`.
+
+- **callback_deliveries**
+  - Logs callback notifications with fields like `id`, `inbox_id`, `message_id`, `callback_url`, `status_code`, and `created_at`.
+
+- **message_attachments**
+  - Manages metadata for message attachments with fields like `id`, `message_id`, `provider_id`, `filename`, `content_type`, and `size_bytes`.
+
+- **audit_events**
+  - Tracks audit logs for actions performed by teams or API keys, including `id`, `team_id`, `action`, `resource_type`, and `created_at`.
+
+These tables are essential for the functionality of MailAgent, including inbox management, message handling, team administration, and auditing.",8430,87756,346,gpt-4o-mini,1,false,1,3,Candidate identifies core tables but includes additional tables not specified in gold criteria.
+MA09,technical,B,What database tables are critical in MailAgent?,3319,830,context-os/subcores/database-core.md,database-core,"The critical tables in MailAgent are:
+
+- **`inboxes`**: Core product table with fields like `id`, `address`, `expires_at`, etc.
+- **`messages`**: Contains email content with fields such as `id`, `inbox_id`, `from_addr`, etc.
+- **`teams`**: Manages multi-tenant authentication with plan and subscription details.
+- **`api_keys`**: Stores API key information with unique key hashes and scopes.
+- **`custom_domains`**: Holds verified domains for inbox addresses.
+- **`message_attachments`**: Metadata for attachments and R2 keys.
+- **`callback_deliveries`**: QA callback audit log.
+- **`message_search`**: Full-text search and vector embeddings.
+- **`audit_events`**: Audit trail for team activities.
+- **`agent_run_sessions`**: Tracks multi-step agent state by runId.
+- **`team_dedicated_resend`**: Stores enterprise per-team Resend credentials.",4977,1006,214,gpt-4o-mini,1,true,1,3,Candidate lists several tables but includes irrelevant ones and misses key points from gold criteria.
+MA10,operational,A,What environment variables are required for the Worker?,320000,80000,AGENTS.md;README.md;SETUP.md;docs/AGENT-SKILLS.md;docs/ATTACHMENTS.md;docs/AUTOTESTS.md;docs/BILLING.md;docs/CATALOG-SUBMIT.md;docs/CI.md;docs/CODEX-DIRECTORY-SUBMIT.md;docs/CODEX.md;docs/DEDICATED-DOMAINS.md;docs/DISTRIBUTION-STATUS.md;docs/ENTERPRISE.md;docs/HOSTING-CLOUDFLARE.md;docs/INTEGRATE.md;docs/MCP-OAUTH-IDP.md;docs/MCP-OAUTH.md;docs/MCP-PROGRESS.md;docs/OPERATOR-ACCESS.md;docs/OPERATOR.md;docs/PENTEST-PREP.md;docs/PUBLISH.md;docs/QA-CALLBACK.md;docs/QA-CI-ALERTS.md;docs/QA-LOCAL-SMTP.md;docs/QA-MIGRATION.md;docs/QA-ONBOARDING.md;docs/QA-PILOT.md;docs/QA-PRESETS.md;docs/QA-RELEASE.md;docs/QA-ROADMAP.md;docs/QA-SIMULATE.md;docs/QA-TROUBLESHOOTING.md;docs/QA.md;docs/RAW-MIME-R2.md;docs/ROADMAP.md;docs/SCOPED-API-KEYS.md;docs/SKILLS-SUBMIT.md;docs/SLA.md;docs/SOC2.md;docs/STRIPE-SETUP.md;docs/TEAMS.md;docs/V1-PLATFORM.md;docs/YOUR-TURN.md;migrations/001_init.sql;migrations/002_allowed_senders.sql;migrations/003_qa_fields.sql;migrations/004_api_key_hint.sql;migrations/005_callback_deliveries.sql;migrations/006_teams_api_keys.sql;migrations/007_oidc_identities.sql;migrations/008_api_key_scopes.sql;migrations/009_message_raw_r2.sql;migrations/010_message_attachments.sql;migrations/011_outbound_threads.sql;migrations/012_custom_domains.sql;migrations/013_message_search.sql;migrations/014_audit_log.sql;migrations/015_agent_run_sessions.sql;migrations/016_team_dedicated_resend.sql;package.json;src/db/client.ts;src/durable-objects/inbox-wait.ts;src/env.ts;src/index.ts;src/lib/agent-recipes.ts;src/lib/api-context.ts;src/lib/api-key-hint.ts;src/lib/api-keys.ts;src/lib/auth.ts;src/lib/callback-url.ts;src/lib/generate-api-key.ts;src/lib/key-scope.ts;src/lib/mcp-jwt.ts;src/lib/mcp-signing-secret.ts;src/lib/npm-versions.ts;src/lib/oidc-flow-jwt.ts;src/lib/outbound-capabilities.ts;src/lib/plans.ts;src/lib/public-origin.ts;src/lib/rate-limit.ts;src/lib/scope-guard.ts;src/lib/sender-allowlist.ts;src/lib/service-presets.ts;src/lib/team-secrets.ts;src/lib/validate-run-id.ts;src/mcp/handlers.ts;src/mcp/manifest.ts;src/mcp/progress.ts;src/mcp/session-progress.ts;src/mcp/session.ts;src/mcp/sse-response.ts;src/openapi/spec.ts;src/queue/consumer.ts;src/routes/agent.ts;src/routes/api-meta.ts;src/routes/audit.ts;src/routes/billing.ts;src/routes/console.ts;src/routes/domains.ts;src/routes/health.ts;src/routes/inboxes.ts;src/routes/mcp-http.ts;src/routes/me.ts;src/routes/oauth.ts;src/routes/openapi.ts;src/routes/stats.ts;src/routes/team.ts (partial),,"The required environment variables for the Worker are:
+
+- `DATABASE_URL`: Connection string for Neon Postgres.
+- `RESEND_API_KEY`: API key for Resend.
+- `RESEND_WEBHOOK_SECRET`: Signing secret for Resend webhooks.
+- `API_KEY`: Main API key for authentication.
+- `INBOX_DOMAIN`: Domain for the inbox.
+- `DEFAULT_TTL_MINUTES`: Default time-to-live for inboxes.
+
+Optional variables include:
+
+- `OUTBOUND_FROM`: Email address for sending/replying.
+- `OIDC_*`: Variables for OIDC configuration (issuer, client ID, client secret, audience).
+- `RAW_MIME`: R2 bucket for storing raw MIME.
+- `RAW_MIME_MAX_BYTES`: Maximum size for raw MIME.
+- `ATTACHMENT_MAX_STORE_BYTES`: Maximum size for attachments.",5468,87756,170,gpt-4o-mini,1,true,1,2,Candidate includes incorrect required variables and misses some optional ones.
+MA10,operational,B,What environment variables are required for the Worker?,3504,876,context-os/subcores/deployment-core.md,deployment-core,"The required environment variables for the Worker are:
+
+| Variable                  | Description                             |
+|---------------------------|-----------------------------------------|
+| `DATABASE_URL`           | Neon pooled connection string           |
+| `RESEND_API_KEY`         | Resend API key                          |
+| `RESEND_WEBHOOK_SECRET`  | Webhook signing secret (whsec_)        |
+| `API_KEY`                | Master API key (or use `API_KEYS`)    |
+| `INBOX_DOMAIN`           | Resend receiving domain                 |",2090,1078,104,gpt-4o-mini,3,false,1,4,The answer correctly lists the required variables but misses optional ones and how to set them.

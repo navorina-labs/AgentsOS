@@ -1,0 +1,419 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Queue motion workbench</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --canvas: #f3f6fa;
+      --surface: #ffffff;
+      --text: #1d2733;
+      --muted: #5d6877;
+      --line: #d4dbe5;
+      --accent: #145bc7;
+      --accent-dark: #0f4ca8;
+      --success: #14783e;
+      --shadow: 0 12px 36px rgba(28, 42, 61, .14);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+      font: 15px/1.5 Arial, sans-serif;
+      color: var(--text);
+      background: var(--canvas);
+    }
+
+    button { font: inherit; }
+
+    button {
+      min-height: 42px;
+      padding: 9px 15px;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    button:focus-visible {
+      outline: 3px solid #111827;
+      outline-offset: 2px;
+    }
+
+    .primary {
+      color: #fff;
+      background: var(--accent);
+    }
+
+    .primary:hover { background: var(--accent-dark); }
+
+    .secondary {
+      color: var(--text);
+      background: var(--surface);
+      border-color: #aeb8c6;
+    }
+
+    .app-header {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 28px;
+      background: var(--surface);
+      border-block-end: 1px solid var(--line);
+    }
+
+    .brand {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .live-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--success);
+      animation: pulse 1.2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      50% { transform: scale(1.7); opacity: .45; }
+    }
+
+    main {
+      width: min(1160px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 34px 0 80px;
+    }
+
+    .hero {
+      display: flex;
+      gap: 24px;
+      align-items: end;
+      justify-content: space-between;
+      margin-block-end: 24px;
+    }
+
+    h1, h2, p { margin-block-start: 0; }
+    h1 { margin-block-end: 8px; font-size: 30px; line-height: 1.15; }
+    h2 { margin-block-end: 6px; font-size: 18px; }
+    .muted { color: var(--muted); }
+
+    .queue {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .queue-card {
+      min-width: 0;
+      padding: 18px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      box-shadow: 0 1px 2px rgba(28, 42, 61, .05);
+    }
+
+    .queue-card strong {
+      display: block;
+      margin-block-end: 10px;
+      font-size: 26px;
+    }
+
+    .queue-card.refreshing {
+      animation: card-in 480ms cubic-bezier(.2, 0, 0, 1) both;
+    }
+
+    .queue-card.refreshing:nth-child(2) { animation-delay: 120ms; }
+    .queue-card.refreshing:nth-child(3) { animation-delay: 240ms; }
+
+    @keyframes card-in {
+      from { transform: translateY(22px) scale(.96); opacity: 0; }
+      to { transform: translateY(0) scale(1); opacity: 1; }
+    }
+
+    .activity {
+      margin-block-start: 18px;
+      padding: 20px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+    }
+
+    .activity li { padding-block: 8px; }
+
+    .backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 4;
+      background: rgba(17, 24, 39, .28);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 420ms cubic-bezier(.2, 0, 0, 1);
+    }
+
+    .backdrop.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .details-panel {
+      position: fixed;
+      z-index: 5;
+      inset-block: 0;
+      right: -380px;
+      width: min(380px, 92vw);
+      padding: 24px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      opacity: .6;
+      transition: all 420ms cubic-bezier(.2, 0, 0, 1);
+    }
+
+    .details-panel.open {
+      right: 0;
+      opacity: 1;
+    }
+
+    .panel-header {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+      margin-block-end: 24px;
+    }
+
+    .panel-header h2 { margin: 0; font-size: 23px; }
+
+    .panel-list {
+      display: grid;
+      gap: 12px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .panel-list li {
+      padding: 14px;
+      background: #f5f7fa;
+      border-radius: 8px;
+    }
+
+    .toast-region {
+      position: fixed;
+      z-index: 8;
+      inset-inline: 20px;
+      inset-block-end: 20px;
+      display: grid;
+      justify-items: center;
+      pointer-events: none;
+    }
+
+    .toast {
+      display: flex;
+      gap: 18px;
+      align-items: center;
+      max-width: 560px;
+      padding: 14px 16px;
+      color: #fff;
+      background: #1c2734;
+      border-radius: 10px;
+      box-shadow: var(--shadow);
+      opacity: 0;
+      transform: translateY(70px);
+      transition: all 600ms cubic-bezier(.2, 0, 0, 1);
+      pointer-events: auto;
+    }
+
+    .toast.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .toast button {
+      min-height: 36px;
+      padding: 6px 10px;
+      color: #fff;
+      background: transparent;
+      border-color: rgba(255,255,255,.55);
+    }
+
+    @media (max-width: 680px) {
+      .app-header, .hero { align-items: stretch; flex-direction: column; }
+      .queue { grid-template-columns: 1fr; }
+      main { width: min(100% - 28px, 1160px); padding-block-start: 24px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="app-header">
+    <div class="brand">
+      <span class="live-dot" aria-hidden="true"></span>
+      <strong>Support queue</strong>
+    </div>
+    <div>
+      <button id="save-view" class="secondary" type="button">Save view</button>
+      <button
+        id="toggle-panel"
+        class="primary"
+        type="button"
+        aria-controls="queue-details"
+        aria-expanded="false"
+      >View queue details</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div>
+        <h1>Morning support triage</h1>
+        <p class="muted">Review workload and rebalance the queue.</p>
+      </div>
+      <button id="refresh-queue" class="secondary" type="button">Refresh queue</button>
+    </section>
+
+    <section class="queue" aria-label="Queue summary">
+      <article class="queue-card">
+        <h2>Unassigned</h2>
+        <strong>116</strong>
+        <span class="muted">12 added this hour</span>
+      </article>
+      <article class="queue-card">
+        <h2>SLA risk</h2>
+        <strong>24</strong>
+        <span class="muted">6 require action now</span>
+      </article>
+      <article class="queue-card">
+        <h2>Waiting on customer</h2>
+        <strong>83</strong>
+        <span class="muted">Median wait 3h 18m</span>
+      </article>
+    </section>
+
+    <section class="activity">
+      <h2>Recent changes</h2>
+      <ul>
+        <li>Maya accepted ticket #8941</li>
+        <li>Devon moved #8928 to API support</li>
+        <li>Automatic escalation created for #8919</li>
+      </ul>
+    </section>
+  </main>
+
+  <div class="backdrop" id="panel-backdrop"></div>
+  <aside
+    class="details-panel"
+    id="queue-details"
+    aria-labelledby="queue-details-title"
+    aria-hidden="true"
+    inert
+  >
+    <div class="panel-header">
+      <h2 id="queue-details-title">Queue details</h2>
+      <button id="close-panel" class="secondary" type="button">Close</button>
+    </div>
+    <ul class="panel-list">
+      <li><strong>Payments API</strong><br><span class="muted">142 tickets</span></li>
+      <li><strong>Login latency</strong><br><span class="muted">86 tickets</span></li>
+      <li><strong>Webhooks delayed</strong><br><span class="muted">39 tickets</span></li>
+    </ul>
+  </aside>
+
+  <div class="toast-region" id="toast-region" aria-live="polite"></div>
+
+  <script>
+    (() => {
+      const panel = document.querySelector("#queue-details");
+      const backdrop = document.querySelector("#panel-backdrop");
+      const trigger = document.querySelector("#toggle-panel");
+      const closeButton = document.querySelector("#close-panel");
+      const saveButton = document.querySelector("#save-view");
+      const refreshButton = document.querySelector("#refresh-queue");
+      const toastRegion = document.querySelector("#toast-region");
+      const cards = [...document.querySelectorAll(".queue-card")];
+      const timers = new Set();
+      let panelState = "closed";
+      let refreshCount = 0;
+      let toastCount = 0;
+
+      const later = (callback, delay) => {
+        const timer = setTimeout(() => {
+          timers.delete(timer);
+          callback();
+        }, delay);
+        timers.add(timer);
+        return timer;
+      };
+
+      const setPanel = open => {
+        panelState = open ? "opening" : "closing";
+        panel.classList.toggle("open", open);
+        backdrop.classList.toggle("open", open);
+        trigger.setAttribute("aria-expanded", String(open));
+        panel.setAttribute("aria-hidden", String(!open));
+        panel.inert = !open;
+        later(() => {
+          panelState = open ? "open" : "closed";
+          if (!open) trigger.focus();
+        }, 420);
+      };
+
+      trigger.addEventListener("click", () => setPanel(!panel.classList.contains("open")));
+      closeButton.addEventListener("click", () => setPanel(false));
+      backdrop.addEventListener("click", () => setPanel(false));
+
+      saveButton.addEventListener("click", () => {
+        toastCount += 1;
+        const toast = document.createElement("div");
+        toast.className = "toast";
+        toast.dataset.toastId = String(toastCount);
+        toast.innerHTML = `
+          <span>View saved. Previous filters were replaced.</span>
+          <button type="button">Undo</button>
+        `;
+        toast.querySelector("button").addEventListener("click", () => {
+          toast.remove();
+          window.__motionLab.undoCount += 1;
+        });
+        toastRegion.replaceChildren(toast);
+        requestAnimationFrame(() => toast.classList.add("visible"));
+        later(() => {
+          toast.classList.remove("visible");
+          later(() => toast.remove(), 600);
+        }, 1600);
+      });
+
+      refreshButton.addEventListener("click", () => {
+        refreshCount += 1;
+        cards.forEach(card => {
+          card.classList.remove("refreshing");
+          void card.offsetWidth;
+          card.classList.add("refreshing");
+        });
+        later(() => cards.forEach(card => card.classList.remove("refreshing")), 760);
+      });
+
+      window.__motionLab = {
+        ready: true,
+        undoCount: 0,
+        get state() {
+          return {
+            panelState,
+            panelOpen: panel.classList.contains("open"),
+            refreshCount,
+            toastCount,
+            activeTimers: timers.size,
+            toastPresent: Boolean(document.querySelector(".toast")),
+            reducedMotion: matchMedia("(prefers-reduced-motion: reduce)").matches,
+          };
+        },
+      };
+    })();
+  </script>
+</body>
+</html>

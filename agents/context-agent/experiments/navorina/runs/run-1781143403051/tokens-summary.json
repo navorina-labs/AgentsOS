@@ -1,0 +1,59 @@
+{
+  "results_dir": "context-os/eval/results/run-1781143403051",
+  "model": "gpt-4o-mini",
+  "paired_questions": 42,
+  "conditions": [
+    "A",
+    "B",
+    "C"
+  ],
+  "price_per_1m": {
+    "input_usd": 0.15,
+    "output_usd": 0.6
+  },
+  "per_condition": {
+    "A": {
+      "count": 42,
+      "tokens_in": 1160328,
+      "tokens_out": 5538,
+      "tokens_all": 1165866,
+      "cost_usd": 0.17737199999999997,
+      "mean_in": 27626.85714285714,
+      "mean_out": 131.85714285714286
+    },
+    "B": {
+      "count": 42,
+      "tokens_in": 84902,
+      "tokens_out": 4165,
+      "tokens_all": 89067,
+      "cost_usd": 0.0152343,
+      "mean_in": 2021.4761904761904,
+      "mean_out": 99.16666666666667
+    },
+    "C": {
+      "count": 42,
+      "tokens_in": 498045,
+      "tokens_out": 6174,
+      "tokens_all": 504219,
+      "cost_usd": 0.07841115,
+      "mean_in": 11858.214285714286,
+      "mean_out": 147
+    }
+  },
+  "savings_vs_a": {
+    "B": {
+      "cost_saved_usd": 0.16213769999999997,
+      "cost_savings_pct": 91.41110209052161,
+      "input_tokens_saved": 1075426,
+      "input_savings_pct": 92.68293103329404,
+      "ccr_input_tokens": 13.666674518857036
+    },
+    "C": {
+      "cost_saved_usd": 0.09896084999999998,
+      "cost_savings_pct": 55.792825248629995,
+      "input_tokens_saved": 662283,
+      "input_savings_pct": 57.07722299211947,
+      "ccr_input_tokens": 2.3297653826461464
+    }
+  }
+}

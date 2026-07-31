@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Audit log — MailAgent</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta name="theme-color" content="#000000" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body class="app-page" data-site="app" data-doc="audit">
+    <div id="site-nav"></div>
+
+    <main class="dash-main">
+      <div class="dash-container dash-container--wide">
+        <div id="connect-gate"></div>
+        <header class="dash-toolbar" data-gate-hide>
+          <div>
+            <h1>Logs</h1>
+            <p class="dash-toolbar__sub">Team audit trail · streamed like a terminal.</p>
+          </div>
+        </header>
+        <div class="log-terminal" data-gate-hide>
+          <div class="log-terminal__bar">
+            <span class="log-terminal__dots" aria-hidden="true">
+              <i class="log-terminal__dot log-terminal__dot--red"></i>
+              <i class="log-terminal__dot log-terminal__dot--yellow"></i>
+              <i class="log-terminal__dot log-terminal__dot--green"></i>
+            </span>
+            <span class="log-terminal__title">audit.log</span>
+            <span class="log-terminal__meta" id="meta"></span>
+          </div>
+          <div class="log-terminal__body" id="list" tabindex="0" aria-live="polite"></div>
+          <div class="log-terminal__foot" id="pager" hidden>
+            <button type="button" class="log-terminal__more" id="more">↑ load older</button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <div id="site-footer"></div>
+    <script src="/site-shell.js" defer></script>
+    <script src="/app-connect-gate.js" defer></script>
+    <script src="/app-insights.js" defer></script>
+    <script src="/app-session.js" defer></script>
+    <script>
+      const App = () => window.MailAgentApp;
+      const Gate = () => window.MailAgentConnectGate;
+      const gateEl = document.getElementById("connect-gate");
+      const metaEl = document.getElementById("meta");
+      const listEl = document.getElementById("list");
+      const pagerEl = document.getElementById("pager");
+      const moreBtn = document.getElementById("more");
+
+      let nextBefore = null;
+      let rows = [];
+
+      function esc(s) {
+        return String(s ?? "")
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;");
+      }
+
+      async function api(path) {
+        return App().api(path);
+      }
+
+      function showEmptyState() {
+        Gate()?.renderConnectGate(gateEl, {
+          title: "Connect to view logs",
+          desc: "Audit events for API actions on your team appear here after you connect.",
+        });
+        listEl.innerHTML = "";
+        metaEl.textContent = "";
+        pagerEl.hidden = true;
+      }
+
+      document.addEventListener("mailagent:session-ready", () => {
+        if (!App()?.getKey()) showEmptyState();
+        else fetchPage(null, false);
+      });
+      document.addEventListener("mailagent:connect", () => fetchPage(null, false));
+
+      function formatTs(iso) {
+        const d = new Date(iso);
+        const pad = (n) => String(n).padStart(2, "0");
+        return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+      }
+
+      function formatMeta(meta) {
+        if (!meta || typeof meta !== "object" || !Object.keys(meta).length) return "";
+        const full = JSON.stringify(meta);
+        if (full.length <= 64) return esc(full);
+        return esc(`${full.slice(0, 61)}…`);
+      }
+
+      function renderTerminal() {
+        if (!rows.length) {
+          listEl.innerHTML = `<div class="log-terminal__prompt">
+            <span class="log-prompt">$</span>
+            <span class="log-muted">mailagent audit --tail</span>
+          </div>
+          <p class="log-empty">No events yet. API actions on your team will appear here.</p>`;
+          return;
+        }
+
+        let html = `<div class="log-terminal__prompt">
+          <span class="log-prompt">$</span>
+          <span class="log-muted">mailagent audit --tail · ${rows.length} events</span>
+        </div>`;
+
+        for (const ev of rows) {
+          const resource =
+            ev.resourceId
+              ? `${esc(ev.resourceType || "resource")}:${esc(ev.resourceId)}`
+              : "—";
+          const metaRaw =
+            ev.meta && typeof ev.meta === "object" && Object.keys(ev.meta).length
+              ? JSON.stringify(ev.meta)
+              : "";
+          const meta = formatMeta(ev.meta);
+          html += `<div class="log-line"${metaRaw ? ` title="${esc(metaRaw)}"` : ""}>
+            <time class="log-ts">${esc(formatTs(ev.createdAt))}</time>
+            <span class="log-action">${esc(ev.action)}</span>
+            <span class="log-resource">${resource}</span>
+            <span class="log-key">${esc(ev.apiKeyHint || "—")}</span>
+            ${meta ? `<span class="log-meta">${meta}</span>` : ""}
+          </div>`;
+        }
+        listEl.innerHTML = html;
+      }
+
+      async function fetchPage(before, append) {
+        if (!App()?.getKey()) {
+          showEmptyState();
+          return;
+        }
+        Gate()?.clearConnectGate(gateEl);
+        if (!append) {
+          listEl.innerHTML = `<div class="log-terminal__prompt">
+            <span class="log-prompt">$</span>
+            <span class="log-muted">mailagent audit --tail</span>
+            <span class="log-cursor" aria-hidden="true"></span>
+          </div>`;
+          rows = [];
+          nextBefore = null;
+        } else {
+          moreBtn.disabled = true;
+        }
+
+        const q = new URLSearchParams({ limit: "50" });
+        if (before) q.set("before", before);
+        const res = await api(`/v1/audit?${q}`);
+        if (!res.ok) {
+          listEl.innerHTML = `<p class="log-err">error: ${esc(res.json.error || res.status)}</p>`;
+          pagerEl.hidden = true;
+          return;
+        }
+
+        const events = res.json.events || [];
+        rows = append ? rows.concat(events) : events;
+        nextBefore = res.json.nextBefore || null;
+        const days = res.json.policies?.auditRetentionDays ?? 90;
+        metaEl.textContent = `retention ${days}d`;
+        renderTerminal();
+        pagerEl.hidden = !nextBefore;
+        moreBtn.disabled = false;
+      }
+
+      document.addEventListener("mailagent:disconnect", showEmptyState);
+      moreBtn.onclick = () => {
+        if (nextBefore) fetchPage(nextBefore, true);
+      };
+    </script>
+  </body>
+</html>

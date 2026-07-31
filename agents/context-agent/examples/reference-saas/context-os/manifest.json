@@ -1,0 +1,24 @@
+{
+  "version": "1.0.0",
+  "project": "beacon-metrics",
+  "updated": "2026-06-27",
+  "description": "AI Context OS — domain-oriented context cores for Beacon Metrics",
+  "entry_point": "context-os/README.md",
+  "canon": "context-os/CANON.md",
+  "maintenance": "context-os/MAINTENANCE.md",
+  "router": "context-os/router/question-router.md",
+  "routing_map": "context-os/router/routing-map.json",
+  "default_pipeline": "B",
+  "cores": {
+    "business-core": "context-os/cores/business-core.md",
+    "product-core": "context-os/cores/product-core.md",
+    "technical-core": "context-os/cores/technical-core.md",
+    "operational-core": "context-os/cores/operational-core.md"
+  },
+  "framework_repo": "https://github.com/navorina-labs/AI-Context-OS",
+  "implementation_type": "reference",
+  "read_first_for_agents": [
+    "context-os/CANON.md",
+    "context-os/router/question-router.md"
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "results_dir": "context-os/eval/results/run-1781074375223",
+  "paired_questions": 10,
+  "mean_accuracy_a": 1.4,
+  "mean_accuracy_b": 1.8,
+  "mean_accuracy_delta": 0.4,
+  "mean_ccr_context_chars": null,
+  "mean_ccr_tokens_est": null,
+  "mean_latency_a_ms": 0,
+  "mean_latency_b_ms": 0,
+  "hallucination_rate_a": 0.3,
+  "hallucination_rate_b": 0.3,
+  "hypothesis_supported": true
+}

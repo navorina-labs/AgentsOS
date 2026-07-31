@@ -1,0 +1,22 @@
+[
+  {
+    "id": "Q01",
+    "question": "Which usage limits should apply to a new automation feature?",
+    "expected_cores": ["business-core"]
+  },
+  {
+    "id": "Q02",
+    "question": "How do we release safely?",
+    "expected_cores": ["operational-core"]
+  },
+  {
+    "id": "Q03",
+    "question": "What workflow should the first-run onboarding optimize?",
+    "expected_cores": ["product-core"]
+  },
+  {
+    "id": "Q04",
+    "question": "Where should permission checks happen before tool execution?",
+    "expected_cores": ["technical-core"]
+  }
+]

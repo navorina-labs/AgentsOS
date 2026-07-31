@@ -1,0 +1,19 @@
+{
+  "description": "Condition A: full-repo baseline (excludes context-os treatment artifacts)",
+  "includeRoots": [
+    "README.md",
+    "package.json"
+  ],
+  "includeDirs": [
+    { "dir": "src", "extensions": [".ts", ".tsx", ".js", ".jsx", ".py", ".swift"] },
+    { "dir": "docs", "extensions": [".md"] }
+  ],
+  "excludePathContains": [
+    "node_modules",
+    "/dist/",
+    "context-os/",
+    ".git/"
+  ],
+  "maxFileChars": 14000,
+  "maxTotalChars": 320000
+}

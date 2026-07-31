@@ -1,0 +1,111 @@
+# E2EE messaging — пример threat model (профиль messaging)
+version: "1"
+
+organization:
+  name: Signal-like Messenger
+  migration_years: 3
+  quantum_horizon_years: 10
+
+adversary:
+  classical: true
+  quantum_record: true
+  ai_implementation: true
+
+defaults:
+  confidentiality_years: 25
+
+data_flows:
+  - id: e2ee-session
+    name: Double ratchet session messages
+    confidentiality_years: 5
+    storage: ephemeral
+    hndl_exposed: true
+    crypto:
+      key_exchange: [X25519, ECDHE-P256]
+      signatures: []
+      symmetric: [AES-256-GCM, ChaCha20-Poly1305]
+      hash: [SHA-256]
+    tags: [e2ee, messaging, session]
+
+  - id: identity-keys
+    name: Long-term identity / prekeys
+    confidentiality_years: 25
+    storage: permanent
+    hndl_exposed: true
+    crypto:
+      key_exchange: [X25519]
+      signatures: [Ed25519, ECDSA-P256]
+      symmetric: []
+      hash: [SHA-256]
+    tags: [identity, messaging]
+
+  - id: support-bot-rag
+    name: In-app support AI (RAG)
+    storage: short
+    crypto:
+      key_exchange: [ECDHE-P256]
+      signatures: []
+      symmetric: [AES-256-GCM]
+      hash: [SHA-256]
+    tags: [ai, rag, support]
+    ai_context:
+      channels: [user, rag]
+      trust: foreign
+
+ai_governance:
+  friend_or_foe:
+    own:
+      - id: messenger-backend
+        kind: service
+      - id: key-transparency
+        kind: service
+    foreign:
+      - id: user-message
+        kind: user
+      - id: support-rag
+        kind: rag_source
+    rules:
+      - id: iff-foreign-no-instruct
+        statement: Чужой контент не задаёт инструкции боту
+        enforce: required
+      - id: iff-secrets-own-only
+        statement: Prekeys и master secrets не в RAG
+        enforce: required
+  ai_language:
+    channels:
+      - id: system
+        trust: own
+        role: instruction
+      - id: user
+        trust: foreign
+        role: data
+        delimiter_start: "<<USER>>"
+        delimiter_end: "<<END_USER>>"
+      - id: rag
+        trust: foreign
+        role: data
+        delimiter_start: "<<UNTRUSTED>>"
+        delimiter_end: "<<END_UNTRUSTED>>"
+        strip_instruction_like: true
+    foreign_patterns:
+      - pattern: "ignore previous"
+        action: strip_and_log
+    rules:
+      - id: lang-foreign-delimited
+        statement: foreign с delimiter
+        enforce: required
+
+policies:
+  - id: msg-no-rsa-permanent
+    when:
+      retention_tier: permanent
+      has_algorithm: RSA-2048
+    action: block
+    recommend:
+      key_exchange: ML-KEM-1024
+      hybrid_with: X25519
+  - id: msg-no-weak-hash
+    when:
+      retention_tier: long
+      has_algorithm: MD5
+    action: block

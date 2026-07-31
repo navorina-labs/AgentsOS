@@ -1,0 +1,192 @@
+{
+  "schema_version": 1,
+  "id": "team-access-review",
+  "title": "Modern and intuitive team access review",
+  "status": "approved",
+  "context": {
+    "product_surface": "Team access review",
+    "primary_user": {
+      "role": "Administrator",
+      "job": "Review access"
+    },
+    "outcome": "A clean experience",
+    "platforms": ["Web"],
+    "viewport_range": {
+      "minimum_css_px": 320,
+      "maximum_css_px": 1440
+    },
+    "constraints": [],
+    "assumptions": [],
+    "out_of_scope": []
+  },
+  "evidence": [
+    {
+      "id": "brief-access",
+      "type": "brief",
+      "locator": "Team access brief",
+      "claim": "Administrators review inactive accounts",
+      "confidence": "high"
+    }
+  ],
+  "decisions": [
+    {
+      "id": "decision-responsive",
+      "decision": "Use a beautiful responsive table",
+      "status": "confirmed",
+      "evidence_ids": [],
+      "tradeoff": "None"
+    }
+  ],
+  "contracts": [
+    {
+      "id": "contract-review",
+      "category": "task",
+      "owner": "Frontend",
+      "applies_to": ["view-review"],
+      "requirement": "Make the review intuitive",
+      "status": "confirmed",
+      "evidence_ids": []
+    },
+    {
+      "id": "contract-review",
+      "category": "responsive",
+      "owner": "Frontend",
+      "applies_to": ["view-review"],
+      "requirement": "Use a 768 pixel breakpoint",
+      "status": "proposed_default_validate",
+      "evidence_ids": ["brief-access"]
+    },
+    {
+      "id": "contract-session",
+      "category": "data_dependency",
+      "owner": "Backend",
+      "applies_to": ["view-review"],
+      "requirement": "Preserve the review after session expiry",
+      "status": "requires_decision",
+      "evidence_ids": ["brief-access"]
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-review",
+      "name": "Review access",
+      "entry": "Open page",
+      "steps": ["Select people", "Continue"],
+      "success": "Done",
+      "alternate_and_recovery": ["Try again"]
+    }
+  ],
+  "views": [
+    {
+      "id": "view-review",
+      "name": "Review",
+      "purpose": "Review people",
+      "primary_action": "Continue",
+      "reading_order": ["Heading", "Table", "Button"],
+      "focus_order": ["Button"],
+      "regions": ["Table"],
+      "layout": {
+        "wide": "Table",
+        "intermediate": "Table",
+        "narrow": "Table",
+        "transitions": ["At 768 pixels"]
+      },
+      "component_ids": ["component-missing"],
+      "contract_ids": ["contract-review", "contract-missing"]
+    }
+  ],
+  "foundations": {
+    "color_roles": ["Modern blue"],
+    "typography_roles": ["Clean type"],
+    "spacing_and_grid": ["8 pixel grid"],
+    "shape_and_elevation": ["Beautiful cards"],
+    "iconography_and_imagery": ["Simple icons"],
+    "motion": ["Smooth transitions"]
+  },
+  "components": [
+    {
+      "id": "component-action",
+      "name": "Action",
+      "purpose": "Continue",
+      "interactive": true,
+      "anatomy": ["Label"],
+      "variants": [],
+      "props": [],
+      "states": ["default"],
+      "not_applicable_states": {},
+      "interactions": ["Click"],
+      "accessibility": {
+        "name_role_value": "Button",
+        "keyboard": "Keyboard",
+        "focus": "Focus",
+        "announcements": "Later"
+      },
+      "content_constraints": ["Short label"],
+      "responsive_behavior": "Responsive",
+      "contract_ids": ["contract-review"]
+    }
+  ],
+  "acceptance_criteria": [
+    {
+      "id": "accept-one",
+      "priority": "must",
+      "covers": ["core_task"],
+      "given": "Page",
+      "when": "Used",
+      "then": "Works",
+      "verifies_contract_ids": ["contract-missing"],
+      "evidence": "Check it"
+    },
+    {
+      "id": "accept-two",
+      "priority": "must",
+      "covers": ["core_task"],
+      "given": "Page",
+      "when": "Used",
+      "then": "Works",
+      "verifies_contract_ids": ["contract-missing"],
+      "evidence": "Check it"
+    },
+    {
+      "id": "accept-three",
+      "priority": "must",
+      "covers": ["core_task"],
+      "given": "Page",
+      "when": "Used",
+      "then": "Works",
+      "verifies_contract_ids": ["contract-missing"],
+      "evidence": "Check it"
+    },
+    {
+      "id": "accept-four",
+      "priority": "must",
+      "covers": ["core_task"],
+      "given": "Page",
+      "when": "Used",
+      "then": "Works",
+      "verifies_contract_ids": ["contract-missing"],
+      "evidence": "Check it"
+    },
+    {
+      "id": "accept-five",
+      "priority": "must",
+      "covers": ["core_task"],
+      "given": "Page",
+      "when": "Used",
+      "then": "Works",
+      "verifies_contract_ids": ["contract-missing"],
+      "evidence": "Check it"
+    },
+    {
+      "id": "accept-six",
+      "priority": "must",
+      "covers": ["core_task"],
+      "given": "Page",
+      "when": "Used",
+      "then": "Works",
+      "verifies_contract_ids": ["contract-missing"],
+      "evidence": "Check it"
+    }
+  ],
+  "open_questions": []
+}

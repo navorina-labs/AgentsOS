@@ -1,0 +1,16 @@
+.DS_Store
+node_modules/
+.wrangler/
+.dev.vars
+.env
+.env.local
+.pilot-keys.local
+*.egg-info/
+dist/
+dist/catalog-staging/
+*.log
+worker-configuration.d.ts
+examples/playwright/.mailagent-context.json
+test-results/
+playwright-report/
+blob-report/

@@ -1,0 +1,23 @@
+{
+  "results_dir": "experiments/django-rest-framework/runs/run-drf-phase-2.1-aggregate",
+  "export_type": "aggregate_only",
+  "paired_questions": 42,
+  "per_question_csv": false,
+  "conditions": ["A", "B", "C"],
+  "mean_accuracy_a": 1.35,
+  "mean_accuracy_b": 1.68,
+  "mean_accuracy_c": 1.4,
+  "mean_accuracy_delta_b_vs_a": 0.33,
+  "mean_accuracy_delta_c_vs_a": 0.05,
+  "mean_tokens_in_a": 76000,
+  "mean_tokens_in_b": 2000,
+  "mean_tokens_in_c": 18000,
+  "ccr_tokens_b_vs_a": 38,
+  "ccr_tokens_c_vs_a": 4.2,
+  "hallucination_rate_a": 0.18,
+  "hallucination_rate_b": 0.22,
+  "hallucination_rate_c": 0.11,
+  "hypothesis_supported": true,
+  "production_default": "C",
+  "production_default_rationale": "Lower hallucination (11% vs 22% B) on integrated framework"
+}

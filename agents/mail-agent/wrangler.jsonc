@@ -1,0 +1,70 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "mailagent",
+  "account_id": "42ae092824ce3429ee3f914b43603273",
+  "main": "src/index.ts",
+  "workers_dev": true,
+  "compatibility_date": "2026-01-15",
+  "compatibility_flags": ["nodejs_compat_v2"],
+  "vars": {
+    "DEFAULT_TTL_MINUTES": "30",
+    "RATE_LIMIT_PER_MINUTE": "120",
+    "RATE_LIMIT_KV_WRITE_EVERY": "10",
+    "AUDIT_RETENTION_DAYS": "90"
+  },
+  "kv_namespaces": [
+    {
+      "binding": "RATE_LIMIT",
+      "id": "e9ce5a89a90f47b4993e1a7f78b31a1b",
+      "preview_id": "ebef170c6d9f4c5d8496c6862f6bc374"
+    }
+  ],
+  "queues": {
+    "producers": [
+      {
+        "binding": "MAIL_QUEUE",
+        "queue": "mailagent-email"
+      }
+    ],
+    "consumers": [
+      {
+        "queue": "mailagent-email",
+        "max_batch_size": 5,
+        "max_batch_timeout": 2,
+        "max_retries": 5,
+        "dead_letter_queue": "mailagent-email-dlq"
+      }
+    ]
+  },
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "INBOX_WAIT",
+        "class_name": "InboxWait"
+      }
+    ]
+  },
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_sqlite_classes": ["InboxWait"]
+    }
+  ],
+  "triggers": {
+    "crons": ["0 * * * *"]
+  },
+  "r2_buckets": [
+    {
+      "binding": "RAW_MIME",
+      "bucket_name": "mailagent-raw-mime"
+    }
+  ],
+  "ai": {
+    "binding": "AI"
+  },
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS",
+    "run_worker_first": true
+  }
+}

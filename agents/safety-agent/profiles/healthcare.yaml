@@ -1,0 +1,57 @@
+# Профиль: здравоохранение (HIPAA-подобные сроки, умеренный горизонт миграции)
+id: healthcare
+name: Healthcare / PHI
+description: Медицинские записи, PHI — длительное хранение, регуляторный аудит
+
+organization_defaults:
+  migration_years: 3
+  quantum_horizon_years: 10
+
+adversary:
+  classical: true
+  quantum_record: true
+  ai_implementation: true
+
+defaults:
+  confidentiality_years: 20
+
+apply_ai_governance_template: true
+
+starter_flows:
+  - id: phi-at-rest
+    name: PHI / EHR at rest
+    confidentiality_years: 20
+    storage: long
+    hndl_exposed: true
+    crypto:
+      key_exchange: [RSA-2048]
+      signatures: []
+      symmetric: [AES-256-GCM]
+      hash: [SHA-256]
+    tags: [phi, hipaa, todo-review]
+  - id: clinical-api-tls
+    name: Clinical API / patient portal TLS
+    storage: ephemeral
+    hndl_exposed: true
+    crypto:
+      key_exchange: [ECDHE-P256]
+      signatures: []
+      symmetric: [AES-256-GCM]
+      hash: [SHA-256]
+    tags: [api, tls, healthcare, todo-review]
+
+recommended_policies:
+  - id: health-no-rsa-long
+    when:
+      retention_tier: long
+      has_algorithm: RSA-2048
+    action: block
+    recommend:
+      key_exchange: ML-KEM-768
+      hybrid_with: X25519
+  - id: health-archive-signatures
+    when:
+      retention_tier: permanent
+    action: recommend
+    recommend:
+      key_exchange: ML-KEM-1024

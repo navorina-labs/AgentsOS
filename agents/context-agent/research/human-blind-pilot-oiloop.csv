@@ -1,0 +1,11 @@
+display_id,preference,notes
+Q01,1,SystemPromptBuilder vs wrong AgentCriticService
+Q02,2,A empty; B headless RemindersReader
+Q03,Equal,Both valid; A tables detail vs B compression
+Q04,Equal,Same FilePreviewSheet
+Q05,2,A empty; B full sandbox flow
+Q06,2,B matches GestureEngine/AVCapture/Vision chain
+Q07,2,A empty; B MailReader JXA path
+Q08,Equal,Both state no public Messages API
+Q09,1,Browser-only; B over-scoped integrations
+Q10,2,B SafariReader JXA; A vague/missing

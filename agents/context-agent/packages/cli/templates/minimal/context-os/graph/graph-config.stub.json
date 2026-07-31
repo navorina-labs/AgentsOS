@@ -1,0 +1,28 @@
+{
+  "description": "Graph index builder config — files scanned for Condition C",
+  "includeRoots": [
+    "README.md",
+    "package.json",
+    "AGENTS.md"
+  ],
+  "includeDirs": [
+    { "dir": "src", "extensions": [".ts", ".tsx", ".js", ".jsx", ".mjs", ".py", ".swift"] },
+    { "dir": "docs", "extensions": [".md"] },
+    { "dir": "migrations", "extensions": [".sql"] }
+  ],
+  "excludeDirNames": [
+    "node_modules",
+    ".git",
+    "dist",
+    "build",
+    "coverage",
+    ".next",
+    "context-os/eval/results"
+  ],
+  "excludePathContains": [
+    "context-os/eval/results/",
+    "node_modules/"
+  ],
+  "maxPreviewChars": 2000,
+  "keywordLinkThreshold": 3
+}

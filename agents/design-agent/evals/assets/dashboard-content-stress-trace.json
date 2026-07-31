@@ -1,0 +1,1602 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-07-29T16:00:58.374011+00:00",
+  "source": {
+    "file": "visual-dashboard-after.html",
+    "sha256": "d73b9b02a552358c0b773afb826cc36ac6aa25cf9b225a342485cc6498ee8753"
+  },
+  "harness": {
+    "file": "dashboard-content-stress.js",
+    "sha256": "acf251c6a85548bf659bcae1f9e4eb78660ffecdcdfa320059f7c1bd5141fb5a"
+  },
+  "evidence_boundaries": {
+    "pseudo_locale": "Pseudo-localized strings test growth and wrapping only; they do not validate translation quality, grammar, cultural fit, or locale formatting.",
+    "rtl": "Setting Arabic content and document direction tests this reproduced DOM and CSS render, not linguistic quality or every bidirectional edge case.",
+    "text_200": "The author stylesheet doubles declared text sizes for deterministic text-only stress. It is not browser zoom, OS text scaling, or user settings.",
+    "reflow_320": "A 320 CSS px viewport is direct narrow-reflow evidence. It is not proof of 400% browser zoom from a 1280 px viewport.",
+    "overflow": "Page metrics and the first viewport capture do not prove below-fold reachability, nested scrolling, focus visibility, or every content value."
+  },
+  "states": [
+    {
+      "id": "pseudo-1440x1000",
+      "mode": "pseudo",
+      "viewport": {
+        "width": 1440,
+        "height": 1000,
+        "device_scale_factor": 1
+      },
+      "method": "DOM content-stress harness",
+      "checks": [
+        {
+          "expression": "window.__contentStress.mode",
+          "expected": "pseudo",
+          "observed": "pseudo",
+          "passed": true,
+          "enforced": true
+        },
+        {
+          "expression": "innerWidth",
+          "expected": 1440,
+          "observed": 1440,
+          "passed": true,
+          "enforced": true
+        },
+        {
+          "expression": "document.documentElement.scrollWidth <= document.documentElement.clientWidth",
+          "expected": true,
+          "observed": true,
+          "passed": true,
+          "enforced": false,
+          "note": "Page-level horizontal overflow is a contract failure unless a documented two-dimensional region is responsible and independently reachable."
+        },
+        {
+          "expression": "((() => {\n  const visible = e => {\n    const s = getComputedStyle(e);\n    const r = e.getBoundingClientRect();\n    return s.display !== 'none' && s.visibility !== 'hidden' && r.width > 0 && r.height > 0;\n  };\n  const label = e => ({\n    tag: e.tagName.toLowerCase(),\n    id: e.id || null,\n    className: typeof e.className === 'string' ? e.className : null,\n    text: (e.innerText || e.textContent || '').trim().replace(/\\s+/g, ' ').slice(0, 180)\n  });\n  const nonScrollableOverflow = [...document.querySelectorAll('body *')]\n    .filter(visible)\n    .filter(e => {\n      const s = getComputedStyle(e);\n      return e.scrollWidth > e.clientWidth + 1 &&\n        !['auto', 'scroll'].includes(s.overflowX);\n    })\n    .map(e => ({\n      ...label(e),\n      clientWidth: e.clientWidth,\n      scrollWidth: e.scrollWidth,\n      overflowX: getComputedStyle(e).overflowX\n    }))\n    .slice(0, 40);\n  const clippedText = [...document.querySelectorAll('body *')]\n    .filter(visible)\n    .filter(e => {\n      const s = getComputedStyle(e);\n      if (e.matches('.visually-hidden') || e.closest('.visually-hidden')) return false;\n      const hasText = [...e.childNodes].some(n => n.nodeType === Node.TEXT_NODE && n.textContent.trim());\n      return hasText &&\n        (e.scrollWidth > e.clientWidth + 1 || e.scrollHeight > e.clientHeight + 1) &&\n        ['hidden', 'clip'].includes(s.overflow);\n    })\n    .map(e => ({\n      ...label(e),\n      clientWidth: e.clientWidth,\n      scrollWidth: e.scrollWidth,\n      clientHeight: e.clientHeight,\n      scrollHeight: e.scrollHeight\n    }))\n    .slice(0, 40);\n  const offscreenInteractive = [...document.querySelectorAll(\n    'a[href],button,input,select,textarea,summary,[tabindex]:not([tabindex=\"-1\"])'\n  )]\n    .filter(visible)\n    .map(e => ({e, r: e.getBoundingClientRect()}))\n    .filter(({r}) => r.right <= 0 || r.left >= innerWidth)\n    .map(({e, r}) => ({...label(e), left:r.left, right:r.right, width:r.width}))\n    .slice(0, 40);\n  const rect = selector => {\n    const e = document.querySelector(selector);\n    if (!e || !visible(e)) return null;\n    const r = e.getBoundingClientRect();\n    return {top:r.top,left:r.left,right:r.right,bottom:r.bottom,width:r.width,height:r.height};\n  };\n  const critical = document.querySelector('.incident.critical');\n  const cs = critical ? getComputedStyle(critical) : null;\n  return {\n    viewport: {width:innerWidth,height:innerHeight,dpr:devicePixelRatio},\n    document: {\n      clientWidth: document.documentElement.clientWidth,\n      scrollWidth: document.documentElement.scrollWidth,\n      horizontalOverflow:\n        document.documentElement.scrollWidth > document.documentElement.clientWidth\n    },\n    language: document.documentElement.lang,\n    direction: document.dir || getComputedStyle(document.documentElement).direction,\n    headerRects: {\n      title: rect('.site-header h1'),\n      search: rect('.global-search'),\n      actions: rect('.header-actions')\n    },\n    criticalBorder: cs ? {\n      inlineStart: cs.borderInlineStartWidth,\n      left: cs.borderLeftWidth,\n      right: cs.borderRightWidth\n    } : null,\n    visibleRepresentations: {\n      table: Boolean(document.querySelector('.table-wrap') && visible(document.querySelector('.table-wrap'))),\n      ticketList: Boolean(document.querySelector('.ticket-list') && visible(document.querySelector('.ticket-list')))\n    },\n    nonScrollableOverflow,\n    clippedText,\n    offscreenInteractive\n  };\n})()).offscreenInteractive.length",
+          "expected": 0,
+          "observed": 0,
+          "passed": true,
+          "enforced": false,
+          "note": "Visible interactive controls must not sit wholly outside the viewport."
+        },
+        {
+          "expression": "((() => {\n  const visible = e => {\n    const s = getComputedStyle(e);\n    const r = e.getBoundingClientRect();\n    return s.display !== 'none' && s.visibility !== 'hidden' && r.width > 0 && r.height > 0;\n  };\n  const label = e => ({\n    tag: e.tagName.toLowerCase(),\n    id: e.id || null,\n    className: typeof e.className === 'string' ? e.className : null,\n    text: (e.innerText || e.textContent || '').trim().replace(/\\s+/g, ' ').slice(0, 180)\n  });\n  const nonScrollableOverflow = [...document.querySelectorAll('body *')]\n    .filter(visible)\n    .filter(e => {\n      const s = getComputedStyle(e);\n      return e.scrollWidth > e.clientWidth + 1 &&\n        !['auto', 'scroll'].includes(s.overflowX);\n    })\n    .map(e => ({\n      ...label(e),\n      clientWidth: e.clientWidth,\n      scrollWidth: e.scrollWidth,\n      overflowX: getComputedStyle(e).overflowX\n    }))\n    .slice(0, 40);\n  const clippedText = [...document.querySelectorAll('body *')]\n    .filter(visible)\n    .filter(e => {\n      const s = getComputedStyle(e);\n      if (e.matches('.visually-hidden') || e.closest('.visually-hidden')) return false;\n      const hasText = [...e.childNodes].some(n => n.nodeType === Node.TEXT_NODE && n.textContent.trim());\n      return hasText &&\n        (e.scrollWidth > e.clientWidth + 1 || e.scrollHeight > e.clientHeight + 1) &&\n        ['hidden', 'clip'].includes(s.overflow);\n    })\n    .map(e => ({\n      ...label(e),\n      clientWidth: e.clientWidth,\n      scrollWidth: e.scrollWidth,\n      clientHeight: e.clientHeight,\n      scrollHeight: e.scrollHeight\n    }))\n    .slice(0, 40);\n  const offscreenInteractive = [...document.querySelectorAll(\n    'a[href],button,input,select,textarea,summary,[tabindex]:not([tabindex=\"-1\"])'\n  )]\n    .filter(visible)\n    .map(e => ({e, r: e.getBoundingClientRect()}))\n    .filter(({r}) => r.right <= 0 || r.left >= innerWidth)\n    .map(({e, r}) => ({...label(e), left:r.left, right:r.right, width:r.width}))\n    .slice(0, 40);\n  const rect = selector => {\n    const e = document.querySelector(selector);\n    if (!e || !visible(e)) return null;\n    const r = e.getBoundingClientRect();\n    return {top:r.top,left:r.left,right:r.right,bottom:r.bottom,width:r.width,height:r.height};\n  };\n  const critical = document.querySelector('.incident.critical');\n  const cs = critical ? getComputedStyle(critical) : null;\n  return {\n    viewport: {width:innerWidth,height:innerHeight,dpr:devicePixelRatio},\n    document: {\n      clientWidth: document.documentElement.clientWidth,\n      scrollWidth: document.documentElement.scrollWidth,\n      horizontalOverflow:\n        document.documentElement.scrollWidth > document.documentElement.clientWidth\n    },\n    language: document.documentElement.lang,\n    direction: document.dir || getComputedStyle(document.documentElement).direction,\n    headerRects: {\n      title: rect('.site-header h1'),\n      search: rect('.global-search'),\n      actions: rect('.header-actions')\n    },\n    criticalBorder: cs ? {\n      inlineStart: cs.borderInlineStartWidth,\n      left: cs.borderLeftWidth,\n      right: cs.borderRightWidth\n    } : null,\n    visibleRepresentations: {\n      table: Boolean(document.querySelector('.table-wrap') && visible(document.querySelector('.table-wrap'))),\n      ticketList: Boolean(document.querySelector('.ticket-list') && visible(document.querySelector('.ticket-list')))\n    },\n    nonScrollableOverflow,\n    clippedText,\n    offscreenInteractive\n  };\n})()).clippedText.length",
+          "expected": 0,
+          "observed": 0,
+          "passed": true,
+          "enforced": false,
+          "note": "Clipped text requires a documented, reachable full-value path."
+        },
+        {
+          "expression": "document.documentElement.lang",
+          "expected": "de-x-pseudo",
+          "observed": "de-x-pseudo",
+          "passed": true,
+          "enforced": true
+        }
+      ],
+      "metrics": {
+        "viewport": {
+          "width": 1440,
+          "height": 1000,
+          "dpr": 1
+        },
+        "document": {
+          "clientWidth": 1440,
+          "scrollWidth": 1440,
+          "horizontalOverflow": false
+        },
+        "language": "de-x-pseudo",
+        "direction": "ltr",
+        "headerRects": {
+          "title": {
+            "top": 41.4375,
+            "left": 32,
+            "right": 482.046875,
+            "bottom": 65.4375,
+            "width": 450.046875,
+            "height": 24
+          },
+          "search": {
+            "top": 33.4375,
+            "left": 498.046875,
+            "right": 812.875,
+            "bottom": 73.4375,
+            "width": 314.828125,
+            "height": 40
+          },
+          "actions": {
+            "top": 14,
+            "left": 828.875,
+            "right": 1408,
+            "bottom": 92.890625,
+            "width": 579.125,
+            "height": 78.890625
+          }
+        },
+        "criticalBorder": {
+          "inlineStart": "5px",
+          "left": "5px",
+          "right": "1px"
+        },
+        "visibleRepresentations": {
+          "table": true,
+          "ticketList": false
+        },
+        "nonScrollableOverflow": [
+          {
+            "tag": "label",
+            "id": null,
+            "className": "visually-hidden",
+            "text": "Search everything",
+            "clientWidth": 1,
+            "scrollWidth": 113,
+            "overflowX": "hidden"
+          },
+          {
+            "tag": "div",
+            "id": null,
+            "className": "",
+            "text": "MAJOR Verzögerung bei der Unternehmensanmeldung Owner: Maya · 86 tickets",
+            "clientWidth": 163,
+            "scrollWidth": 185,
+            "overflowX": "visible"
+          },
+          {
+            "tag": "h3",
+            "id": null,
+            "className": "",
+            "text": "Verzögerung bei der Unternehmensanmeldung",
+            "clientWidth": 163,
+            "scrollWidth": 185,
+            "overflowX": "visible"
+          },
+          {
+            "tag": "select",
+            "id": "view",
+            "className": "",
+            "text": "[!! Alle gespeicherten Ansichten anzeigen !!]",
+            "clientWidth": 88,
+            "scrollWidth": 285,
+            "overflowX": "visible"
+          },
+          {
+            "tag": "div",
+            "id": null,
+            "className": "field",
+            "text": "[!! Bearbeitungsstatus auswählen !!] [!! Alle Bearbeitungsstatus anzeigen !!]",
+            "clientWidth": 90,
+            "scrollWidth": 112,
+            "overflowX": "visible"
+          },
+          {
+            "tag": "select",
+            "id": "status",
+            "className": "",
+            "text": "[!! Alle Bearbeitungsstatus anzeigen !!]",
+            "clientWidth": 110,
+            "scrollWidth": 252,
+            "overflowX": "visible"
+          },
+          {
+            "tag": "select",
+            "id": "priority",
+            "className": "",
+            "text": "[!! Alle geschäftlichen Prioritäten anzeigen !!]",
+            "clientWidth": 88,
+            "scrollWidth": 290,
+            "overflowX": "visible"
+          },
+          {
+            "tag": "select",
+            "id": "owner",
+            "className": "",
+            "text": "[!! Alle verantwortlichen Personen anzeigen !!]",
+            "clientWidth": 88,
+            "scrollWidth": 298,
+            "overflowX": "visible"
+          },
+          {
+            "tag": "select",
+            "id": "channel",
+            "className": "",
+            "text": "[!! Alle Eingangskanäle anzeigen !!]",
+            "clientWidth": 88,
+            "scrollWidth": 232,
+            "overflowX": "visible"
+          },
+          {
+            "tag": "label",
+            "id": null,
+            "className": "visually-hidden",
+            "text": "Select all tickets",
+            "clientWidth": 1,
+            "scrollWidth": 93,
+            "overflowX": "hidden"
+          },
+          {
+            "tag": "label",
+            "id": null,
+            "className": "visually-hidden",
+            "text": "Select ticket 8941",
+            "clientWidth": 1,
+            "scrollWidth": 95,
+            "overflowX": "hidden"
+          },
+          {
+            "tag": "label",
+            "id": null,
+            "className": "visually-hidden",
+            "text": "Select ticket 8937",
+            "clientWidth": 1,
+            "scrollWidth": 95,
+            "overflowX": "hidden"
+          },
+          {
+            "tag": "label",
+            "id": null,
+            "className": "visually-hidden",
+            "text": "Select ticket 8928",
+            "clientWidth": 1,
+            "scrollWidth": 95,
+            "overflowX": "hidden"
+          },
+          {
+            "tag": "label",
+            "id": null,
+            "className": "visually-hidden",
+            "text": "Select ticket 8919",
+            "clientWidth": 1,
+            "scrollWidth": 95,
+            "overflowX": "hidden"
+          },
+          {
+            "tag": "label",
+            "id": null,
+            "className": "visually-hidden",
+            "text": "Select ticket 8911",
+            "clientWidth": 1,
+            "scrollWidth": 94,
+            "overflowX": "hidden"
+          }
+        ],
+        "clippedText": [],
+        "offscreenInteractive": []
+      },
+      "screenshot": "dashboard-content-pseudo-1440x1000.png",
+      "capture": {
+        "bytes": 208877
+      }
+    },
+    {
+      "id": "pseudo-768x1000",
+      "mode": "pseudo",
+      "viewport": {
+        "width": 768,
+        "height": 1000,
+        "device_scale_factor": 1
+      },
+      "method": "DOM content-stress harness",
+      "checks": [
+        {
+          "expression": "window.__contentStress.mode",
+          "expected": "pseudo",
+          "observed": "pseudo",
+          "passed": true,
+          "enforced": true
+        },
+        {
+          "expression": "innerWidth",
+          "expected": 768,
+          "observed": 768,
+          "passed": true,
+          "enforced": true
+        },
+        {
+          "expression": "document.documentElement.scrollWidth <= document.documentElement.clientWidth",
+          "expected": true,
+          "observed": false,
+          "passed": false,
+          "enforced": false,
+          "note": "Page-level horizontal overflow is a contract failure unless a documented two-dimensional region is responsible and independently reachable."
+        },
+        {
+          "expression": "((() => {\n  const visible = e => {\n    const s = getComputedStyle(e);\n    const r = e.getBoundingClientRect();\n    return s.display !== 'none' && s.visibility !== 'hidden' && r.width > 0 && r.height > 0;\n  };\n  const label = e => ({\n    tag: e.tagName.toLowerCase(),\n    id: e.id || null,\n    className: typeof e.className === 'string' ? e.className : null,\n    text: (e.innerText || e.textContent || '').trim().replace(/\\s+/g, ' ').slice(0, 180)\n  });\n  const nonScrollableOverflow = [...document.querySelectorAll('body *')]\n    .filter(visible)\n    .filter(e => {\n      const s = getComputedStyle(e);\n      return e.scrollWidth > e.clientWidth + 1 &&\n        !['auto', 'scroll'].includes(s.overflowX);\n    })\n    .map(e => ({\n      ...label(e),\n      clientWidth: e.clientWidth,\n      scrollWidth: e.scrollWidth,\n      overflowX: getComputedStyle(e).overflowX\n    }))\n    .slice(0, 40);\n  const clippedText = [...document.querySelectorAll('body *')]\n    .filter(visible)\n    .filter(e => {\n      const s = getComputedStyle(e);\n      if (e.matches('.visually-hidden') || e.closest('.visually-hidden')) return false;\n      const hasText = [...e.childNodes].some(n => n.nodeType === Node.TEXT_NODE && n.textContent.trim());\n      return hasText &&\n        (e.scrollWidth > e.clientWidth + 1 || e.scrollHeight > e.clientHeight + 1) &&\n        ['hidden', 'clip'].includes(s.overflow);\n    })\n    .map(e => ({\n      ...label(e),\n      clientWidth: e.clientWidth,\n      scrollWidth: e.scrollWidth,\n      clientHeight: e.clientHeight,\n      scrollHeight: e.scrollHeight\n    }))\n    .slice(0, 40);\n  const offscreenInteractive = [...document.querySelectorAll(\n    'a[href],button,input,select,textarea,summary,[tabindex]:not([tabindex=\"-1\"])'\n  )]\n    .filter(visible)\n    .map(e => ({e, r: e.getBoundingClientRect()}))\n    .filter(({r}) => r.right <= 0 || r.left >= innerWidth)\n    .map(({e, r}) => ({...label(e), left:r.left, right:r.right, width:r.width}))\n    .slice(0, 40);\n  const rect = selector => {\n    const e = document.querySelector(selector);\n    if (!e || !visible(e)) return null;\n    const r = e.getBoundingClientRect();\n    return {top:r.top,left:r.left,right:r.right,bottom:r.bottom,width:r.width,height:r.height};\n  };\n  const critical = document.querySelector('.incident.critical');\n  const cs = critical ? getComputedStyle(critical) : null;\n  return {\n    viewport: {width:innerWidth,height:innerHeight,dpr:devicePixelRatio},\n    document: {\n      clientWidth: document.documentElement.clientWidth,\n      scrollWidth: document.documentElement.scrollWidth,\n      horizontalOverflow:\n        document.documentElement.scrollWidth > document.documentElement.clientWidth\n    },\n    language: document.documentElement.lang,\n    direction: document.dir || getComputedStyle(document.documentElement).direction,\n    headerRects: {\n      title: rect('.site-header h1'),\n      search: rect('.global-search'),\n      actions: rect('.header-actions')\n    },\n    criticalBorder: cs ? {\n      inlineStart: cs.borderInlineStartWidth,\n      left: cs.borderLeftWidth,\n      right: cs.borderRightWidth\n    } : null,\n    visibleRepresentations: {\n      table: Boolean(document.querySelector('.table-wrap') && visible(document.querySelector('.table-wrap'))),\n      ticketList: Boolean(document.querySelector('.ticket-list') && visible(document.querySelector('.ticket-list')))\n    },\n    nonScrollableOverflow,\n    clippedText,\n    offscreenInteractive\n  };\n})()).offscreenInteractive.length",
+          "expected": 0,
+          "observed": 0,
+          "passed": true,
+          "enforced": false,
+          "note": "Visible interactive controls must not sit wholly outside the viewport."
+        },
+        {
+          "expression": "((() => {\n  const visible = e => {\n    const s = getComputedStyle(e);\n    const r = e.getBoundingClientRect();\n    return s.display !== 'none' && s.visibility !== 'hidden' && r.width > 0 && r.height > 0;\n  };\n  const label = e => ({\n    tag: e.tagName.toLowerCase(),\n    id: e.id || null,\n    className: typeof e.className === 'string' ? e.className : null,\n    text: (e.innerText || e.textContent || '').trim().replace(/\\s+/g, ' ').slice(0, 180)\n  });\n  const nonScrollableOverflow = [...document.querySelectorAll('body *')]\n    .filter(visible)\n    .filter(e => {\n      const s = getComputedStyle(e);\n      return e.scrollWidth > e.clientWidth + 1 &&\n        !['auto', 'scroll'].includes(s.overflowX);\n    })\n    .map(e => ({\n      ...label(e),\n      clientWidth: e.clientWidth,\n      scrollWidth: e.scrollWidth,\n      overflowX: getComputedStyle(e).overflowX\n    }))\n    .slice(0, 40);\n  const clippedText = [...document.querySelectorAll('body *')]\n    .filter(visible)\n    .filter(e => {\n      const s = getComputedStyle(e);\n      if (e.matches('.visually-hidden') || e.closest('.visually-hidden')) return false;\n      const hasText = [...e.childNodes].some(n => n.nodeType === Node.TEXT_NODE && n.textContent.trim());\n      return hasText &&\n        (e.scrollWidth > e.clientWidth + 1 || e.scrollHeight > e.clientHeight + 1) &&\n        ['hidden', 'clip'].includes(s.overflow);\n    })\n    .map(e => ({\n      ...label(e),\n      clientWidth: e.clientWidth,\n      scrollWidth: e.scrollWidth,\n      clientHeight: e.clientHeight,\n      scrollHeight: e.scrollHeight\n    }))\n    .slice(0, 40);\n  const offscreenInteractive = [...document.querySelectorAll(\n    'a[href],button,input,select,textarea,summary,[tabindex]:not([tabindex=\"-1\"])'\n  )]\n    .filter(visible)\n    .map(e => ({e, r: e.getBoundingClientRect()}))\n    .filter(({r}) => r.right <= 0 || r.left >= innerWidth)\n    .map(({e, r}) => ({...label(e), left:r.left, right:r.right, width:r.width}))\n    .slice(0, 40);\n  const rect = selector => {\n    const e = document.querySelector(selector);\n    if (!e || !visible(e)) return null;\n    const r = e.getBoundingClientRect();\n    return {top:r.top,left:r.left,right:r.right,bottom:r.bottom,width:r.width,height:r.height};\n  };\n  const critical = document.querySelector('.incident.critical');\n  const cs = critical ? getComputedStyle(critical) : null;\n  return {\n    viewport: {width:innerWidth,height:innerHeight,dpr:devicePixelRatio},\n    document: {\n      clientWidth: document.documentElement.clientWidth,\n      scrollWidth: document.documentElement.scrollWidth,\n      horizontalOverflow:\n        document.documentElement.scrollWidth > document.documentElement.clientWidth\n    },\n    language: document.documentElement.lang,\n    direction: document.dir || getComputedStyle(document.documentElement).direction,\n    headerRects: {\n      title: rect('.site-header h1'),\n      search: rect('.global-search'),\n      actions: rect('.header-actions')\n    },\n    criticalBorder: cs ? {\n      inlineStart: cs.borderInlineStartWidth,\n      left: cs.borderLeftWidth,\n      right: cs.borderRightWidth\n    } : null,\n    visibleRepresentations: {\n      table: Boolean(document.querySelector('.table-wrap') && visible(document.querySelector('.table-wrap'))),\n      ticketList: Boolean(document.querySelector('.ticket-list') && visible(document.querySelector('.ticket-list')))\n    },\n    nonScrollableOverflow,\n    clippedText,\n    offscreenInteractive\n  };\n})()).clippedText.length",
+          "expected": 0,
+          "observed": 0,
+          "passed": true,
+          "enforced": false,
+          "note": "Clipped text requires a documented, reachable full-value path."
+        },
+        {
+          "expression": "document.documentElement.lang",
+          "expected": "de-x-pseudo",
+          "observed": "de-x-pseudo",
+          "passed": true,
+          "enforced": true
+        }
+      ],
+      "metrics": {
+        "viewport": {
+          "width": 768,
+          "height": 1000,
+          "dpr": 1
+        },
+        "document": {
+          "clientWidth": 768,
+          "scrollWidth": 990,
+          "horizontalOverflow": true
+        },
+        "language": "de-x-pseudo",
+        "direction": "ltr",
+        "headerRects": {
+          "title": {
+            "top": 61.734375,
+            "left": 19.1875,
+            "right": 469.234375,
+            "bottom": 85.734375,
+            "width": 450.046875,
+            "height": 24
+          },
+          "search": {
+            "top": 149.484375,
+            "left": 19.1875,
+            "right": 989.53125,
+            "bottom": 189.484375,
+            "width": 970.34375,
+            "height": 40
+          },
+          "actions": {
+            "top": 14,
+            "left": 485.234375,
+            "right": 989.53125,
+            "bottom": 133.484375,
+            "width": 504.296875,
+            "height": 119.484375
+          }
+        },
+        "criticalBorder": {
+          "inlineStart": "5px",
+          "left": "5px",
+          "right": "1px"
+        },
+        "visibleRepresentations": {
+          "table": false,
+          "ticketList": true
+        },
+        "nonScrollableOverflow": [
+          {
+            "tag": "header",
+            "id": null,
+            "className": "site-header",
+            "text": "[!! Betriebsübersicht für Kundendienstteams !!] Search everything [!! Neuen Supportvorgang erstellen !!] [!! Bericht exportieren und herunterladen !!] [!! Arbeitsbereichseinstellun",
+            "clientWidth": 768,
+            "scrollWidth": 990,
+            "overflowX": "visible"
+          },
+          {
+            "tag": "label",
+            "id": null,
+            "className": "visually-hidden",
+            "text": "Search everything",
+            "clientWidth": 1,
+            "scrollWidth": 113,
+            "overflowX": "hidden"
+          },
+          {
+            "tag": "div",
+            "id": null,
+            "className": "",
+            "text": "CRITICAL Zahlungsabwicklungs- und Rückerstattungsschnittstelle [!! Verantwortlich: Noch nicht zugewiesen · 10.842 Vorgänge !!]",
+            "clientWidth": 151,
+            "scrollWidth": 206,
+            "overflowX": "visible"
+          },
+          {
+            "tag": "h3",
+            "id": null,
+            "className": "",
+            "text": "Zahlungsabwicklungs- und Rückerstattungsschnittstelle",
+            "clientWidth": 151,
+            "scrollWidth": 206,
+            "overflowX": "visible"
+          },
+          {
+            "tag": "select",
+            "id": "view",
+            "className": "",
+            "text": "[!! Alle gespeicherten Ansichten anzeigen !!]",
+            "clientWidth": 230,
+            "scrollWidth": 285,
+            "overflowX": "visible"
+          },
+          {
+            "tag": "select",
+            "id": "status",
+            "className": "",
+            "text": "[!! Alle Bearbeitungsstatus anzeigen !!]",
+            "clientWidth": 230,
+            "scrollWidth": 252,
+            "overflowX": "visible"
+          },
+          {
+            "tag": "select",
+            "id": "priority",
+            "className": "",
+            "text": "[!! Alle geschäftlichen Prioritäten anzeigen !!]",
+            "clientWidth": 230,
+            "scrollWidth": 290,
+            "overflowX": "visible"
+          },
+          {
+            "tag": "select",
+            "id": "owner",
+            "className": "",
+            "text": "[!! Alle verantwortlichen Personen anzeigen !!]",
+            "clientWidth": 230,
+            "scrollWidth": 298,
+            "overflowX": "visible"
+          },
+          {
+            "tag": "select",
+            "id": "channel",
+            "className": "",
+            "text": "[!! Alle Eingangskanäle anzeigen !!]",
+            "clientWidth": 230,
+            "scrollWidth": 232,
+            "overflowX": "visible"
+          }
+        ],
+        "clippedText": [],
+        "offscreenInteractive": []
+      },
+      "screenshot": "dashboard-content-pseudo-768x1000.png",
+      "capture": {
+        "bytes": 141952
+      }
+    },
+    {
+      "id": "pseudo-390x1000",
+      "mode": "pseudo",
+      "viewport": {
+        "width": 390,
+        "height": 1000,
+        "device_scale_factor": 1
+      },
+      "method": "DOM content-stress harness",
+      "checks": [
+        {
+          "expression": "window.__contentStress.mode",
+          "expected": "pseudo",
+          "observed": "pseudo",
+          "passed": true,
+          "enforced": true
+        },
+        {
+          "expression": "innerWidth",
+          "expected": 390,
+          "observed": 390,
+          "passed": true,
+          "enforced": true
+        },
+        {
+          "expression": "document.documentElement.scrollWidth <= document.documentElement.clientWidth",
+          "expected": true,
+          "observed": false,
+          "passed": false,
+          "enforced": false,
+          "note": "Page-level horizontal overflow is a contract failure unless a documented two-dimensional region is responsible and independently reachable."
+        },
+        {
+          "expression": "((() => {\n  const visible = e => {\n    const s = getComputedStyle(e);\n    const r = e.getBoundingClientRect();\n    return s.display !== 'none' && s.visibility !== 'hidden' && r.width > 0 && r.height > 0;\n  };\n  const label = e => ({\n    tag: e.tagName.toLowerCase(),\n    id: e.id || null,\n    className: typeof e.className === 'string' ? e.className : null,\n    text: (e.innerText || e.textContent || '').trim().replace(/\\s+/g, ' ').slice(0, 180)\n  });\n  const nonScrollableOverflow = [...document.querySelectorAll('body *')]\n    .filter(visible)\n    .filter(e => {\n      const s = getComputedStyle(e);\n      return e.scrollWidth > e.clientWidth + 1 &&\n        !['auto', 'scroll'].includes(s.overflowX);\n    })\n    .map(e => ({\n      ...label(e),\n      clientWidth: e.clientWidth,\n      scrollWidth: e.scrollWidth,\n      overflowX: getComputedStyle(e).overflowX\n    }))\n    .slice(0, 40);\n  const clippedText = [...document.querySelectorAll('body *')]\n    .filter(visible)\n    .filter(e => {\n      const s = getComputedStyle(e);\n      if (e.matches('.visually-hidden') || e.closest('.visually-hidden')) return false;\n      const hasText = [...e.childNodes].some(n => n.nodeType === Node.TEXT_NODE && n.textContent.trim());\n      return hasText &&\n        (e.scrollWidth > e.clientWidth + 1 || e.scrollHeight > e.clientHeight + 1) &&\n        ['hidden', 'clip'].includes(s.overflow);\n    })\n    .map(e => ({\n      ...label(e),\n      clientWidth: e.clientWidth,\n      scrollWidth: e.scrollWidth,\n      clientHeight: e.clientHeight,\n      scrollHeight: e.scrollHeight\n    }))\n    .slice(0, 40);\n  const offscreenInteractive = [...document.querySelectorAll(\n    'a[href],button,input,select,textarea,summary,[tabindex]:not([tabindex=\"-1\"])'\n  )]\n    .filter(visible)\n    .map(e => ({e, r: e.getBoundingClientRect()}))\n    .filter(({r}) => r.right <= 0 || r.left >= innerWidth)\n    .map(({e, r}) => ({...label(e), left:r.left, right:r.right, width:r.width}))\n    .slice(0, 40);\n  const rect = selector => {\n    const e = document.querySelector(selector);\n    if (!e || !visible(e)) return null;\n    const r = e.getBoundingClientRect();\n    return {top:r.top,left:r.left,right:r.right,bottom:r.bottom,width:r.width,height:r.height};\n  };\n  const critical = document.querySelector('.incident.critical');\n  const cs = critical ? getComputedStyle(critical) : null;\n  return {\n    viewport: {width:innerWidth,height:innerHeight,dpr:devicePixelRatio},\n    document: {\n      clientWidth: document.documentElement.clientWidth,\n      scrollWidth: document.documentElement.scrollWidth,\n      horizontalOverflow:\n        document.documentElement.scrollWidth > document.documentElement.clientWidth\n    },\n    language: document.documentElement.lang,\n    direction: document.dir || getComputedStyle(document.documentElement).direction,\n    headerRects: {\n      title: rect('.site-header h1'),\n      search: rect('.global-search'),\n      actions: rect('.header-actions')\n    },\n    criticalBorder: cs ? {\n      inlineStart: cs.borderInlineStartWidth,\n      left: cs.borderLeftWidth,\n      right: cs.borderRightWidth\n    } : null,\n    visibleRepresentations: {\n      table: Boolean(document.querySelector('.table-wrap') && visible(document.querySelector('.table-wrap'))),\n      ticketList: Boolean(document.querySelector('.ticket-list') && visible(document.querySelector('.ticket-list')))\n    },\n    nonScrollableOverflow,\n    clippedText,\n    offscreenInteractive\n  };\n})()).offscreenInteractive.length",
+          "expected": 0,
+          "observed": 0,
+          "passed": true,
+          "enforced": false,
+          "note": "Visible interactive controls must not sit wholly outside the viewport."
+        },
+        {
+          "expression": "((() => {\n  const visible = e => {\n    const s = getComputedStyle(e);\n    const r = e.getBoundingClientRect();\n    return s.display !== 'none' && s.visibility !== 'hidden' && r.width > 0 && r.height > 0;\n  };\n  const label = e => ({\n    tag: e.tagName.toLowerCase(),\n    id: e.id || null,\n    className: typeof e.className === 'string' ? e.className : null,\n    text: (e.innerText || e.textContent || '').trim().replace(/\\s+/g, ' ').slice(0, 180)\n  });\n  const nonScrollableOverflow = [...document.querySelectorAll('body *')]\n    .filter(visible)\n    .filter(e => {\n      const s = getComputedStyle(e);\n      return e.scrollWidth > e.clientWidth + 1 &&\n        !['auto', 'scroll'].includes(s.overflowX);\n    })\n    .map(e => ({\n      ...label(e),\n      clientWidth: e.clientWidth,\n      scrollWidth: e.scrollWidth,\n      overflowX: getComputedStyle(e).overflowX\n    }))\n    .slice(0, 40);\n  const clippedText = [...document.querySelectorAll('body *')]\n    .filter(visible)\n    .filter(e => {\n      const s = getComputedStyle(e);\n      if (e.matches('.visually-hidden') || e.closest('.visually-hidden')) return false;\n      const hasText = [...e.childNodes].some(n => n.nodeType === Node.TEXT_NODE && n.textContent.trim());\n      return hasText &&\n        (e.scrollWidth > e.clientWidth + 1 || e.scrollHeight > e.clientHeight + 1) &&\n        ['hidden', 'clip'].includes(s.overflow);\n    })\n    .map(e => ({\n      ...label(e),\n      clientWidth: e.clientWidth,\n      scrollWidth: e.scrollWidth,\n      clientHeight: e.clientHeight,\n      scrollHeight: e.scrollHeight\n    }))\n    .slice(0, 40);\n  const offscreenInteractive = [...document.querySelectorAll(\n    'a[href],button,input,select,textarea,summary,[tabindex]:not([tabindex=\"-1\"])'\n  )]\n    .filter(visible)\n    .map(e => ({e, r: e.getBoundingClientRect()}))\n    .filter(({r}) => r.right <= 0 || r.left >= innerWidth)\n    .map(({e, r}) => ({...label(e), left:r.left, right:r.right, width:r.width}))\n    .slice(0, 40);\n  const rect = selector => {\n    const e = document.querySelector(selector);\n    if (!e || !visible(e)) return null;\n    const r = e.getBoundingClientRect();\n    return {top:r.top,left:r.left,right:r.right,bottom:r.bottom,width:r.width,height:r.height};\n  };\n  const critical = document.querySelector('.incident.critical');\n  const cs = critical ? getComputedStyle(critical) : null;\n  return {\n    viewport: {width:innerWidth,height:innerHeight,dpr:devicePixelRatio},\n    document: {\n      clientWidth: document.documentElement.clientWidth,\n      scrollWidth: document.documentElement.scrollWidth,\n      horizontalOverflow:\n        document.documentElement.scrollWidth > document.documentElement.clientWidth\n    },\n    language: document.documentElement.lang,\n    direction: document.dir || getComputedStyle(document.documentElement).direction,\n    headerRects: {\n      title: rect('.site-header h1'),\n      search: rect('.global-search'),\n      actions: rect('.header-actions')\n    },\n    criticalBorder: cs ? {\n      inlineStart: cs.borderInlineStartWidth,\n      left: cs.borderLeftWidth,\n      right: cs.borderRightWidth\n    } : null,\n    visibleRepresentations: {\n      table: Boolean(document.querySelector('.table-wrap') && visible(document.querySelector('.table-wrap'))),\n      ticketList: Boolean(document.querySelector('.ticket-list') && visible(document.querySelector('.ticket-list')))\n    },\n    nonScrollableOverflow,\n    clippedText,\n    offscreenInteractive\n  };\n})()).clippedText.length",
+          "expected": 0,
+          "observed": 0,
+          "passed": true,
+          "enforced": false,
+          "note": "Clipped text requires a documented, reachable full-value path."
+        },
+        {
+          "expression": "document.documentElement.lang",
+          "expected": "de-x-pseudo",
+          "observed": "de-x-pseudo",
+          "passed": true,
+          "enforced": true
+        }
+      ],
+      "metrics": {
+        "viewport": {
+          "width": 390,
+          "height": 1000,
+          "dpr": 1
+        },
+        "document": {
+          "clientWidth": 390,
+          "scrollWidth": 464,
+          "horizontalOverflow": true
+        },
+        "language": "de-x-pseudo",
+        "direction": "ltr",
+        "headerRects": {
+          "title": {
+            "top": 12,
+            "left": 14,
+            "right": 376,
+            "bottom": 36,
+            "width": 362,
+            "height": 24
+          },
+          "search": {
+            "top": 134.890625,
+            "left": 14,
+            "right": 376,
+            "bottom": 174.890625,
+            "width": 362,
+            "height": 40
+          },
+          "actions": {
+            "top": 46,
+            "left": 14,
+            "right": 376,
+            "bottom": 124.890625,
+            "width": 362,
+            "height": 78.890625
+          }
+        },
+        "criticalBorder": {
+          "inlineStart": "5px",
+          "left": "5px",
+          "right": "1px"
+        },
+        "visibleRepresentations": {
+          "table": false,
+          "ticketList": true
+        },
+        "nonScrollableOverflow": [
+          {
+            "tag": "header",
+            "id": null,
+            "className": "site-header",
+            "text": "[!! Betriebsübersicht für Kundendienstteams !!] Search everything [!! Neuen Supportvorgang erstellen !!] [!! Weitere Aktionen anzeigen !!]",
+            "clientWidth": 390,
+            "scrollWidth": 464,
+            "overflowX": "visible"
+          },
+          {
+            "tag": "h1",
+            "id": null,
+            "className": "",
+            "text": "[!! Betriebsübersicht für Kundendienstteams !!]",
+            "clientWidth": 362,
+            "scrollWidth": 450,
+            "overflowX": "visible"
+          },
+          {
+            "tag": "label",
+            "id": null,
+            "className": "visually-hidden",
+            "text": "Search everything",
+            "clientWidth": 1,
+            "scrollWidth": 113,
+            "overflowX": "hidden"
+          },
+          {
+            "tag": "div",
+            "id": null,
+            "className": "menu-panel",
+            "text": "[!! Bericht exportieren und herunterladen !!] [!! Arbeitsbereichseinstellungen verwalten !!]",
+            "clientWidth": 215,
+            "scrollWidth": 226,
+            "overflowX": "visible"
+          }
+        ],
+        "clippedText": [],
+        "offscreenInteractive": []
+      },
+      "screenshot": "dashboard-content-pseudo-390x1000.png",
+      "capture": {
+        "bytes": 88880
+      }
+    },
+    {
+      "id": "pseudo-320x1000",
+      "mode": "pseudo",
+      "viewport": {
+        "width": 320,
+        "height": 1000,
+        "device_scale_factor": 1
+      },
+      "method": "DOM content-stress harness",
+      "checks": [
+        {
+          "expression": "window.__contentStress.mode",
+          "expected": "pseudo",
+          "observed": "pseudo",
+          "passed": true,
+          "enforced": true
+        },
+        {
+          "expression": "innerWidth",
+          "expected": 320,
+          "observed": 320,
+          "passed": true,
+          "enforced": true
+        },
+        {
+          "expression": "document.documentElement.scrollWidth <= document.documentElement.clientWidth",
+          "expected": true,
+          "observed": false,
+          "passed": false,
+          "enforced": false,
+          "note": "Page-level horizontal overflow is a contract failure unless a documented two-dimensional region is responsible and independently reachable."
+        },
+        {
+          "expression": "((() => {\n  const visible = e => {\n    const s = getComputedStyle(e);\n    const r = e.getBoundingClientRect();\n    return s.display !== 'none' && s.visibility !== 'hidden' && r.width > 0 && r.height > 0;\n  };\n  const label = e => ({\n    tag: e.tagName.toLowerCase(),\n    id: e.id || null,\n    className: typeof e.className === 'string' ? e.className : null,\n    text: (e.innerText || e.textContent || '').trim().replace(/\\s+/g, ' ').slice(0, 180)\n  });\n  const nonScrollableOverflow = [...document.querySelectorAll('body *')]\n    .filter(visible)\n    .filter(e => {\n      const s = getComputedStyle(e);\n      return e.scrollWidth > e.clientWidth + 1 &&\n        !['auto', 'scroll'].includes(s.overflowX);\n    })\n    .map(e => ({\n      ...label(e),\n      clientWidth: e.clientWidth,\n      scrollWidth: e.scrollWidth,\n      overflowX: getComputedStyle(e).overflowX\n    }))\n    .slice(0, 40);\n  const clippedText = [...document.querySelectorAll('body *')]\n    .filter(visible)\n    .filter(e => {\n      const s = getComputedStyle(e);\n      if (e.matches('.visually-hidden') || e.closest('.visually-hidden')) return false;\n      const hasText = [...e.childNodes].some(n => n.nodeType === Node.TEXT_NODE && n.textContent.trim());\n      return hasText &&\n        (e.scrollWidth > e.clientWidth + 1 || e.scrollHeight > e.clientHeight + 1) &&\n        ['hidden', 'clip'].includes(s.overflow);\n    })\n    .map(e => ({\n      ...label(e),\n      clientWidth: e.clientWidth,\n      scrollWidth: e.scrollWidth,\n      clientHeight: e.clientHeight,\n      scrollHeight: e.scrollHeight\n    }))\n    .slice(0, 40);\n  const offscreenInteractive = [...document.querySelectorAll(\n    'a[href],button,input,select,textarea,summary,[tabindex]:not([tabindex=\"-1\"])'\n  )]\n    .filter(visible)\n    .map(e => ({e, r: e.getBoundingClientRect()}))\n    .filter(({r}) => r.right <= 0 || r.left >= innerWidth)\n    .map(({e, r}) => ({...label(e), left:r.left, right:r.right, width:r.width}))\n    .slice(0, 40);\n  const rect = selector => {\n    const e = document.querySelector(selector);\n    if (!e || !visible(e)) return null;\n    const r = e.getBoundingClientRect();\n    return {top:r.top,left:r.left,right:r.right,bottom:r.bottom,width:r.width,height:r.height};\n  };\n  const critical = document.querySelector('.incident.critical');\n  const cs = critical ? getComputedStyle(critical) : null;\n  return {\n    viewport: {width:innerWidth,height:innerHeight,dpr:devicePixelRatio},\n    document: {\n      clientWidth: document.documentElement.clientWidth,\n      scrollWidth: document.documentElement.scrollWidth,\n      horizontalOverflow:\n        document.documentElement.scrollWidth > document.documentElement.clientWidth\n    },\n    language: document.documentElement.lang,\n    direction: document.dir || getComputedStyle(document.documentElement).direction,\n    headerRects: {\n      title: rect('.site-header h1'),\n      search: rect('.global-search'),\n      actions: rect('.header-actions')\n    },\n    criticalBorder: cs ? {\n      inlineStart: cs.borderInlineStartWidth,\n      left: cs.borderLeftWidth,\n      right: cs.borderRightWidth\n    } : null,\n    visibleRepresentations: {\n      table: Boolean(document.querySelector('.table-wrap') && visible(document.querySelector('.table-wrap'))),\n      ticketList: Boolean(document.querySelector('.ticket-list') && visible(document.querySelector('.ticket-list')))\n    },\n    nonScrollableOverflow,\n    clippedText,\n    offscreenInteractive\n  };\n})()).offscreenInteractive.length",
+          "expected": 0,
+          "observed": 0,
+          "passed": true,
+          "enforced": false,
+          "note": "Visible interactive controls must not sit wholly outside the viewport."
+        },
+        {
+          "expression": "((() => {\n  const visible = e => {\n    const s = getComputedStyle(e);\n    const r = e.getBoundingClientRect();\n    return s.display !== 'none' && s.visibility !== 'hidden' && r.width > 0 && r.height > 0;\n  };\n  const label = e => ({\n    tag: e.tagName.toLowerCase(),\n    id: e.id || null,\n    className: typeof e.className === 'string' ? e.className : null,\n    text: (e.innerText || e.textContent || '').trim().replace(/\\s+/g, ' ').slice(0, 180)\n  });\n  const nonScrollableOverflow = [...document.querySelectorAll('body *')]\n    .filter(visible)\n    .filter(e => {\n      const s = getComputedStyle(e);\n      return e.scrollWidth > e.clientWidth + 1 &&\n        !['auto', 'scroll'].includes(s.overflowX);\n    })\n    .map(e => ({\n      ...label(e),\n      clientWidth: e.clientWidth,\n      scrollWidth: e.scrollWidth,\n      overflowX: getComputedStyle(e).overflowX\n    }))\n    .slice(0, 40);\n  const clippedText = [...document.querySelectorAll('body *')]\n    .filter(visible)\n    .filter(e => {\n      const s = getComputedStyle(e);\n      if (e.matches('.visually-hidden') || e.closest('.visually-hidden')) return false;\n      const hasText = [...e.childNodes].some(n => n.nodeType === Node.TEXT_NODE && n.textContent.trim());\n      return hasText &&\n        (e.scrollWidth > e.clientWidth + 1 || e.scrollHeight > e.clientHeight + 1) &&\n        ['hidden', 'clip'].includes(s.overflow);\n    })\n    .map(e => ({\n      ...label(e),\n      clientWidth: e.clientWidth,\n      scrollWidth: e.scrollWidth,\n      clientHeight: e.clientHeight,\n      scrollHeight: e.scrollHeight\n    }))\n    .slice(0, 40);\n  const offscreenInteractive = [...document.querySelectorAll(\n    'a[href],button,input,select,textarea,summary,[tabindex]:not([tabindex=\"-1\"])'\n  )]\n    .filter(visible)\n    .map(e => ({e, r: e.getBoundingClientRect()}))\n    .filter(({r}) => r.right <= 0 || r.left >= innerWidth)\n    .map(({e, r}) => ({...label(e), left:r.left, right:r.right, width:r.width}))\n    .slice(0, 40);\n  const rect = selector => {\n    const e = document.querySelector(selector);\n    if (!e || !visible(e)) return null;\n    const r = e.getBoundingClientRect();\n    return {top:r.top,left:r.left,right:r.right,bottom:r.bottom,width:r.width,height:r.height};\n  };\n  const critical = document.querySelector('.incident.critical');\n  const cs = critical ? getComputedStyle(critical) : null;\n  return {\n    viewport: {width:innerWidth,height:innerHeight,dpr:devicePixelRatio},\n    document: {\n      clientWidth: document.documentElement.clientWidth,\n      scrollWidth: document.documentElement.scrollWidth,\n      horizontalOverflow:\n        document.documentElement.scrollWidth > document.documentElement.clientWidth\n    },\n    language: document.documentElement.lang,\n    direction: document.dir || getComputedStyle(document.documentElement).direction,\n    headerRects: {\n      title: rect('.site-header h1'),\n      search: rect('.global-search'),\n      actions: rect('.header-actions')\n    },\n    criticalBorder: cs ? {\n      inlineStart: cs.borderInlineStartWidth,\n      left: cs.borderLeftWidth,\n      right: cs.borderRightWidth\n    } : null,\n    visibleRepresentations: {\n      table: Boolean(document.querySelector('.table-wrap') && visible(document.querySelector('.table-wrap'))),\n      ticketList: Boolean(document.querySelector('.ticket-list') && visible(document.querySelector('.ticket-list')))\n    },\n    nonScrollableOverflow,\n    clippedText,\n    offscreenInteractive\n  };\n})()).clippedText.length",
+          "expected": 0,
+          "observed": 0,
+          "passed": true,
+          "enforced": false,
+          "note": "Clipped text requires a documented, reachable full-value path."
+        },
+        {
+          "expression": "document.documentElement.lang",
+          "expected": "de-x-pseudo",
+          "observed": "de-x-pseudo",
+          "passed": true,
+          "enforced": true
+        }
+      ],
+      "metrics": {
+        "viewport": {
+          "width": 320,
+          "height": 1000,
+          "dpr": 1
+        },
+        "document": {
+          "clientWidth": 320,
+          "scrollWidth": 464,
+          "horizontalOverflow": true
+        },
+        "language": "de-x-pseudo",
+        "direction": "ltr",
+        "headerRects": {
+          "title": {
+            "top": 12,
+            "left": 14,
+            "right": 306,
+            "bottom": 36,
+            "width": 292,
+            "height": 24
+          },
+          "search": {
+            "top": 134.890625,
+            "left": 14,
+            "right": 306,
+            "bottom": 174.890625,
+            "width": 292,
+            "height": 40
+          },
+          "actions": {
+            "top": 46,
+            "left": 14,
+            "right": 306,
+            "bottom": 124.890625,
+            "width": 292,
+            "height": 78.890625
+          }
+        },
+        "criticalBorder": {
+          "inlineStart": "5px",
+          "left": "5px",
+          "right": "1px"
+        },
+        "visibleRepresentations": {
+          "table": false,
+          "ticketList": true
+        },
+        "nonScrollableOverflow": [
+          {
+            "tag": "header",
+            "id": null,
+            "className": "site-header",
+            "text": "[!! Betriebsübersicht für Kundendienstteams !!] Search everything [!! Neuen Supportvorgang erstellen !!] [!! Weitere Aktionen anzeigen !!]",
+            "clientWidth": 320,
+            "scrollWidth": 464,
+            "overflowX": "visible"
+          },
+          {
+            "tag": "h1",
+            "id": null,
+            "className": "",
+            "text": "[!! Betriebsübersicht für Kundendienstteams !!]",
+            "clientWidth": 292,
+            "scrollWidth": 450,
+            "overflowX": "visible"
+          },
+          {
+            "tag": "label",
+            "id": null,
+            "className": "visually-hidden",
+            "text": "Search everything",
+            "clientWidth": 1,
+            "scrollWidth": 113,
+            "overflowX": "hidden"
+          },
+          {
+            "tag": "div",
+            "id": null,
+            "className": "menu-panel",
+            "text": "[!! Bericht exportieren und herunterladen !!] [!! Arbeitsbereichseinstellungen verwalten !!]",
+            "clientWidth": 145,
+            "scrollWidth": 226,
+            "overflowX": "visible"
+          },
+          {
+            "tag": "select",
+            "id": "view",
+            "className": "",
+            "text": "[!! Alle gespeicherten Ansichten anzeigen !!]",
+            "clientWidth": 264,
+            "scrollWidth": 285,
+            "overflowX": "visible"
+          },
+          {
+            "tag": "select",
+            "id": "priority",
+            "className": "",
+            "text": "[!! Alle geschäftlichen Prioritäten anzeigen !!]",
+            "clientWidth": 264,
+            "scrollWidth": 290,
+            "overflowX": "visible"
+          },
+          {
+            "tag": "select",
+            "id": "owner",
+            "className": "",
+            "text": "[!! Alle verantwortlichen Personen anzeigen !!]",
+            "clientWidth": 264,
+            "scrollWidth": 298,
+            "overflowX": "visible"
+          }
+        ],
+        "clippedText": [],
+        "offscreenInteractive": []
+      },
+      "screenshot": "dashboard-content-pseudo-320x1000.png",
+      "capture": {
+        "bytes": 85973
+      }
+    },
+    {
+      "id": "rtl-1440x1000",
+      "mode": "rtl",
+      "viewport": {
+        "width": 1440,
+        "height": 1000,
+        "device_scale_factor": 1
+      },
+      "method": "DOM content-stress harness",
+      "checks": [
+        {
+          "expression": "window.__contentStress.mode",
+          "expected": "rtl",
+          "observed": "rtl",
+          "passed": true,
+          "enforced": true
+        },
+        {
+          "expression": "innerWidth",
+          "expected": 1440,
+          "observed": 1440,
+          "passed": true,
+          "enforced": true
+        },
+        {
+          "expression": "document.documentElement.scrollWidth <= document.documentElement.clientWidth",
+          "expected": true,
+          "observed": true,
+          "passed": true,
+          "enforced": false,
+          "note": "Page-level horizontal overflow is a contract failure unless a documented two-dimensional region is responsible and independently reachable."
+        },
+        {
+          "expression": "((() => {\n  const visible = e => {\n    const s = getComputedStyle(e);\n    const r = e.getBoundingClientRect();\n    return s.display !== 'none' && s.visibility !== 'hidden' && r.width > 0 && r.height > 0;\n  };\n  const label = e => ({\n    tag: e.tagName.toLowerCase(),\n    id: e.id || null,\n    className: typeof e.className === 'string' ? e.className : null,\n    text: (e.innerText || e.textContent || '').trim().replace(/\\s+/g, ' ').slice(0, 180)\n  });\n  const nonScrollableOverflow = [...document.querySelectorAll('body *')]\n    .filter(visible)\n    .filter(e => {\n      const s = getComputedStyle(e);\n      return e.scrollWidth > e.clientWidth + 1 &&\n        !['auto', 'scroll'].includes(s.overflowX);\n    })\n    .map(e => ({\n      ...label(e),\n      clientWidth: e.clientWidth,\n      scrollWidth: e.scrollWidth,\n      overflowX: getComputedStyle(e).overflowX\n    }))\n    .slice(0, 40);\n  const clippedText = [...document.querySelectorAll('body *')]\n    .filter(visible)\n    .filter(e => {\n      const s = getComputedStyle(e);\n      if (e.matches('.visually-hidden') || e.closest('.visually-hidden')) return false;\n      const hasText = [...e.childNodes].some(n => n.nodeType === Node.TEXT_NODE && n.textContent.trim());\n      return hasText &&\n        (e.scrollWidth > e.clientWidth + 1 || e.scrollHeight > e.clientHeight + 1) &&\n        ['hidden', 'clip'].includes(s.overflow);\n    })\n    .map(e => ({\n      ...label(e),\n      clientWidth: e.clientWidth,\n      scrollWidth: e.scrollWidth,\n      clientHeight: e.clientHeight,\n      scrollHeight: e.scrollHeight\n    }))\n    .slice(0, 40);\n  const offscreenInteractive = [...document.querySelectorAll(\n    'a[href],button,input,select,textarea,summary,[tabindex]:not([tabindex=\"-1\"])'\n  )]\n    .filter(visible)\n    .map(e => ({e, r: e.getBoundingClientRect()}))\n    .filter(({r}) => r.right <= 0 || r.left >= innerWidth)\n    .map(({e, r}) => ({...label(e), left:r.left, right:r.right, width:r.width}))\n    .slice(0, 40);\n  const rect = selector => {\n    const e = document.querySelector(selector);\n    if (!e || !visible(e)) return null;\n    const r = e.getBoundingClientRect();\n    return {top:r.top,left:r.left,right:r.right,bottom:r.bottom,width:r.width,height:r.height};\n  };\n  const critical = document.querySelector('.incident.critical');\n  const cs = critical ? getComputedStyle(critical) : null;\n  return {\n    viewport: {width:innerWidth,height:innerHeight,dpr:devicePixelRatio},\n    document: {\n      clientWidth: document.documentElement.clientWidth,\n      scrollWidth: document.documentElement.scrollWidth,\n      horizontalOverflow:\n        document.documentElement.scrollWidth > document.documentElement.clientWidth\n    },\n    language: document.documentElement.lang,\n    direction: document.dir || getComputedStyle(document.documentElement).direction,\n    headerRects: {\n      title: rect('.site-header h1'),\n      search: rect('.global-search'),\n      actions: rect('.header-actions')\n    },\n    criticalBorder: cs ? {\n      inlineStart: cs.borderInlineStartWidth,\n      left: cs.borderLeftWidth,\n      right: cs.borderRightWidth\n    } : null,\n    visibleRepresentations: {\n      table: Boolean(document.querySelector('.table-wrap') && visible(document.querySelector('.table-wrap'))),\n      ticketList: Boolean(document.querySelector('.ticket-list') && visible(document.querySelector('.ticket-list')))\n    },\n    nonScrollableOverflow,\n    clippedText,\n    offscreenInteractive\n  };\n})()).offscreenInteractive.length",
+          "expected": 0,
+          "observed": 0,
+          "passed": true,
+          "enforced": false,
+          "note": "Visible interactive controls must not sit wholly outside the viewport."
+        },
+        {
+          "expression": "((() => {\n  const visible = e => {\n    const s = getComputedStyle(e);\n    const r = e.getBoundingClientRect();\n    return s.display !== 'none' && s.visibility !== 'hidden' && r.width > 0 && r.height > 0;\n  };\n  const label = e => ({\n    tag: e.tagName.toLowerCase(),\n    id: e.id || null,\n    className: typeof e.className === 'string' ? e.className : null,\n    text: (e.innerText || e.textContent || '').trim().replace(/\\s+/g, ' ').slice(0, 180)\n  });\n  const nonScrollableOverflow = [...document.querySelectorAll('body *')]\n    .filter(visible)\n    .filter(e => {\n      const s = getComputedStyle(e);\n      return e.scrollWidth > e.clientWidth + 1 &&\n        !['auto', 'scroll'].includes(s.overflowX);\n    })\n    .map(e => ({\n      ...label(e),\n      clientWidth: e.clientWidth,\n      scrollWidth: e.scrollWidth,\n      overflowX: getComputedStyle(e).overflowX\n    }))\n    .slice(0, 40);\n  const clippedText = [...document.querySelectorAll('body *')]\n    .filter(visible)\n    .filter(e => {\n      const s = getComputedStyle(e);\n      if (e.matches('.visually-hidden') || e.closest('.visually-hidden')) return false;\n      const hasText = [...e.childNodes].some(n => n.nodeType === Node.TEXT_NODE && n.textContent.trim());\n      return hasText &&\n        (e.scrollWidth > e.clientWidth + 1 || e.scrollHeight > e.clientHeight + 1) &&\n        ['hidden', 'clip'].includes(s.overflow);\n    })\n    .map(e => ({\n      ...label(e),\n      clientWidth: e.clientWidth,\n      scrollWidth: e.scrollWidth,\n      clientHeight: e.clientHeight,\n      scrollHeight: e.scrollHeight\n    }))\n    .slice(0, 40);\n  const offscreenInteractive = [...document.querySelectorAll(\n    'a[href],button,input,select,textarea,summary,[tabindex]:not([tabindex=\"-1\"])'\n  )]\n    .filter(visible)\n    .map(e => ({e, r: e.getBoundingClientRect()}))\n    .filter(({r}) => r.right <= 0 || r.left >= innerWidth)\n    .map(({e, r}) => ({...label(e), left:r.left, right:r.right, width:r.width}))\n    .slice(0, 40);\n  const rect = selector => {\n    const e = document.querySelector(selector);\n    if (!e || !visible(e)) return null;\n    const r = e.getBoundingClientRect();\n    return {top:r.top,left:r.left,right:r.right,bottom:r.bottom,width:r.width,height:r.height};\n  };\n  const critical = document.querySelector('.incident.critical');\n  const cs = critical ? getComputedStyle(critical) : null;\n  return {\n    viewport: {width:innerWidth,height:innerHeight,dpr:devicePixelRatio},\n    document: {\n      clientWidth: document.documentElement.clientWidth,\n      scrollWidth: document.documentElement.scrollWidth,\n      horizontalOverflow:\n        document.documentElement.scrollWidth > document.documentElement.clientWidth\n    },\n    language: document.documentElement.lang,\n    direction: document.dir || getComputedStyle(document.documentElement).direction,\n    headerRects: {\n      title: rect('.site-header h1'),\n      search: rect('.global-search'),\n      actions: rect('.header-actions')\n    },\n    criticalBorder: cs ? {\n      inlineStart: cs.borderInlineStartWidth,\n      left: cs.borderLeftWidth,\n      right: cs.borderRightWidth\n    } : null,\n    visibleRepresentations: {\n      table: Boolean(document.querySelector('.table-wrap') && visible(document.querySelector('.table-wrap'))),\n      ticketList: Boolean(document.querySelector('.ticket-list') && visible(document.querySelector('.ticket-list')))\n    },\n    nonScrollableOverflow,\n    clippedText,\n    offscreenInteractive\n  };\n})()).clippedText.length",
+          "expected": 0,
+          "observed": 0,
+          "passed": true,
+          "enforced": false,
+          "note": "Clipped text requires a documented, reachable full-value path."
+        },
+        {
+          "expression": "document.documentElement.lang",
+          "expected": "ar",
+          "observed": "ar",
+          "passed": true,
+          "enforced": true
+        },
+        {
+          "expression": "document.dir",
+          "expected": "rtl",
+          "observed": "rtl",
+          "passed": true,
+          "enforced": true
+        },
+        {
+          "expression": "getComputedStyle(document.querySelector('.incident.critical')).borderRightWidth",
+          "expected": "5px",
+          "observed": "5px",
+          "passed": true,
+          "enforced": false,
+          "note": "The inline-start severity border should mirror to the right in RTL."
+        }
+      ],
+      "metrics": {
+        "viewport": {
+          "width": 1440,
+          "height": 1000,
+          "dpr": 1
+        },
+        "document": {
+          "clientWidth": 1440,
+          "scrollWidth": 1440,
+          "horizontalOverflow": false
+        },
+        "language": "ar",
+        "direction": "rtl",
+        "headerRects": {
+          "title": {
+            "top": 23.5,
+            "left": 1046.6875,
+            "right": 1408,
+            "bottom": 47.5,
+            "width": 361.3125,
+            "height": 24
+          },
+          "search": {
+            "top": 15.5,
+            "left": 510.6875,
+            "right": 1030.6875,
+            "bottom": 55.5,
+            "width": 520,
+            "height": 40
+          },
+          "actions": {
+            "top": 15.5,
+            "left": 32,
+            "right": 494.6875,
+            "bottom": 55.5,
+            "width": 462.6875,
+            "height": 40
+          }
+        },
+        "criticalBorder": {
+          "inlineStart": "5px",
+          "left": "1px",
+          "right": "5px"
+        },
+        "visibleRepresentations": {
+          "table": true,
+          "ticketList": false
+        },
+        "nonScrollableOverflow": [
+          {
+            "tag": "label",
+            "id": null,
+            "className": "visually-hidden",
+            "text": "Search everything",
+            "clientWidth": 1,
+            "scrollWidth": 113,
+            "overflowX": "hidden"
+          },
+          {
+            "tag": "label",
+            "id": null,
+            "className": "visually-hidden",
+            "text": "Select all tickets",
+            "clientWidth": 1,
+            "scrollWidth": 93,
+            "overflowX": "hidden"
+          },
+          {
+            "tag": "label",
+            "id": null,
+            "className": "visually-hidden",
+            "text": "Select ticket 8941",
+            "clientWidth": 1,
+            "scrollWidth": 95,
+            "overflowX": "hidden"
+          },
+          {
+            "tag": "label",
+            "id": null,
+            "className": "visually-hidden",
+            "text": "Select ticket 8937",
+            "clientWidth": 1,
+            "scrollWidth": 95,
+            "overflowX": "hidden"
+          },
+          {
+            "tag": "label",
+            "id": null,
+            "className": "visually-hidden",
+            "text": "Select ticket 8928",
+            "clientWidth": 1,
+            "scrollWidth": 95,
+            "overflowX": "hidden"
+          },
+          {
+            "tag": "label",
+            "id": null,
+            "className": "visually-hidden",
+            "text": "Select ticket 8919",
+            "clientWidth": 1,
+            "scrollWidth": 95,
+            "overflowX": "hidden"
+          },
+          {
+            "tag": "label",
+            "id": null,
+            "className": "visually-hidden",
+            "text": "Select ticket 8911",
+            "clientWidth": 1,
+            "scrollWidth": 94,
+            "overflowX": "hidden"
+          }
+        ],
+        "clippedText": [],
+        "offscreenInteractive": []
+      },
+      "screenshot": "dashboard-content-rtl-1440x1000.png",
+      "capture": {
+        "bytes": 144776
+      }
+    },
+    {
+      "id": "rtl-390x1000",
+      "mode": "rtl",
+      "viewport": {
+        "width": 390,
+        "height": 1000,
+        "device_scale_factor": 1
+      },
+      "method": "DOM content-stress harness",
+      "checks": [
+        {
+          "expression": "window.__contentStress.mode",
+          "expected": "rtl",
+          "observed": "rtl",
+          "passed": true,
+          "enforced": true
+        },
+        {
+          "expression": "innerWidth",
+          "expected": 390,
+          "observed": 390,
+          "passed": true,
+          "enforced": true
+        },
+        {
+          "expression": "document.documentElement.scrollWidth <= document.documentElement.clientWidth",
+          "expected": true,
+          "observed": true,
+          "passed": true,
+          "enforced": false,
+          "note": "Page-level horizontal overflow is a contract failure unless a documented two-dimensional region is responsible and independently reachable."
+        },
+        {
+          "expression": "((() => {\n  const visible = e => {\n    const s = getComputedStyle(e);\n    const r = e.getBoundingClientRect();\n    return s.display !== 'none' && s.visibility !== 'hidden' && r.width > 0 && r.height > 0;\n  };\n  const label = e => ({\n    tag: e.tagName.toLowerCase(),\n    id: e.id || null,\n    className: typeof e.className === 'string' ? e.className : null,\n    text: (e.innerText || e.textContent || '').trim().replace(/\\s+/g, ' ').slice(0, 180)\n  });\n  const nonScrollableOverflow = [...document.querySelectorAll('body *')]\n    .filter(visible)\n    .filter(e => {\n      const s = getComputedStyle(e);\n      return e.scrollWidth > e.clientWidth + 1 &&\n        !['auto', 'scroll'].includes(s.overflowX);\n    })\n    .map(e => ({\n      ...label(e),\n      clientWidth: e.clientWidth,\n      scrollWidth: e.scrollWidth,\n      overflowX: getComputedStyle(e).overflowX\n    }))\n    .slice(0, 40);\n  const clippedText = [...document.querySelectorAll('body *')]\n    .filter(visible)\n    .filter(e => {\n      const s = getComputedStyle(e);\n      if (e.matches('.visually-hidden') || e.closest('.visually-hidden')) return false;\n      const hasText = [...e.childNodes].some(n => n.nodeType === Node.TEXT_NODE && n.textContent.trim());\n      return hasText &&\n        (e.scrollWidth > e.clientWidth + 1 || e.scrollHeight > e.clientHeight + 1) &&\n        ['hidden', 'clip'].includes(s.overflow);\n    })\n    .map(e => ({\n      ...label(e),\n      clientWidth: e.clientWidth,\n      scrollWidth: e.scrollWidth,\n      clientHeight: e.clientHeight,\n      scrollHeight: e.scrollHeight\n    }))\n    .slice(0, 40);\n  const offscreenInteractive = [...document.querySelectorAll(\n    'a[href],button,input,select,textarea,summary,[tabindex]:not([tabindex=\"-1\"])'\n  )]\n    .filter(visible)\n    .map(e => ({e, r: e.getBoundingClientRect()}))\n    .filter(({r}) => r.right <= 0 || r.left >= innerWidth)\n    .map(({e, r}) => ({...label(e), left:r.left, right:r.right, width:r.width}))\n    .slice(0, 40);\n  const rect = selector => {\n    const e = document.querySelector(selector);\n    if (!e || !visible(e)) return null;\n    const r = e.getBoundingClientRect();\n    return {top:r.top,left:r.left,right:r.right,bottom:r.bottom,width:r.width,height:r.height};\n  };\n  const critical = document.querySelector('.incident.critical');\n  const cs = critical ? getComputedStyle(critical) : null;\n  return {\n    viewport: {width:innerWidth,height:innerHeight,dpr:devicePixelRatio},\n    document: {\n      clientWidth: document.documentElement.clientWidth,\n      scrollWidth: document.documentElement.scrollWidth,\n      horizontalOverflow:\n        document.documentElement.scrollWidth > document.documentElement.clientWidth\n    },\n    language: document.documentElement.lang,\n    direction: document.dir || getComputedStyle(document.documentElement).direction,\n    headerRects: {\n      title: rect('.site-header h1'),\n      search: rect('.global-search'),\n      actions: rect('.header-actions')\n    },\n    criticalBorder: cs ? {\n      inlineStart: cs.borderInlineStartWidth,\n      left: cs.borderLeftWidth,\n      right: cs.borderRightWidth\n    } : null,\n    visibleRepresentations: {\n      table: Boolean(document.querySelector('.table-wrap') && visible(document.querySelector('.table-wrap'))),\n      ticketList: Boolean(document.querySelector('.ticket-list') && visible(document.querySelector('.ticket-list')))\n    },\n    nonScrollableOverflow,\n    clippedText,\n    offscreenInteractive\n  };\n})()).offscreenInteractive.length",
+          "expected": 0,
+          "observed": 0,
+          "passed": true,
+          "enforced": false,
+          "note": "Visible interactive controls must not sit wholly outside the viewport."
+        },
+        {
+          "expression": "((() => {\n  const visible = e => {\n    const s = getComputedStyle(e);\n    const r = e.getBoundingClientRect();\n    return s.display !== 'none' && s.visibility !== 'hidden' && r.width > 0 && r.height > 0;\n  };\n  const label = e => ({\n    tag: e.tagName.toLowerCase(),\n    id: e.id || null,\n    className: typeof e.className === 'string' ? e.className : null,\n    text: (e.innerText || e.textContent || '').trim().replace(/\\s+/g, ' ').slice(0, 180)\n  });\n  const nonScrollableOverflow = [...document.querySelectorAll('body *')]\n    .filter(visible)\n    .filter(e => {\n      const s = getComputedStyle(e);\n      return e.scrollWidth > e.clientWidth + 1 &&\n        !['auto', 'scroll'].includes(s.overflowX);\n    })\n    .map(e => ({\n      ...label(e),\n      clientWidth: e.clientWidth,\n      scrollWidth: e.scrollWidth,\n      overflowX: getComputedStyle(e).overflowX\n    }))\n    .slice(0, 40);\n  const clippedText = [...document.querySelectorAll('body *')]\n    .filter(visible)\n    .filter(e => {\n      const s = getComputedStyle(e);\n      if (e.matches('.visually-hidden') || e.closest('.visually-hidden')) return false;\n      const hasText = [...e.childNodes].some(n => n.nodeType === Node.TEXT_NODE && n.textContent.trim());\n      return hasText &&\n        (e.scrollWidth > e.clientWidth + 1 || e.scrollHeight > e.clientHeight + 1) &&\n        ['hidden', 'clip'].includes(s.overflow);\n    })\n    .map(e => ({\n      ...label(e),\n      clientWidth: e.clientWidth,\n      scrollWidth: e.scrollWidth,\n      clientHeight: e.clientHeight,\n      scrollHeight: e.scrollHeight\n    }))\n    .slice(0, 40);\n  const offscreenInteractive = [...document.querySelectorAll(\n    'a[href],button,input,select,textarea,summary,[tabindex]:not([tabindex=\"-1\"])'\n  )]\n    .filter(visible)\n    .map(e => ({e, r: e.getBoundingClientRect()}))\n    .filter(({r}) => r.right <= 0 || r.left >= innerWidth)\n    .map(({e, r}) => ({...label(e), left:r.left, right:r.right, width:r.width}))\n    .slice(0, 40);\n  const rect = selector => {\n    const e = document.querySelector(selector);\n    if (!e || !visible(e)) return null;\n    const r = e.getBoundingClientRect();\n    return {top:r.top,left:r.left,right:r.right,bottom:r.bottom,width:r.width,height:r.height};\n  };\n  const critical = document.querySelector('.incident.critical');\n  const cs = critical ? getComputedStyle(critical) : null;\n  return {\n    viewport: {width:innerWidth,height:innerHeight,dpr:devicePixelRatio},\n    document: {\n      clientWidth: document.documentElement.clientWidth,\n      scrollWidth: document.documentElement.scrollWidth,\n      horizontalOverflow:\n        document.documentElement.scrollWidth > document.documentElement.clientWidth\n    },\n    language: document.documentElement.lang,\n    direction: document.dir || getComputedStyle(document.documentElement).direction,\n    headerRects: {\n      title: rect('.site-header h1'),\n      search: rect('.global-search'),\n      actions: rect('.header-actions')\n    },\n    criticalBorder: cs ? {\n      inlineStart: cs.borderInlineStartWidth,\n      left: cs.borderLeftWidth,\n      right: cs.borderRightWidth\n    } : null,\n    visibleRepresentations: {\n      table: Boolean(document.querySelector('.table-wrap') && visible(document.querySelector('.table-wrap'))),\n      ticketList: Boolean(document.querySelector('.ticket-list') && visible(document.querySelector('.ticket-list')))\n    },\n    nonScrollableOverflow,\n    clippedText,\n    offscreenInteractive\n  };\n})()).clippedText.length",
+          "expected": 0,
+          "observed": 0,
+          "passed": true,
+          "enforced": false,
+          "note": "Clipped text requires a documented, reachable full-value path."
+        },
+        {
+          "expression": "document.documentElement.lang",
+          "expected": "ar",
+          "observed": "ar",
+          "passed": true,
+          "enforced": true
+        },
+        {
+          "expression": "document.dir",
+          "expected": "rtl",
+          "observed": "rtl",
+          "passed": true,
+          "enforced": true
+        },
+        {
+          "expression": "getComputedStyle(document.querySelector('.incident.critical')).borderRightWidth",
+          "expected": "5px",
+          "observed": "5px",
+          "passed": true,
+          "enforced": false,
+          "note": "The inline-start severity border should mirror to the right in RTL."
+        }
+      ],
+      "metrics": {
+        "viewport": {
+          "width": 390,
+          "height": 1000,
+          "dpr": 1
+        },
+        "document": {
+          "clientWidth": 390,
+          "scrollWidth": 390,
+          "horizontalOverflow": false
+        },
+        "language": "ar",
+        "direction": "rtl",
+        "headerRects": {
+          "title": {
+            "top": 12,
+            "left": 14,
+            "right": 376,
+            "bottom": 36,
+            "width": 362,
+            "height": 24
+          },
+          "search": {
+            "top": 96,
+            "left": 14,
+            "right": 376,
+            "bottom": 136,
+            "width": 362,
+            "height": 40
+          },
+          "actions": {
+            "top": 46,
+            "left": 14,
+            "right": 376,
+            "bottom": 86,
+            "width": 362,
+            "height": 40
+          }
+        },
+        "criticalBorder": {
+          "inlineStart": "5px",
+          "left": "1px",
+          "right": "5px"
+        },
+        "visibleRepresentations": {
+          "table": false,
+          "ticketList": true
+        },
+        "nonScrollableOverflow": [
+          {
+            "tag": "label",
+            "id": null,
+            "className": "visually-hidden",
+            "text": "Search everything",
+            "clientWidth": 1,
+            "scrollWidth": 113,
+            "overflowX": "hidden"
+          },
+          {
+            "tag": "div",
+            "id": null,
+            "className": "menu-panel",
+            "text": "تصدير الإعدادات",
+            "clientWidth": 57,
+            "scrollWidth": 72,
+            "overflowX": "visible"
+          }
+        ],
+        "clippedText": [],
+        "offscreenInteractive": []
+      },
+      "screenshot": "dashboard-content-rtl-390x1000.png",
+      "capture": {
+        "bytes": 54508
+      }
+    },
+    {
+      "id": "text-200-1440x1000",
+      "mode": "text-200",
+      "viewport": {
+        "width": 1440,
+        "height": 1000,
+        "device_scale_factor": 1
+      },
+      "method": "author-stylesheet text-only enlargement simulation",
+      "checks": [
+        {
+          "expression": "window.__contentStress.mode",
+          "expected": "text-200",
+          "observed": "text-200",
+          "passed": true,
+          "enforced": true
+        },
+        {
+          "expression": "innerWidth",
+          "expected": 1440,
+          "observed": 1440,
+          "passed": true,
+          "enforced": true
+        },
+        {
+          "expression": "document.documentElement.scrollWidth <= document.documentElement.clientWidth",
+          "expected": true,
+          "observed": true,
+          "passed": true,
+          "enforced": false,
+          "note": "Page-level horizontal overflow is a contract failure unless a documented two-dimensional region is responsible and independently reachable."
+        },
+        {
+          "expression": "((() => {\n  const visible = e => {\n    const s = getComputedStyle(e);\n    const r = e.getBoundingClientRect();\n    return s.display !== 'none' && s.visibility !== 'hidden' && r.width > 0 && r.height > 0;\n  };\n  const label = e => ({\n    tag: e.tagName.toLowerCase(),\n    id: e.id || null,\n    className: typeof e.className === 'string' ? e.className : null,\n    text: (e.innerText || e.textContent || '').trim().replace(/\\s+/g, ' ').slice(0, 180)\n  });\n  const nonScrollableOverflow = [...document.querySelectorAll('body *')]\n    .filter(visible)\n    .filter(e => {\n      const s = getComputedStyle(e);\n      return e.scrollWidth > e.clientWidth + 1 &&\n        !['auto', 'scroll'].includes(s.overflowX);\n    })\n    .map(e => ({\n      ...label(e),\n      clientWidth: e.clientWidth,\n      scrollWidth: e.scrollWidth,\n      overflowX: getComputedStyle(e).overflowX\n    }))\n    .slice(0, 40);\n  const clippedText = [...document.querySelectorAll('body *')]\n    .filter(visible)\n    .filter(e => {\n      const s = getComputedStyle(e);\n      if (e.matches('.visually-hidden') || e.closest('.visually-hidden')) return false;\n      const hasText = [...e.childNodes].some(n => n.nodeType === Node.TEXT_NODE && n.textContent.trim());\n      return hasText &&\n        (e.scrollWidth > e.clientWidth + 1 || e.scrollHeight > e.clientHeight + 1) &&\n        ['hidden', 'clip'].includes(s.overflow);\n    })\n    .map(e => ({\n      ...label(e),\n      clientWidth: e.clientWidth,\n      scrollWidth: e.scrollWidth,\n      clientHeight: e.clientHeight,\n      scrollHeight: e.scrollHeight\n    }))\n    .slice(0, 40);\n  const offscreenInteractive = [...document.querySelectorAll(\n    'a[href],button,input,select,textarea,summary,[tabindex]:not([tabindex=\"-1\"])'\n  )]\n    .filter(visible)\n    .map(e => ({e, r: e.getBoundingClientRect()}))\n    .filter(({r}) => r.right <= 0 || r.left >= innerWidth)\n    .map(({e, r}) => ({...label(e), left:r.left, right:r.right, width:r.width}))\n    .slice(0, 40);\n  const rect = selector => {\n    const e = document.querySelector(selector);\n    if (!e || !visible(e)) return null;\n    const r = e.getBoundingClientRect();\n    return {top:r.top,left:r.left,right:r.right,bottom:r.bottom,width:r.width,height:r.height};\n  };\n  const critical = document.querySelector('.incident.critical');\n  const cs = critical ? getComputedStyle(critical) : null;\n  return {\n    viewport: {width:innerWidth,height:innerHeight,dpr:devicePixelRatio},\n    document: {\n      clientWidth: document.documentElement.clientWidth,\n      scrollWidth: document.documentElement.scrollWidth,\n      horizontalOverflow:\n        document.documentElement.scrollWidth > document.documentElement.clientWidth\n    },\n    language: document.documentElement.lang,\n    direction: document.dir || getComputedStyle(document.documentElement).direction,\n    headerRects: {\n      title: rect('.site-header h1'),\n      search: rect('.global-search'),\n      actions: rect('.header-actions')\n    },\n    criticalBorder: cs ? {\n      inlineStart: cs.borderInlineStartWidth,\n      left: cs.borderLeftWidth,\n      right: cs.borderRightWidth\n    } : null,\n    visibleRepresentations: {\n      table: Boolean(document.querySelector('.table-wrap') && visible(document.querySelector('.table-wrap'))),\n      ticketList: Boolean(document.querySelector('.ticket-list') && visible(document.querySelector('.ticket-list')))\n    },\n    nonScrollableOverflow,\n    clippedText,\n    offscreenInteractive\n  };\n})()).offscreenInteractive.length",
+          "expected": 0,
+          "observed": 0,
+          "passed": true,
+          "enforced": false,
+          "note": "Visible interactive controls must not sit wholly outside the viewport."
+        },
+        {
+          "expression": "((() => {\n  const visible = e => {\n    const s = getComputedStyle(e);\n    const r = e.getBoundingClientRect();\n    return s.display !== 'none' && s.visibility !== 'hidden' && r.width > 0 && r.height > 0;\n  };\n  const label = e => ({\n    tag: e.tagName.toLowerCase(),\n    id: e.id || null,\n    className: typeof e.className === 'string' ? e.className : null,\n    text: (e.innerText || e.textContent || '').trim().replace(/\\s+/g, ' ').slice(0, 180)\n  });\n  const nonScrollableOverflow = [...document.querySelectorAll('body *')]\n    .filter(visible)\n    .filter(e => {\n      const s = getComputedStyle(e);\n      return e.scrollWidth > e.clientWidth + 1 &&\n        !['auto', 'scroll'].includes(s.overflowX);\n    })\n    .map(e => ({\n      ...label(e),\n      clientWidth: e.clientWidth,\n      scrollWidth: e.scrollWidth,\n      overflowX: getComputedStyle(e).overflowX\n    }))\n    .slice(0, 40);\n  const clippedText = [...document.querySelectorAll('body *')]\n    .filter(visible)\n    .filter(e => {\n      const s = getComputedStyle(e);\n      if (e.matches('.visually-hidden') || e.closest('.visually-hidden')) return false;\n      const hasText = [...e.childNodes].some(n => n.nodeType === Node.TEXT_NODE && n.textContent.trim());\n      return hasText &&\n        (e.scrollWidth > e.clientWidth + 1 || e.scrollHeight > e.clientHeight + 1) &&\n        ['hidden', 'clip'].includes(s.overflow);\n    })\n    .map(e => ({\n      ...label(e),\n      clientWidth: e.clientWidth,\n      scrollWidth: e.scrollWidth,\n      clientHeight: e.clientHeight,\n      scrollHeight: e.scrollHeight\n    }))\n    .slice(0, 40);\n  const offscreenInteractive = [...document.querySelectorAll(\n    'a[href],button,input,select,textarea,summary,[tabindex]:not([tabindex=\"-1\"])'\n  )]\n    .filter(visible)\n    .map(e => ({e, r: e.getBoundingClientRect()}))\n    .filter(({r}) => r.right <= 0 || r.left >= innerWidth)\n    .map(({e, r}) => ({...label(e), left:r.left, right:r.right, width:r.width}))\n    .slice(0, 40);\n  const rect = selector => {\n    const e = document.querySelector(selector);\n    if (!e || !visible(e)) return null;\n    const r = e.getBoundingClientRect();\n    return {top:r.top,left:r.left,right:r.right,bottom:r.bottom,width:r.width,height:r.height};\n  };\n  const critical = document.querySelector('.incident.critical');\n  const cs = critical ? getComputedStyle(critical) : null;\n  return {\n    viewport: {width:innerWidth,height:innerHeight,dpr:devicePixelRatio},\n    document: {\n      clientWidth: document.documentElement.clientWidth,\n      scrollWidth: document.documentElement.scrollWidth,\n      horizontalOverflow:\n        document.documentElement.scrollWidth > document.documentElement.clientWidth\n    },\n    language: document.documentElement.lang,\n    direction: document.dir || getComputedStyle(document.documentElement).direction,\n    headerRects: {\n      title: rect('.site-header h1'),\n      search: rect('.global-search'),\n      actions: rect('.header-actions')\n    },\n    criticalBorder: cs ? {\n      inlineStart: cs.borderInlineStartWidth,\n      left: cs.borderLeftWidth,\n      right: cs.borderRightWidth\n    } : null,\n    visibleRepresentations: {\n      table: Boolean(document.querySelector('.table-wrap') && visible(document.querySelector('.table-wrap'))),\n      ticketList: Boolean(document.querySelector('.ticket-list') && visible(document.querySelector('.ticket-list')))\n    },\n    nonScrollableOverflow,\n    clippedText,\n    offscreenInteractive\n  };\n})()).clippedText.length",
+          "expected": 0,
+          "observed": 0,
+          "passed": true,
+          "enforced": false,
+          "note": "Clipped text requires a documented, reachable full-value path."
+        },
+        {
+          "expression": "Boolean(document.querySelector('style[data-content-stress-text200]'))",
+          "expected": true,
+          "observed": true,
+          "passed": true,
+          "enforced": true
+        },
+        {
+          "expression": "getComputedStyle(document.body).fontSize",
+          "expected": "28px",
+          "observed": "28px",
+          "passed": true,
+          "enforced": true
+        }
+      ],
+      "metrics": {
+        "viewport": {
+          "width": 1440,
+          "height": 1000,
+          "dpr": 1
+        },
+        "document": {
+          "clientWidth": 1440,
+          "scrollWidth": 1440,
+          "horizontalOverflow": false
+        },
+        "language": "en",
+        "direction": "ltr",
+        "headerRects": {
+          "title": {
+            "top": 19.296875,
+            "left": 32,
+            "right": 425.484375,
+            "bottom": 67.296875,
+            "width": 393.484375,
+            "height": 48
+          },
+          "search": {
+            "top": 14,
+            "left": 441.484375,
+            "right": 918.75,
+            "bottom": 72.59375,
+            "width": 477.265625,
+            "height": 58.59375
+          },
+          "actions": {
+            "top": 14,
+            "left": 934.75,
+            "right": 1408,
+            "bottom": 72.59375,
+            "width": 473.25,
+            "height": 58.59375
+          }
+        },
+        "criticalBorder": {
+          "inlineStart": "5px",
+          "left": "5px",
+          "right": "1px"
+        },
+        "visibleRepresentations": {
+          "table": true,
+          "ticketList": false
+        },
+        "nonScrollableOverflow": [
+          {
+            "tag": "label",
+            "id": null,
+            "className": "visually-hidden",
+            "text": "Search everything",
+            "clientWidth": 1,
+            "scrollWidth": 226,
+            "overflowX": "hidden"
+          },
+          {
+            "tag": "div",
+            "id": null,
+            "className": "",
+            "text": "CRITICAL Payments API Owner: Unassigned · 142 tickets",
+            "clientWidth": 84,
+            "scrollWidth": 148,
+            "overflowX": "visible"
+          },
+          {
+            "tag": "h3",
+            "id": null,
+            "className": "",
+            "text": "Payments API",
+            "clientWidth": 84,
+            "scrollWidth": 142,
+            "overflowX": "visible"
+          },
+          {
+            "tag": "p",
+            "id": null,
+            "className": "",
+            "text": "Owner: Unassigned · 142 tickets",
+            "clientWidth": 84,
+            "scrollWidth": 148,
+            "overflowX": "visible"
+          },
+          {
+            "tag": "select",
+            "id": "view",
+            "className": "",
+            "text": "All views",
+            "clientWidth": 99,
+            "scrollWidth": 123,
+            "overflowX": "visible"
+          },
+          {
+            "tag": "select",
+            "id": "status",
+            "className": "",
+            "text": "All statuses",
+            "clientWidth": 99,
+            "scrollWidth": 157,
+            "overflowX": "visible"
+          },
+          {
+            "tag": "select",
+            "id": "priority",
+            "className": "",
+            "text": "All priorities",
+            "clientWidth": 99,
+            "scrollWidth": 159,
+            "overflowX": "visible"
+          },
+          {
+            "tag": "select",
+            "id": "owner",
+            "className": "",
+            "text": "All owners",
+            "clientWidth": 99,
+            "scrollWidth": 143,
+            "overflowX": "visible"
+          },
+          {
+            "tag": "select",
+            "id": "channel",
+            "className": "",
+            "text": "All channels",
+            "clientWidth": 99,
+            "scrollWidth": 165,
+            "overflowX": "visible"
+          },
+          {
+            "tag": "label",
+            "id": null,
+            "className": "visually-hidden",
+            "text": "Select all tickets",
+            "clientWidth": 1,
+            "scrollWidth": 187,
+            "overflowX": "hidden"
+          },
+          {
+            "tag": "label",
+            "id": null,
+            "className": "visually-hidden",
+            "text": "Select ticket 8941",
+            "clientWidth": 1,
+            "scrollWidth": 189,
+            "overflowX": "hidden"
+          },
+          {
+            "tag": "label",
+            "id": null,
+            "className": "visually-hidden",
+            "text": "Select ticket 8937",
+            "clientWidth": 1,
+            "scrollWidth": 189,
+            "overflowX": "hidden"
+          },
+          {
+            "tag": "label",
+            "id": null,
+            "className": "visually-hidden",
+            "text": "Select ticket 8928",
+            "clientWidth": 1,
+            "scrollWidth": 189,
+            "overflowX": "hidden"
+          },
+          {
+            "tag": "label",
+            "id": null,
+            "className": "visually-hidden",
+            "text": "Select ticket 8919",
+            "clientWidth": 1,
+            "scrollWidth": 189,
+            "overflowX": "hidden"
+          },
+          {
+            "tag": "label",
+            "id": null,
+            "className": "visually-hidden",
+            "text": "Select ticket 8911",
+            "clientWidth": 1,
+            "scrollWidth": 188,
+            "overflowX": "hidden"
+          },
+          {
+            "tag": "div",
+            "id": null,
+            "className": "bar",
+            "text": "Mon",
+            "clientWidth": 39,
+            "scrollWidth": 43,
+            "overflowX": "visible"
+          },
+          {
+            "tag": "div",
+            "id": null,
+            "className": "bar",
+            "text": "Wed",
+            "clientWidth": 39,
+            "scrollWidth": 45,
+            "overflowX": "visible"
+          }
+        ],
+        "clippedText": [],
+        "offscreenInteractive": []
+      },
+      "screenshot": "dashboard-content-text-200-1440x1000.png",
+      "capture": {
+        "bytes": 205134
+      }
+    },
+    {
+      "id": "text-200-390x1000",
+      "mode": "text-200",
+      "viewport": {
+        "width": 390,
+        "height": 1000,
+        "device_scale_factor": 1
+      },
+      "method": "author-stylesheet text-only enlargement simulation",
+      "checks": [
+        {
+          "expression": "window.__contentStress.mode",
+          "expected": "text-200",
+          "observed": "text-200",
+          "passed": true,
+          "enforced": true
+        },
+        {
+          "expression": "innerWidth",
+          "expected": 390,
+          "observed": 390,
+          "passed": true,
+          "enforced": true
+        },
+        {
+          "expression": "document.documentElement.scrollWidth <= document.documentElement.clientWidth",
+          "expected": true,
+          "observed": false,
+          "passed": false,
+          "enforced": false,
+          "note": "Page-level horizontal overflow is a contract failure unless a documented two-dimensional region is responsible and independently reachable."
+        },
+        {
+          "expression": "((() => {\n  const visible = e => {\n    const s = getComputedStyle(e);\n    const r = e.getBoundingClientRect();\n    return s.display !== 'none' && s.visibility !== 'hidden' && r.width > 0 && r.height > 0;\n  };\n  const label = e => ({\n    tag: e.tagName.toLowerCase(),\n    id: e.id || null,\n    className: typeof e.className === 'string' ? e.className : null,\n    text: (e.innerText || e.textContent || '').trim().replace(/\\s+/g, ' ').slice(0, 180)\n  });\n  const nonScrollableOverflow = [...document.querySelectorAll('body *')]\n    .filter(visible)\n    .filter(e => {\n      const s = getComputedStyle(e);\n      return e.scrollWidth > e.clientWidth + 1 &&\n        !['auto', 'scroll'].includes(s.overflowX);\n    })\n    .map(e => ({\n      ...label(e),\n      clientWidth: e.clientWidth,\n      scrollWidth: e.scrollWidth,\n      overflowX: getComputedStyle(e).overflowX\n    }))\n    .slice(0, 40);\n  const clippedText = [...document.querySelectorAll('body *')]\n    .filter(visible)\n    .filter(e => {\n      const s = getComputedStyle(e);\n      if (e.matches('.visually-hidden') || e.closest('.visually-hidden')) return false;\n      const hasText = [...e.childNodes].some(n => n.nodeType === Node.TEXT_NODE && n.textContent.trim());\n      return hasText &&\n        (e.scrollWidth > e.clientWidth + 1 || e.scrollHeight > e.clientHeight + 1) &&\n        ['hidden', 'clip'].includes(s.overflow);\n    })\n    .map(e => ({\n      ...label(e),\n      clientWidth: e.clientWidth,\n      scrollWidth: e.scrollWidth,\n      clientHeight: e.clientHeight,\n      scrollHeight: e.scrollHeight\n    }))\n    .slice(0, 40);\n  const offscreenInteractive = [...document.querySelectorAll(\n    'a[href],button,input,select,textarea,summary,[tabindex]:not([tabindex=\"-1\"])'\n  )]\n    .filter(visible)\n    .map(e => ({e, r: e.getBoundingClientRect()}))\n    .filter(({r}) => r.right <= 0 || r.left >= innerWidth)\n    .map(({e, r}) => ({...label(e), left:r.left, right:r.right, width:r.width}))\n    .slice(0, 40);\n  const rect = selector => {\n    const e = document.querySelector(selector);\n    if (!e || !visible(e)) return null;\n    const r = e.getBoundingClientRect();\n    return {top:r.top,left:r.left,right:r.right,bottom:r.bottom,width:r.width,height:r.height};\n  };\n  const critical = document.querySelector('.incident.critical');\n  const cs = critical ? getComputedStyle(critical) : null;\n  return {\n    viewport: {width:innerWidth,height:innerHeight,dpr:devicePixelRatio},\n    document: {\n      clientWidth: document.documentElement.clientWidth,\n      scrollWidth: document.documentElement.scrollWidth,\n      horizontalOverflow:\n        document.documentElement.scrollWidth > document.documentElement.clientWidth\n    },\n    language: document.documentElement.lang,\n    direction: document.dir || getComputedStyle(document.documentElement).direction,\n    headerRects: {\n      title: rect('.site-header h1'),\n      search: rect('.global-search'),\n      actions: rect('.header-actions')\n    },\n    criticalBorder: cs ? {\n      inlineStart: cs.borderInlineStartWidth,\n      left: cs.borderLeftWidth,\n      right: cs.borderRightWidth\n    } : null,\n    visibleRepresentations: {\n      table: Boolean(document.querySelector('.table-wrap') && visible(document.querySelector('.table-wrap'))),\n      ticketList: Boolean(document.querySelector('.ticket-list') && visible(document.querySelector('.ticket-list')))\n    },\n    nonScrollableOverflow,\n    clippedText,\n    offscreenInteractive\n  };\n})()).offscreenInteractive.length",
+          "expected": 0,
+          "observed": 0,
+          "passed": true,
+          "enforced": false,
+          "note": "Visible interactive controls must not sit wholly outside the viewport."
+        },
+        {
+          "expression": "((() => {\n  const visible = e => {\n    const s = getComputedStyle(e);\n    const r = e.getBoundingClientRect();\n    return s.display !== 'none' && s.visibility !== 'hidden' && r.width > 0 && r.height > 0;\n  };\n  const label = e => ({\n    tag: e.tagName.toLowerCase(),\n    id: e.id || null,\n    className: typeof e.className === 'string' ? e.className : null,\n    text: (e.innerText || e.textContent || '').trim().replace(/\\s+/g, ' ').slice(0, 180)\n  });\n  const nonScrollableOverflow = [...document.querySelectorAll('body *')]\n    .filter(visible)\n    .filter(e => {\n      const s = getComputedStyle(e);\n      return e.scrollWidth > e.clientWidth + 1 &&\n        !['auto', 'scroll'].includes(s.overflowX);\n    })\n    .map(e => ({\n      ...label(e),\n      clientWidth: e.clientWidth,\n      scrollWidth: e.scrollWidth,\n      overflowX: getComputedStyle(e).overflowX\n    }))\n    .slice(0, 40);\n  const clippedText = [...document.querySelectorAll('body *')]\n    .filter(visible)\n    .filter(e => {\n      const s = getComputedStyle(e);\n      if (e.matches('.visually-hidden') || e.closest('.visually-hidden')) return false;\n      const hasText = [...e.childNodes].some(n => n.nodeType === Node.TEXT_NODE && n.textContent.trim());\n      return hasText &&\n        (e.scrollWidth > e.clientWidth + 1 || e.scrollHeight > e.clientHeight + 1) &&\n        ['hidden', 'clip'].includes(s.overflow);\n    })\n    .map(e => ({\n      ...label(e),\n      clientWidth: e.clientWidth,\n      scrollWidth: e.scrollWidth,\n      clientHeight: e.clientHeight,\n      scrollHeight: e.scrollHeight\n    }))\n    .slice(0, 40);\n  const offscreenInteractive = [...document.querySelectorAll(\n    'a[href],button,input,select,textarea,summary,[tabindex]:not([tabindex=\"-1\"])'\n  )]\n    .filter(visible)\n    .map(e => ({e, r: e.getBoundingClientRect()}))\n    .filter(({r}) => r.right <= 0 || r.left >= innerWidth)\n    .map(({e, r}) => ({...label(e), left:r.left, right:r.right, width:r.width}))\n    .slice(0, 40);\n  const rect = selector => {\n    const e = document.querySelector(selector);\n    if (!e || !visible(e)) return null;\n    const r = e.getBoundingClientRect();\n    return {top:r.top,left:r.left,right:r.right,bottom:r.bottom,width:r.width,height:r.height};\n  };\n  const critical = document.querySelector('.incident.critical');\n  const cs = critical ? getComputedStyle(critical) : null;\n  return {\n    viewport: {width:innerWidth,height:innerHeight,dpr:devicePixelRatio},\n    document: {\n      clientWidth: document.documentElement.clientWidth,\n      scrollWidth: document.documentElement.scrollWidth,\n      horizontalOverflow:\n        document.documentElement.scrollWidth > document.documentElement.clientWidth\n    },\n    language: document.documentElement.lang,\n    direction: document.dir || getComputedStyle(document.documentElement).direction,\n    headerRects: {\n      title: rect('.site-header h1'),\n      search: rect('.global-search'),\n      actions: rect('.header-actions')\n    },\n    criticalBorder: cs ? {\n      inlineStart: cs.borderInlineStartWidth,\n      left: cs.borderLeftWidth,\n      right: cs.borderRightWidth\n    } : null,\n    visibleRepresentations: {\n      table: Boolean(document.querySelector('.table-wrap') && visible(document.querySelector('.table-wrap'))),\n      ticketList: Boolean(document.querySelector('.ticket-list') && visible(document.querySelector('.ticket-list')))\n    },\n    nonScrollableOverflow,\n    clippedText,\n    offscreenInteractive\n  };\n})()).clippedText.length",
+          "expected": 0,
+          "observed": 0,
+          "passed": true,
+          "enforced": false,
+          "note": "Clipped text requires a documented, reachable full-value path."
+        },
+        {
+          "expression": "Boolean(document.querySelector('style[data-content-stress-text200]'))",
+          "expected": true,
+          "observed": true,
+          "passed": true,
+          "enforced": true
+        },
+        {
+          "expression": "getComputedStyle(document.body).fontSize",
+          "expected": "28px",
+          "observed": "28px",
+          "passed": true,
+          "enforced": true
+        }
+      ],
+      "metrics": {
+        "viewport": {
+          "width": 390,
+          "height": 1000,
+          "dpr": 1
+        },
+        "document": {
+          "clientWidth": 390,
+          "scrollWidth": 407,
+          "horizontalOverflow": true
+        },
+        "language": "en",
+        "direction": "ltr",
+        "headerRects": {
+          "title": {
+            "top": 12,
+            "left": 14,
+            "right": 376,
+            "bottom": 60,
+            "width": 362,
+            "height": 48
+          },
+          "search": {
+            "top": 138.59375,
+            "left": 14,
+            "right": 376,
+            "bottom": 197.1875,
+            "width": 362,
+            "height": 58.59375
+          },
+          "actions": {
+            "top": 70,
+            "left": 14,
+            "right": 376,
+            "bottom": 128.59375,
+            "width": 362,
+            "height": 58.59375
+          }
+        },
+        "criticalBorder": {
+          "inlineStart": "5px",
+          "left": "5px",
+          "right": "1px"
+        },
+        "visibleRepresentations": {
+          "table": false,
+          "ticketList": true
+        },
+        "nonScrollableOverflow": [
+          {
+            "tag": "header",
+            "id": null,
+            "className": "site-header",
+            "text": "Operations overview Search everything Create ticket More",
+            "clientWidth": 390,
+            "scrollWidth": 407,
+            "overflowX": "visible"
+          },
+          {
+            "tag": "h1",
+            "id": null,
+            "className": "",
+            "text": "Operations overview",
+            "clientWidth": 362,
+            "scrollWidth": 393,
+            "overflowX": "visible"
+          },
+          {
+            "tag": "label",
+            "id": null,
+            "className": "visually-hidden",
+            "text": "Search everything",
+            "clientWidth": 1,
+            "scrollWidth": 226,
+            "overflowX": "hidden"
+          },
+          {
+            "tag": "div",
+            "id": null,
+            "className": "menu-panel",
+            "text": "Export Settings",
+            "clientWidth": 97,
+            "scrollWidth": 140,
+            "overflowX": "visible"
+          }
+        ],
+        "clippedText": [],
+        "offscreenInteractive": []
+      },
+      "screenshot": "dashboard-content-text-200-390x1000.png",
+      "capture": {
+        "bytes": 70850
+      }
+    }
+  ],
+  "browser": {
+    "protocolVersion": "1.3",
+    "product": "Chrome/150.0.7871.187",
+    "revision": "@30f6543ae91e6a860e73b76e3216b663b050f4e5",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/150.0.0.0 Safari/537.36",
+    "jsVersion": "15.0.245.21"
+  },
+  "summary": {
+    "recorded_states": 8,
+    "contract_failures": [
+      {
+        "state": "pseudo-768x1000",
+        "expression": "document.documentElement.scrollWidth <= document.documentElement.clientWidth",
+        "expected": true,
+        "observed": false,
+        "note": "Page-level horizontal overflow is a contract failure unless a documented two-dimensional region is responsible and independently reachable."
+      },
+      {
+        "state": "pseudo-390x1000",
+        "expression": "document.documentElement.scrollWidth <= document.documentElement.clientWidth",
+        "expected": true,
+        "observed": false,
+        "note": "Page-level horizontal overflow is a contract failure unless a documented two-dimensional region is responsible and independently reachable."
+      },
+      {
+        "state": "pseudo-320x1000",
+        "expression": "document.documentElement.scrollWidth <= document.documentElement.clientWidth",
+        "expected": true,
+        "observed": false,
+        "note": "Page-level horizontal overflow is a contract failure unless a documented two-dimensional region is responsible and independently reachable."
+      },
+      {
+        "state": "text-200-390x1000",
+        "expression": "document.documentElement.scrollWidth <= document.documentElement.clientWidth",
+        "expected": true,
+        "observed": false,
+        "note": "Page-level horizontal overflow is a contract failure unless a documented two-dimensional region is responsible and independently reachable."
+      }
+    ]
+  }
+}

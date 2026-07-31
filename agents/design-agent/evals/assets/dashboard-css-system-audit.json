@@ -1,0 +1,4298 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-07-29T18:26:38.668971+00:00",
+  "source": {
+    "file": "visual-dashboard-after.html",
+    "sha256": "d73b9b02a552358c0b773afb826cc36ac6aa25cf9b225a342485cc6498ee8753"
+  },
+  "scope": {
+    "style_blocks": 1,
+    "declarations": 304,
+    "selectors": 84,
+    "media_queries": [
+      "@media (max-width: 1180px)",
+      "@media (max-width: 620px)",
+      "@media (max-width: 860px)"
+    ],
+    "boundary": "This inventory describes only the supplied HTML style blocks. It does not prove a product-wide design system, runtime theme coverage, rendered contrast, component ownership, adoption, or cross-repository usage."
+  },
+  "summary": {
+    "custom_property_count": 15,
+    "custom_property_reference_count": 49,
+    "undefined_token_refs": [],
+    "unused_defined_tokens": [],
+    "category_declaration_counts": {
+      "color": 44,
+      "motion": 2,
+      "radius": 10,
+      "shadow": 3,
+      "sizing": 23,
+      "spacing": 61,
+      "typography": 21
+    },
+    "top_properties": [
+      {
+        "property": "display",
+        "count": 30
+      },
+      {
+        "property": "grid-template-columns",
+        "count": 22
+      },
+      {
+        "property": "background",
+        "count": 20
+      },
+      {
+        "property": "padding",
+        "count": 19
+      },
+      {
+        "property": "color",
+        "count": 18
+      },
+      {
+        "property": "gap",
+        "count": 15
+      },
+      {
+        "property": "margin",
+        "count": 11
+      },
+      {
+        "property": "align-items",
+        "count": 11
+      },
+      {
+        "property": "font-size",
+        "count": 10
+      },
+      {
+        "property": "border-radius",
+        "count": 9
+      },
+      {
+        "property": "border",
+        "count": 8
+      },
+      {
+        "property": "border-block-end",
+        "count": 8
+      },
+      {
+        "property": "grid-column",
+        "count": 8
+      },
+      {
+        "property": "width",
+        "count": 7
+      },
+      {
+        "property": "min-width",
+        "count": 6
+      },
+      {
+        "property": "min-height",
+        "count": 6
+      },
+      {
+        "property": "font-weight",
+        "count": 6
+      },
+      {
+        "property": "position",
+        "count": 4
+      },
+      {
+        "property": "height",
+        "count": 4
+      },
+      {
+        "property": "margin-block-start",
+        "count": 4
+      }
+    ],
+    "top_selectors": [
+      {
+        "selector": ":root",
+        "declaration_count": 16
+      },
+      {
+        "selector": ".site-header",
+        "declaration_count": 13
+      },
+      {
+        "selector": ".incident",
+        "declaration_count": 12
+      },
+      {
+        "selector": ".header-menu[open] .menu-panel",
+        "declaration_count": 11
+      },
+      {
+        "selector": ".header-menu summary",
+        "declaration_count": 10
+      },
+      {
+        "selector": ".toolbar",
+        "declaration_count": 10
+      },
+      {
+        "selector": ".skip-link",
+        "declaration_count": 9
+      },
+      {
+        "selector": ".visually-hidden",
+        "declaration_count": 9
+      },
+      {
+        "selector": ".table-footer",
+        "declaration_count": 8
+      },
+      {
+        "selector": ".bars",
+        "declaration_count": 8
+      },
+      {
+        "selector": ".global-search input,\n    .ticket-search input,\n    select",
+        "declaration_count": 7
+      },
+      {
+        "selector": ".section-heading",
+        "declaration_count": 7
+      },
+      {
+        "selector": ".severity",
+        "declaration_count": 7
+      },
+      {
+        "selector": ".workspace",
+        "declaration_count": 6
+      },
+      {
+        "selector": ".panel",
+        "declaration_count": 6
+      },
+      {
+        "selector": ".ticket",
+        "declaration_count": 6
+      },
+      {
+        "selector": "body",
+        "declaration_count": 5
+      },
+      {
+        "selector": "button",
+        "declaration_count": 5
+      },
+      {
+        "selector": ".site-header h1",
+        "declaration_count": 5
+      },
+      {
+        "selector": ".ticket-list",
+        "declaration_count": 5
+      }
+    ]
+  },
+  "tokens": [
+    {
+      "name": "--accent",
+      "definitions": [
+        {
+          "value": "#155dc7",
+          "selector": ":root",
+          "line": 16,
+          "at_context": []
+        }
+      ],
+      "usage_count": 4,
+      "uses": [
+        {
+          "selector": ".primary",
+          "property": "background",
+          "line": 61,
+          "at_context": []
+        },
+        {
+          "selector": ".quiet",
+          "property": "color",
+          "line": 73,
+          "at_context": []
+        },
+        {
+          "selector": "input[type=\"checkbox\"]",
+          "property": "accent-color",
+          "line": 322,
+          "at_context": []
+        },
+        {
+          "selector": ".bar i",
+          "property": "background",
+          "line": 372,
+          "at_context": []
+        }
+      ],
+      "defined": true
+    },
+    {
+      "name": "--accent-hover",
+      "definitions": [
+        {
+          "value": "#0f4fae",
+          "selector": ":root",
+          "line": 17,
+          "at_context": []
+        }
+      ],
+      "usage_count": 1,
+      "uses": [
+        {
+          "selector": ".primary:hover",
+          "property": "background",
+          "line": 64,
+          "at_context": []
+        }
+      ],
+      "defined": true
+    },
+    {
+      "name": "--canvas",
+      "definitions": [
+        {
+          "value": "#f4f6f8",
+          "selector": ":root",
+          "line": 10,
+          "at_context": []
+        }
+      ],
+      "usage_count": 1,
+      "uses": [
+        {
+          "selector": "body",
+          "property": "background",
+          "line": 34,
+          "at_context": []
+        }
+      ],
+      "defined": true
+    },
+    {
+      "name": "--critical",
+      "definitions": [
+        {
+          "value": "#a61b16",
+          "selector": ":root",
+          "line": 18,
+          "at_context": []
+        }
+      ],
+      "usage_count": 3,
+      "uses": [
+        {
+          "selector": ".incident.critical",
+          "property": "border-inline-start-color",
+          "line": 218,
+          "at_context": []
+        },
+        {
+          "selector": ".severity",
+          "property": "color",
+          "line": 236,
+          "at_context": []
+        },
+        {
+          "selector": ".urgent",
+          "property": "color",
+          "line": 326,
+          "at_context": []
+        }
+      ],
+      "defined": true
+    },
+    {
+      "name": "--critical-bg",
+      "definitions": [
+        {
+          "value": "#fff2f1",
+          "selector": ":root",
+          "line": 19,
+          "at_context": []
+        }
+      ],
+      "usage_count": 1,
+      "uses": [
+        {
+          "selector": ".incident.critical",
+          "property": "background",
+          "line": 216,
+          "at_context": []
+        }
+      ],
+      "defined": true
+    },
+    {
+      "name": "--focus",
+      "definitions": [
+        {
+          "value": "#111827",
+          "selector": ":root",
+          "line": 22,
+          "at_context": []
+        }
+      ],
+      "usage_count": 1,
+      "uses": [
+        {
+          "selector": "button:focus-visible,\n    input:focus-visible,\n    select:focus-visible,\n    summary:focus-visible",
+          "property": "outline",
+          "line": 55,
+          "at_context": []
+        }
+      ],
+      "defined": true
+    },
+    {
+      "name": "--line",
+      "definitions": [
+        {
+          "value": "#d4d9e1",
+          "selector": ":root",
+          "line": 15,
+          "at_context": []
+        }
+      ],
+      "usage_count": 10,
+      "uses": [
+        {
+          "selector": ".site-header",
+          "property": "border-block-end",
+          "line": 112,
+          "at_context": []
+        },
+        {
+          "selector": ".header-menu[open] .menu-panel",
+          "property": "border",
+          "line": 166,
+          "at_context": []
+        },
+        {
+          "selector": ".incident",
+          "property": "border",
+          "line": 209,
+          "at_context": []
+        },
+        {
+          "selector": ".panel",
+          "property": "border",
+          "line": 256,
+          "at_context": []
+        },
+        {
+          "selector": ".panel-title",
+          "property": "border-block-end",
+          "line": 266,
+          "at_context": []
+        },
+        {
+          "selector": ".toolbar",
+          "property": "border-block-end",
+          "line": 276,
+          "at_context": []
+        },
+        {
+          "selector": "th, td",
+          "property": "border-block-end",
+          "line": 302,
+          "at_context": []
+        },
+        {
+          "selector": ".feed li",
+          "property": "border-block-end",
+          "line": 391,
+          "at_context": []
+        },
+        {
+          "selector": ".metric",
+          "property": "border",
+          "line": 408,
+          "at_context": []
+        },
+        {
+          "selector": ".ticket",
+          "property": "border-block-end",
+          "line": 477,
+          "at_context": [
+            "@media (max-width: 860px)"
+          ]
+        }
+      ],
+      "defined": true
+    },
+    {
+      "name": "--major",
+      "definitions": [
+        {
+          "value": "#8a4b08",
+          "selector": ":root",
+          "line": 20,
+          "at_context": []
+        }
+      ],
+      "usage_count": 2,
+      "uses": [
+        {
+          "selector": ".incident",
+          "property": "border-inline-start",
+          "line": 210,
+          "at_context": []
+        },
+        {
+          "selector": ".major .severity",
+          "property": "color",
+          "line": 243,
+          "at_context": []
+        }
+      ],
+      "defined": true
+    },
+    {
+      "name": "--major-bg",
+      "definitions": [
+        {
+          "value": "#fff8e8",
+          "selector": ":root",
+          "line": 21,
+          "at_context": []
+        }
+      ],
+      "usage_count": 1,
+      "uses": [
+        {
+          "selector": ".incident.major",
+          "property": "background",
+          "line": 221,
+          "at_context": []
+        }
+      ],
+      "defined": true
+    },
+    {
+      "name": "--muted",
+      "definitions": [
+        {
+          "value": "#596273",
+          "selector": ":root",
+          "line": 14,
+          "at_context": []
+        }
+      ],
+      "usage_count": 6,
+      "uses": [
+        {
+          "selector": ".section-heading p",
+          "property": "color",
+          "line": 192,
+          "at_context": []
+        },
+        {
+          "selector": ".field label",
+          "property": "color",
+          "line": 286,
+          "at_context": []
+        },
+        {
+          "selector": ".selection-status",
+          "property": "color",
+          "line": 339,
+          "at_context": []
+        },
+        {
+          "selector": ".bar span",
+          "property": "color",
+          "line": 378,
+          "at_context": []
+        },
+        {
+          "selector": ".metric small",
+          "property": "color",
+          "line": 418,
+          "at_context": []
+        },
+        {
+          "selector": ".ticket-meta,\n      .ticket-context",
+          "property": "color",
+          "line": 495,
+          "at_context": [
+            "@media (max-width: 860px)"
+          ]
+        }
+      ],
+      "defined": true
+    },
+    {
+      "name": "--radius",
+      "definitions": [
+        {
+          "value": "10px",
+          "selector": ":root",
+          "line": 23,
+          "at_context": []
+        }
+      ],
+      "usage_count": 3,
+      "uses": [
+        {
+          "selector": ".incident",
+          "property": "border-radius",
+          "line": 211,
+          "at_context": []
+        },
+        {
+          "selector": ".panel",
+          "property": "border-radius",
+          "line": 257,
+          "at_context": []
+        },
+        {
+          "selector": ".metric",
+          "property": "border-radius",
+          "line": 409,
+          "at_context": []
+        }
+      ],
+      "defined": true
+    },
+    {
+      "name": "--shadow",
+      "definitions": [
+        {
+          "value": "0 1px 2px rgba(22, 32, 50, .08), 0 6px 18px rgba(22, 32, 50, .05)",
+          "selector": ":root",
+          "line": 24,
+          "at_context": []
+        }
+      ],
+      "usage_count": 3,
+      "uses": [
+        {
+          "selector": ".header-menu[open] .menu-panel",
+          "property": "box-shadow",
+          "line": 168,
+          "at_context": []
+        },
+        {
+          "selector": ".incident",
+          "property": "box-shadow",
+          "line": 212,
+          "at_context": []
+        },
+        {
+          "selector": ".panel",
+          "property": "box-shadow",
+          "line": 258,
+          "at_context": []
+        }
+      ],
+      "defined": true
+    },
+    {
+      "name": "--surface",
+      "definitions": [
+        {
+          "value": "#ffffff",
+          "selector": ":root",
+          "line": 11,
+          "at_context": []
+        }
+      ],
+      "usage_count": 8,
+      "uses": [
+        {
+          "selector": ".secondary",
+          "property": "background",
+          "line": 68,
+          "at_context": []
+        },
+        {
+          "selector": ".site-header",
+          "property": "background",
+          "line": 111,
+          "at_context": []
+        },
+        {
+          "selector": ".global-search input,\n    .ticket-search input,\n    select",
+          "property": "background",
+          "line": 129,
+          "at_context": []
+        },
+        {
+          "selector": ".header-menu summary",
+          "property": "background",
+          "line": 150,
+          "at_context": []
+        },
+        {
+          "selector": ".header-menu[open] .menu-panel",
+          "property": "background",
+          "line": 165,
+          "at_context": []
+        },
+        {
+          "selector": ".incident",
+          "property": "background",
+          "line": 208,
+          "at_context": []
+        },
+        {
+          "selector": ".panel",
+          "property": "background",
+          "line": 255,
+          "at_context": []
+        },
+        {
+          "selector": ".metric",
+          "property": "background",
+          "line": 407,
+          "at_context": []
+        }
+      ],
+      "defined": true
+    },
+    {
+      "name": "--surface-muted",
+      "definitions": [
+        {
+          "value": "#f7f8fa",
+          "selector": ":root",
+          "line": 12,
+          "at_context": []
+        }
+      ],
+      "usage_count": 1,
+      "uses": [
+        {
+          "selector": ".toolbar",
+          "property": "background",
+          "line": 275,
+          "at_context": []
+        }
+      ],
+      "defined": true
+    },
+    {
+      "name": "--text",
+      "definitions": [
+        {
+          "value": "#20242b",
+          "selector": ":root",
+          "line": 13,
+          "at_context": []
+        }
+      ],
+      "usage_count": 4,
+      "uses": [
+        {
+          "selector": "body",
+          "property": "color",
+          "line": 33,
+          "at_context": []
+        },
+        {
+          "selector": ".secondary",
+          "property": "color",
+          "line": 67,
+          "at_context": []
+        },
+        {
+          "selector": ".global-search input,\n    .ticket-search input,\n    select",
+          "property": "color",
+          "line": 128,
+          "at_context": []
+        },
+        {
+          "selector": ".header-menu summary",
+          "property": "color",
+          "line": 149,
+          "at_context": []
+        }
+      ],
+      "defined": true
+    }
+  ],
+  "literal_inventories": {
+    "colors": [
+      {
+        "value": "#aeb6c3",
+        "count": 3,
+        "uses": [
+          {
+            "selector": ".secondary",
+            "property": "border-color",
+            "line": 69,
+            "at_context": []
+          },
+          {
+            "selector": ".global-search input,\n    .ticket-search input,\n    select",
+            "property": "border",
+            "line": 130,
+            "at_context": []
+          },
+          {
+            "selector": ".header-menu summary",
+            "property": "border",
+            "line": 151,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "value": "#fff",
+        "count": 2,
+        "uses": [
+          {
+            "selector": ".primary",
+            "property": "color",
+            "line": 60,
+            "at_context": []
+          },
+          {
+            "selector": ".skip-link",
+            "property": "color",
+            "line": 84,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "value": "#111827",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".skip-link",
+            "property": "background",
+            "line": 85,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "value": "#394150",
+        "count": 1,
+        "uses": [
+          {
+            "selector": "th",
+            "property": "color",
+            "line": 307,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "value": "#4f2530",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".incident p",
+            "property": "color",
+            "line": 230,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "value": "#9da6b2",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".bars",
+            "property": "border-block-end",
+            "line": 360,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "value": "#e3e7ed",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".bars",
+            "property": "background",
+            "line": 359,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "value": "#edaaa6",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".incident.critical",
+            "property": "border-color",
+            "line": 217,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "value": "#f0f2f5",
+        "count": 1,
+        "uses": [
+          {
+            "selector": "th",
+            "property": "background",
+            "line": 308,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "value": "#f8fafd",
+        "count": 1,
+        "uses": [
+          {
+            "selector": "tbody tr:hover",
+            "property": "background",
+            "line": 311,
+            "at_context": []
+          }
+        ]
+      }
+    ],
+    "lengths": [
+      {
+        "value": "1px",
+        "count": 16,
+        "uses": [
+          {
+            "selector": "button",
+            "property": "border",
+            "line": 45,
+            "at_context": []
+          },
+          {
+            "selector": ".visually-hidden",
+            "property": "width",
+            "line": 94,
+            "at_context": []
+          },
+          {
+            "selector": ".visually-hidden",
+            "property": "height",
+            "line": 95,
+            "at_context": []
+          },
+          {
+            "selector": ".site-header",
+            "property": "border-block-end",
+            "line": 112,
+            "at_context": []
+          },
+          {
+            "selector": ".global-search input,\n    .ticket-search input,\n    select",
+            "property": "border",
+            "line": 130,
+            "at_context": []
+          },
+          {
+            "selector": ".header-menu summary",
+            "property": "border",
+            "line": 151,
+            "at_context": []
+          },
+          {
+            "selector": ".header-menu[open] .menu-panel",
+            "property": "border",
+            "line": 166,
+            "at_context": []
+          },
+          {
+            "selector": ".incident",
+            "property": "border",
+            "line": 209,
+            "at_context": []
+          },
+          {
+            "selector": ".panel",
+            "property": "border",
+            "line": 256,
+            "at_context": []
+          },
+          {
+            "selector": ".panel-title",
+            "property": "border-block-end",
+            "line": 266,
+            "at_context": []
+          },
+          {
+            "selector": ".toolbar",
+            "property": "border-block-end",
+            "line": 276,
+            "at_context": []
+          },
+          {
+            "selector": "th, td",
+            "property": "border-block-end",
+            "line": 302,
+            "at_context": []
+          },
+          {
+            "selector": ".bars",
+            "property": "border-block-end",
+            "line": 360,
+            "at_context": []
+          },
+          {
+            "selector": ".feed li",
+            "property": "border-block-end",
+            "line": 391,
+            "at_context": []
+          },
+          {
+            "selector": ".metric",
+            "property": "border",
+            "line": 408,
+            "at_context": []
+          },
+          {
+            "selector": ".ticket",
+            "property": "border-block-end",
+            "line": 477,
+            "at_context": [
+              "@media (max-width: 860px)"
+            ]
+          }
+        ]
+      },
+      {
+        "value": "12px",
+        "count": 14,
+        "uses": [
+          {
+            "selector": ".section-heading",
+            "property": "gap",
+            "line": 179,
+            "at_context": []
+          },
+          {
+            "selector": ".incidents",
+            "property": "gap",
+            "line": 198,
+            "at_context": []
+          },
+          {
+            "selector": ".incident",
+            "property": "gap",
+            "line": 204,
+            "at_context": []
+          },
+          {
+            "selector": ".severity",
+            "property": "font-size",
+            "line": 237,
+            "at_context": []
+          },
+          {
+            "selector": ".toolbar",
+            "property": "padding",
+            "line": 274,
+            "at_context": []
+          },
+          {
+            "selector": ".field label",
+            "property": "font-size",
+            "line": 287,
+            "at_context": []
+          },
+          {
+            "selector": "table",
+            "property": "font-size",
+            "line": 296,
+            "at_context": []
+          },
+          {
+            "selector": ".table-footer",
+            "property": "gap",
+            "line": 332,
+            "at_context": []
+          },
+          {
+            "selector": ".table-footer",
+            "property": "padding",
+            "line": 336,
+            "at_context": []
+          },
+          {
+            "selector": ".chart",
+            "property": "padding",
+            "line": 349,
+            "at_context": []
+          },
+          {
+            "selector": ".bars",
+            "property": "padding",
+            "line": 358,
+            "at_context": []
+          },
+          {
+            "selector": ".ticket",
+            "property": "gap",
+            "line": 474,
+            "at_context": [
+              "@media (max-width: 860px)"
+            ]
+          },
+          {
+            "selector": ".ticket-meta,\n      .ticket-context",
+            "property": "font-size",
+            "line": 496,
+            "at_context": [
+              "@media (max-width: 860px)"
+            ]
+          },
+          {
+            "selector": ".site-header",
+            "property": "padding",
+            "line": 508,
+            "at_context": [
+              "@media (max-width: 620px)"
+            ]
+          }
+        ]
+      },
+      {
+        "value": "14px",
+        "count": 14,
+        "uses": [
+          {
+            "selector": "body",
+            "property": "font",
+            "line": 32,
+            "at_context": []
+          },
+          {
+            "selector": "button",
+            "property": "padding",
+            "line": 44,
+            "at_context": []
+          },
+          {
+            "selector": ".skip-link",
+            "property": "padding",
+            "line": 83,
+            "at_context": []
+          },
+          {
+            "selector": ".site-header",
+            "property": "padding",
+            "line": 110,
+            "at_context": []
+          },
+          {
+            "selector": ".header-menu summary",
+            "property": "padding-inline",
+            "line": 147,
+            "at_context": []
+          },
+          {
+            "selector": "main",
+            "property": "padding",
+            "line": 174,
+            "at_context": []
+          },
+          {
+            "selector": ".incident",
+            "property": "padding",
+            "line": 207,
+            "at_context": []
+          },
+          {
+            "selector": ".panel-title",
+            "property": "padding",
+            "line": 264,
+            "at_context": []
+          },
+          {
+            "selector": ".chart",
+            "property": "padding",
+            "line": 349,
+            "at_context": []
+          },
+          {
+            "selector": ".feed",
+            "property": "padding",
+            "line": 385,
+            "at_context": []
+          },
+          {
+            "selector": ".feed",
+            "property": "padding",
+            "line": 385,
+            "at_context": []
+          },
+          {
+            "selector": ".metric",
+            "property": "padding",
+            "line": 406,
+            "at_context": []
+          },
+          {
+            "selector": ".ticket",
+            "property": "padding",
+            "line": 476,
+            "at_context": [
+              "@media (max-width: 860px)"
+            ]
+          },
+          {
+            "selector": ".site-header",
+            "property": "padding",
+            "line": 508,
+            "at_context": [
+              "@media (max-width: 620px)"
+            ]
+          }
+        ]
+      },
+      {
+        "value": "8px",
+        "count": 12,
+        "uses": [
+          {
+            "selector": "button",
+            "property": "padding",
+            "line": 44,
+            "at_context": []
+          },
+          {
+            "selector": ".skip-link",
+            "property": "inset-block-start",
+            "line": 81,
+            "at_context": []
+          },
+          {
+            "selector": ".skip-link",
+            "property": "inset-inline-start",
+            "line": 82,
+            "at_context": []
+          },
+          {
+            "selector": ".global-search input,\n    .ticket-search input,\n    select",
+            "property": "padding",
+            "line": 127,
+            "at_context": []
+          },
+          {
+            "selector": ".header-actions,\n    .incident-actions,\n    .toolbar-actions,\n    .pagination",
+            "property": "gap",
+            "line": 139,
+            "at_context": []
+          },
+          {
+            "selector": ".header-menu[open] .menu-panel",
+            "property": "border-radius",
+            "line": 167,
+            "at_context": []
+          },
+          {
+            "selector": ".toolbar",
+            "property": "gap",
+            "line": 272,
+            "at_context": []
+          },
+          {
+            "selector": "th, td",
+            "property": "padding",
+            "line": 300,
+            "at_context": []
+          },
+          {
+            "selector": ".bars",
+            "property": "gap",
+            "line": 355,
+            "at_context": []
+          },
+          {
+            "selector": ".bar i",
+            "property": "min-height",
+            "line": 371,
+            "at_context": []
+          },
+          {
+            "selector": ".metric b",
+            "property": "margin-block",
+            "line": 414,
+            "at_context": []
+          },
+          {
+            "selector": ".ticket",
+            "property": "gap",
+            "line": 474,
+            "at_context": [
+              "@media (max-width: 860px)"
+            ]
+          }
+        ]
+      },
+      {
+        "value": "16px",
+        "count": 8,
+        "uses": [
+          {
+            "selector": ".site-header",
+            "property": "gap",
+            "line": 107,
+            "at_context": []
+          },
+          {
+            "selector": ".site-header",
+            "property": "padding",
+            "line": 110,
+            "at_context": []
+          },
+          {
+            "selector": ".workspace",
+            "property": "gap",
+            "line": 248,
+            "at_context": []
+          },
+          {
+            "selector": ".panel-title",
+            "property": "padding",
+            "line": 264,
+            "at_context": []
+          },
+          {
+            "selector": ".panel-title",
+            "property": "font-size",
+            "line": 265,
+            "at_context": []
+          },
+          {
+            "selector": ".supporting",
+            "property": "gap",
+            "line": 345,
+            "at_context": []
+          },
+          {
+            "selector": ".chart",
+            "property": "padding",
+            "line": 349,
+            "at_context": []
+          },
+          {
+            "selector": "main",
+            "property": "padding-block-start",
+            "line": 531,
+            "at_context": [
+              "@media (max-width: 620px)"
+            ]
+          }
+        ]
+      },
+      {
+        "value": "10px",
+        "count": 7,
+        "uses": [
+          {
+            "selector": ".skip-link",
+            "property": "padding",
+            "line": 83,
+            "at_context": []
+          },
+          {
+            "selector": ".global-search input,\n    .ticket-search input,\n    select",
+            "property": "padding",
+            "line": 127,
+            "at_context": []
+          },
+          {
+            "selector": ".section-heading",
+            "property": "margin-block-end",
+            "line": 182,
+            "at_context": []
+          },
+          {
+            "selector": ".table-footer",
+            "property": "padding",
+            "line": 336,
+            "at_context": []
+          },
+          {
+            "selector": ".feed li",
+            "property": "padding-block",
+            "line": 390,
+            "at_context": []
+          },
+          {
+            "selector": ".metrics",
+            "property": "gap",
+            "line": 401,
+            "at_context": []
+          },
+          {
+            "selector": ".site-header",
+            "property": "gap",
+            "line": 507,
+            "at_context": [
+              "@media (max-width: 620px)"
+            ]
+          }
+        ]
+      },
+      {
+        "value": "4px",
+        "count": 6,
+        "uses": [
+          {
+            "selector": ".field",
+            "property": "gap",
+            "line": 281,
+            "at_context": []
+          },
+          {
+            "selector": ".bars",
+            "property": "padding",
+            "line": 358,
+            "at_context": []
+          },
+          {
+            "selector": ".bar i",
+            "property": "border-radius",
+            "line": 373,
+            "at_context": []
+          },
+          {
+            "selector": ".bar i",
+            "property": "border-radius",
+            "line": 373,
+            "at_context": []
+          },
+          {
+            "selector": ".feed",
+            "property": "padding",
+            "line": 385,
+            "at_context": []
+          },
+          {
+            "selector": ".ticket-title",
+            "property": "margin-block-end",
+            "line": 488,
+            "at_context": [
+              "@media (max-width: 860px)"
+            ]
+          }
+        ]
+      },
+      {
+        "value": "6px",
+        "count": 5,
+        "uses": [
+          {
+            "selector": ".skip-link",
+            "property": "border-radius",
+            "line": 86,
+            "at_context": []
+          },
+          {
+            "selector": ".global-search input,\n    .ticket-search input,\n    select",
+            "property": "border-radius",
+            "line": 131,
+            "at_context": []
+          },
+          {
+            "selector": ".header-menu[open] .menu-panel",
+            "property": "inset-block-start",
+            "line": 160,
+            "at_context": []
+          },
+          {
+            "selector": ".header-menu[open] .menu-panel",
+            "property": "padding",
+            "line": 164,
+            "at_context": []
+          },
+          {
+            "selector": ".bar span",
+            "property": "margin-block-start",
+            "line": 377,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "value": "20px",
+        "count": 4,
+        "uses": [
+          {
+            "selector": ".site-header h1",
+            "property": "font-size",
+            "line": 117,
+            "at_context": []
+          },
+          {
+            "selector": "main",
+            "property": "padding",
+            "line": 174,
+            "at_context": []
+          },
+          {
+            "selector": ".workspace",
+            "property": "margin-block-start",
+            "line": 250,
+            "at_context": []
+          },
+          {
+            "selector": ".bars",
+            "property": "grid-template-columns",
+            "line": 354,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "value": "2px",
+        "count": 4,
+        "uses": [
+          {
+            "selector": "button:focus-visible,\n    input:focus-visible,\n    select:focus-visible,\n    summary:focus-visible",
+            "property": "outline-offset",
+            "line": 56,
+            "at_context": []
+          },
+          {
+            "selector": ".metric b",
+            "property": "margin-block",
+            "line": 414,
+            "at_context": []
+          },
+          {
+            "selector": ".ticket input",
+            "property": "margin-block-start",
+            "line": 480,
+            "at_context": [
+              "@media (max-width: 860px)"
+            ]
+          },
+          {
+            "selector": ".section-heading",
+            "property": "gap",
+            "line": 535,
+            "at_context": [
+              "@media (max-width: 620px)"
+            ]
+          }
+        ]
+      },
+      {
+        "value": "40px",
+        "count": 4,
+        "uses": [
+          {
+            "selector": "button, select, summary",
+            "property": "min-height",
+            "line": 40,
+            "at_context": []
+          },
+          {
+            "selector": ".global-search input,\n    .ticket-search input,\n    select",
+            "property": "min-height",
+            "line": 126,
+            "at_context": []
+          },
+          {
+            "selector": "main",
+            "property": "padding",
+            "line": 174,
+            "at_context": []
+          },
+          {
+            "selector": ".select-cell",
+            "property": "width",
+            "line": 314,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "value": "18px",
+        "count": 3,
+        "uses": [
+          {
+            "selector": ".section-heading h2",
+            "property": "font-size",
+            "line": 187,
+            "at_context": []
+          },
+          {
+            "selector": "input[type=\"checkbox\"]",
+            "property": "width",
+            "line": 319,
+            "at_context": []
+          },
+          {
+            "selector": "input[type=\"checkbox\"]",
+            "property": "height",
+            "line": 320,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "value": "5px",
+        "count": 3,
+        "uses": [
+          {
+            "selector": ".incident",
+            "property": "border-inline-start",
+            "line": 210,
+            "at_context": []
+          },
+          {
+            "selector": ".incident h3",
+            "property": "margin",
+            "line": 224,
+            "at_context": []
+          },
+          {
+            "selector": ".severity",
+            "property": "margin-block-end",
+            "line": 235,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "value": "24px",
+        "count": 2,
+        "uses": [
+          {
+            "selector": ".metrics-section",
+            "property": "margin-block-start",
+            "line": 396,
+            "at_context": []
+          },
+          {
+            "selector": ".metric b",
+            "property": "font-size",
+            "line": 415,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "value": "7px",
+        "count": 2,
+        "uses": [
+          {
+            "selector": "button",
+            "property": "border-radius",
+            "line": 46,
+            "at_context": []
+          },
+          {
+            "selector": ".header-menu summary",
+            "property": "border-radius",
+            "line": 152,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "value": "-1px",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".visually-hidden",
+            "property": "margin",
+            "line": 97,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "value": ".04em",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".severity",
+            "property": "letter-spacing",
+            "line": 239,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "value": "116px",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".incident",
+            "property": "min-height",
+            "line": 206,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "value": "11px",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".bar span",
+            "property": "font-size",
+            "line": 379,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "value": "140px",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".header-menu[open] .menu-panel",
+            "property": "min-width",
+            "line": 163,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "value": "1540px",
+        "count": 1,
+        "uses": [
+          {
+            "selector": "main",
+            "property": "width",
+            "line": 172,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "value": "15px",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".incident h3",
+            "property": "font-size",
+            "line": 225,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "value": "170px",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".toolbar",
+            "property": "grid-template-columns",
+            "line": 271,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "value": "180px",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".toolbar",
+            "property": "grid-template-columns",
+            "line": 432,
+            "at_context": [
+              "@media (max-width: 1180px)"
+            ]
+          }
+        ]
+      },
+      {
+        "value": "190px",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".bars",
+            "property": "height",
+            "line": 357,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "value": "2.5vw",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".site-header",
+            "property": "padding",
+            "line": 110,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "value": "220px",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".site-header",
+            "property": "grid-template-columns",
+            "line": 422,
+            "at_context": [
+              "@media (max-width: 1180px)"
+            ]
+          }
+        ]
+      },
+      {
+        "value": "240px",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".site-header",
+            "property": "grid-template-columns",
+            "line": 106,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "value": "260px",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".workspace",
+            "property": "grid-template-columns",
+            "line": 247,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "value": "28px",
+        "count": 1,
+        "uses": [
+          {
+            "selector": "main",
+            "property": "padding",
+            "line": 174,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "value": "2vw",
+        "count": 1,
+        "uses": [
+          {
+            "selector": "main",
+            "property": "padding",
+            "line": 174,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "value": "310px",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".workspace",
+            "property": "grid-template-columns",
+            "line": 247,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "value": "32px",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".site-header",
+            "property": "padding",
+            "line": 110,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "value": "37px",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".bars",
+            "property": "background",
+            "line": 359,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "value": "38px",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".bars",
+            "property": "background",
+            "line": 359,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "value": "3px",
+        "count": 1,
+        "uses": [
+          {
+            "selector": "button:focus-visible,\n    input:focus-visible,\n    select:focus-visible,\n    summary:focus-visible",
+            "property": "outline",
+            "line": 55,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "value": "520px",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".site-header",
+            "property": "grid-template-columns",
+            "line": 106,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "value": "60px",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".table-footer",
+            "property": "min-height",
+            "line": 335,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "value": "72px",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".site-header",
+            "property": "min-height",
+            "line": 109,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "value": "90px",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".toolbar",
+            "property": "grid-template-columns",
+            "line": 271,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "value": "96px",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".toolbar",
+            "property": "grid-template-columns",
+            "line": 432,
+            "at_context": [
+              "@media (max-width: 1180px)"
+            ]
+          }
+        ]
+      },
+      {
+        "value": "9px",
+        "count": 1,
+        "uses": [
+          {
+            "selector": "th, td",
+            "property": "padding",
+            "line": 300,
+            "at_context": []
+          }
+        ]
+      }
+    ],
+    "times": []
+  },
+  "repeated_raw_candidates": {
+    "colors": [
+      {
+        "value": "#aeb6c3",
+        "count": 3,
+        "uses": [
+          {
+            "selector": ".secondary",
+            "property": "border-color",
+            "line": 69,
+            "at_context": []
+          },
+          {
+            "selector": ".global-search input,\n    .ticket-search input,\n    select",
+            "property": "border",
+            "line": 130,
+            "at_context": []
+          },
+          {
+            "selector": ".header-menu summary",
+            "property": "border",
+            "line": 151,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "value": "#fff",
+        "count": 2,
+        "uses": [
+          {
+            "selector": ".primary",
+            "property": "color",
+            "line": 60,
+            "at_context": []
+          },
+          {
+            "selector": ".skip-link",
+            "property": "color",
+            "line": 84,
+            "at_context": []
+          }
+        ]
+      }
+    ],
+    "lengths": [
+      {
+        "value": "1px",
+        "count": 16,
+        "uses": [
+          {
+            "selector": "button",
+            "property": "border",
+            "line": 45,
+            "at_context": []
+          },
+          {
+            "selector": ".visually-hidden",
+            "property": "width",
+            "line": 94,
+            "at_context": []
+          },
+          {
+            "selector": ".visually-hidden",
+            "property": "height",
+            "line": 95,
+            "at_context": []
+          },
+          {
+            "selector": ".site-header",
+            "property": "border-block-end",
+            "line": 112,
+            "at_context": []
+          },
+          {
+            "selector": ".global-search input,\n    .ticket-search input,\n    select",
+            "property": "border",
+            "line": 130,
+            "at_context": []
+          },
+          {
+            "selector": ".header-menu summary",
+            "property": "border",
+            "line": 151,
+            "at_context": []
+          },
+          {
+            "selector": ".header-menu[open] .menu-panel",
+            "property": "border",
+            "line": 166,
+            "at_context": []
+          },
+          {
+            "selector": ".incident",
+            "property": "border",
+            "line": 209,
+            "at_context": []
+          },
+          {
+            "selector": ".panel",
+            "property": "border",
+            "line": 256,
+            "at_context": []
+          },
+          {
+            "selector": ".panel-title",
+            "property": "border-block-end",
+            "line": 266,
+            "at_context": []
+          },
+          {
+            "selector": ".toolbar",
+            "property": "border-block-end",
+            "line": 276,
+            "at_context": []
+          },
+          {
+            "selector": "th, td",
+            "property": "border-block-end",
+            "line": 302,
+            "at_context": []
+          },
+          {
+            "selector": ".bars",
+            "property": "border-block-end",
+            "line": 360,
+            "at_context": []
+          },
+          {
+            "selector": ".feed li",
+            "property": "border-block-end",
+            "line": 391,
+            "at_context": []
+          },
+          {
+            "selector": ".metric",
+            "property": "border",
+            "line": 408,
+            "at_context": []
+          },
+          {
+            "selector": ".ticket",
+            "property": "border-block-end",
+            "line": 477,
+            "at_context": [
+              "@media (max-width: 860px)"
+            ]
+          }
+        ]
+      },
+      {
+        "value": "12px",
+        "count": 14,
+        "uses": [
+          {
+            "selector": ".section-heading",
+            "property": "gap",
+            "line": 179,
+            "at_context": []
+          },
+          {
+            "selector": ".incidents",
+            "property": "gap",
+            "line": 198,
+            "at_context": []
+          },
+          {
+            "selector": ".incident",
+            "property": "gap",
+            "line": 204,
+            "at_context": []
+          },
+          {
+            "selector": ".severity",
+            "property": "font-size",
+            "line": 237,
+            "at_context": []
+          },
+          {
+            "selector": ".toolbar",
+            "property": "padding",
+            "line": 274,
+            "at_context": []
+          },
+          {
+            "selector": ".field label",
+            "property": "font-size",
+            "line": 287,
+            "at_context": []
+          },
+          {
+            "selector": "table",
+            "property": "font-size",
+            "line": 296,
+            "at_context": []
+          },
+          {
+            "selector": ".table-footer",
+            "property": "gap",
+            "line": 332,
+            "at_context": []
+          },
+          {
+            "selector": ".table-footer",
+            "property": "padding",
+            "line": 336,
+            "at_context": []
+          },
+          {
+            "selector": ".chart",
+            "property": "padding",
+            "line": 349,
+            "at_context": []
+          },
+          {
+            "selector": ".bars",
+            "property": "padding",
+            "line": 358,
+            "at_context": []
+          },
+          {
+            "selector": ".ticket",
+            "property": "gap",
+            "line": 474,
+            "at_context": [
+              "@media (max-width: 860px)"
+            ]
+          },
+          {
+            "selector": ".ticket-meta,\n      .ticket-context",
+            "property": "font-size",
+            "line": 496,
+            "at_context": [
+              "@media (max-width: 860px)"
+            ]
+          },
+          {
+            "selector": ".site-header",
+            "property": "padding",
+            "line": 508,
+            "at_context": [
+              "@media (max-width: 620px)"
+            ]
+          }
+        ]
+      },
+      {
+        "value": "14px",
+        "count": 14,
+        "uses": [
+          {
+            "selector": "body",
+            "property": "font",
+            "line": 32,
+            "at_context": []
+          },
+          {
+            "selector": "button",
+            "property": "padding",
+            "line": 44,
+            "at_context": []
+          },
+          {
+            "selector": ".skip-link",
+            "property": "padding",
+            "line": 83,
+            "at_context": []
+          },
+          {
+            "selector": ".site-header",
+            "property": "padding",
+            "line": 110,
+            "at_context": []
+          },
+          {
+            "selector": ".header-menu summary",
+            "property": "padding-inline",
+            "line": 147,
+            "at_context": []
+          },
+          {
+            "selector": "main",
+            "property": "padding",
+            "line": 174,
+            "at_context": []
+          },
+          {
+            "selector": ".incident",
+            "property": "padding",
+            "line": 207,
+            "at_context": []
+          },
+          {
+            "selector": ".panel-title",
+            "property": "padding",
+            "line": 264,
+            "at_context": []
+          },
+          {
+            "selector": ".chart",
+            "property": "padding",
+            "line": 349,
+            "at_context": []
+          },
+          {
+            "selector": ".feed",
+            "property": "padding",
+            "line": 385,
+            "at_context": []
+          },
+          {
+            "selector": ".feed",
+            "property": "padding",
+            "line": 385,
+            "at_context": []
+          },
+          {
+            "selector": ".metric",
+            "property": "padding",
+            "line": 406,
+            "at_context": []
+          },
+          {
+            "selector": ".ticket",
+            "property": "padding",
+            "line": 476,
+            "at_context": [
+              "@media (max-width: 860px)"
+            ]
+          },
+          {
+            "selector": ".site-header",
+            "property": "padding",
+            "line": 508,
+            "at_context": [
+              "@media (max-width: 620px)"
+            ]
+          }
+        ]
+      },
+      {
+        "value": "8px",
+        "count": 12,
+        "uses": [
+          {
+            "selector": "button",
+            "property": "padding",
+            "line": 44,
+            "at_context": []
+          },
+          {
+            "selector": ".skip-link",
+            "property": "inset-block-start",
+            "line": 81,
+            "at_context": []
+          },
+          {
+            "selector": ".skip-link",
+            "property": "inset-inline-start",
+            "line": 82,
+            "at_context": []
+          },
+          {
+            "selector": ".global-search input,\n    .ticket-search input,\n    select",
+            "property": "padding",
+            "line": 127,
+            "at_context": []
+          },
+          {
+            "selector": ".header-actions,\n    .incident-actions,\n    .toolbar-actions,\n    .pagination",
+            "property": "gap",
+            "line": 139,
+            "at_context": []
+          },
+          {
+            "selector": ".header-menu[open] .menu-panel",
+            "property": "border-radius",
+            "line": 167,
+            "at_context": []
+          },
+          {
+            "selector": ".toolbar",
+            "property": "gap",
+            "line": 272,
+            "at_context": []
+          },
+          {
+            "selector": "th, td",
+            "property": "padding",
+            "line": 300,
+            "at_context": []
+          },
+          {
+            "selector": ".bars",
+            "property": "gap",
+            "line": 355,
+            "at_context": []
+          },
+          {
+            "selector": ".bar i",
+            "property": "min-height",
+            "line": 371,
+            "at_context": []
+          },
+          {
+            "selector": ".metric b",
+            "property": "margin-block",
+            "line": 414,
+            "at_context": []
+          },
+          {
+            "selector": ".ticket",
+            "property": "gap",
+            "line": 474,
+            "at_context": [
+              "@media (max-width: 860px)"
+            ]
+          }
+        ]
+      },
+      {
+        "value": "16px",
+        "count": 8,
+        "uses": [
+          {
+            "selector": ".site-header",
+            "property": "gap",
+            "line": 107,
+            "at_context": []
+          },
+          {
+            "selector": ".site-header",
+            "property": "padding",
+            "line": 110,
+            "at_context": []
+          },
+          {
+            "selector": ".workspace",
+            "property": "gap",
+            "line": 248,
+            "at_context": []
+          },
+          {
+            "selector": ".panel-title",
+            "property": "padding",
+            "line": 264,
+            "at_context": []
+          },
+          {
+            "selector": ".panel-title",
+            "property": "font-size",
+            "line": 265,
+            "at_context": []
+          },
+          {
+            "selector": ".supporting",
+            "property": "gap",
+            "line": 345,
+            "at_context": []
+          },
+          {
+            "selector": ".chart",
+            "property": "padding",
+            "line": 349,
+            "at_context": []
+          },
+          {
+            "selector": "main",
+            "property": "padding-block-start",
+            "line": 531,
+            "at_context": [
+              "@media (max-width: 620px)"
+            ]
+          }
+        ]
+      },
+      {
+        "value": "10px",
+        "count": 7,
+        "uses": [
+          {
+            "selector": ".skip-link",
+            "property": "padding",
+            "line": 83,
+            "at_context": []
+          },
+          {
+            "selector": ".global-search input,\n    .ticket-search input,\n    select",
+            "property": "padding",
+            "line": 127,
+            "at_context": []
+          },
+          {
+            "selector": ".section-heading",
+            "property": "margin-block-end",
+            "line": 182,
+            "at_context": []
+          },
+          {
+            "selector": ".table-footer",
+            "property": "padding",
+            "line": 336,
+            "at_context": []
+          },
+          {
+            "selector": ".feed li",
+            "property": "padding-block",
+            "line": 390,
+            "at_context": []
+          },
+          {
+            "selector": ".metrics",
+            "property": "gap",
+            "line": 401,
+            "at_context": []
+          },
+          {
+            "selector": ".site-header",
+            "property": "gap",
+            "line": 507,
+            "at_context": [
+              "@media (max-width: 620px)"
+            ]
+          }
+        ]
+      },
+      {
+        "value": "4px",
+        "count": 6,
+        "uses": [
+          {
+            "selector": ".field",
+            "property": "gap",
+            "line": 281,
+            "at_context": []
+          },
+          {
+            "selector": ".bars",
+            "property": "padding",
+            "line": 358,
+            "at_context": []
+          },
+          {
+            "selector": ".bar i",
+            "property": "border-radius",
+            "line": 373,
+            "at_context": []
+          },
+          {
+            "selector": ".bar i",
+            "property": "border-radius",
+            "line": 373,
+            "at_context": []
+          },
+          {
+            "selector": ".feed",
+            "property": "padding",
+            "line": 385,
+            "at_context": []
+          },
+          {
+            "selector": ".ticket-title",
+            "property": "margin-block-end",
+            "line": 488,
+            "at_context": [
+              "@media (max-width: 860px)"
+            ]
+          }
+        ]
+      },
+      {
+        "value": "6px",
+        "count": 5,
+        "uses": [
+          {
+            "selector": ".skip-link",
+            "property": "border-radius",
+            "line": 86,
+            "at_context": []
+          },
+          {
+            "selector": ".global-search input,\n    .ticket-search input,\n    select",
+            "property": "border-radius",
+            "line": 131,
+            "at_context": []
+          },
+          {
+            "selector": ".header-menu[open] .menu-panel",
+            "property": "inset-block-start",
+            "line": 160,
+            "at_context": []
+          },
+          {
+            "selector": ".header-menu[open] .menu-panel",
+            "property": "padding",
+            "line": 164,
+            "at_context": []
+          },
+          {
+            "selector": ".bar span",
+            "property": "margin-block-start",
+            "line": 377,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "value": "20px",
+        "count": 4,
+        "uses": [
+          {
+            "selector": ".site-header h1",
+            "property": "font-size",
+            "line": 117,
+            "at_context": []
+          },
+          {
+            "selector": "main",
+            "property": "padding",
+            "line": 174,
+            "at_context": []
+          },
+          {
+            "selector": ".workspace",
+            "property": "margin-block-start",
+            "line": 250,
+            "at_context": []
+          },
+          {
+            "selector": ".bars",
+            "property": "grid-template-columns",
+            "line": 354,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "value": "2px",
+        "count": 4,
+        "uses": [
+          {
+            "selector": "button:focus-visible,\n    input:focus-visible,\n    select:focus-visible,\n    summary:focus-visible",
+            "property": "outline-offset",
+            "line": 56,
+            "at_context": []
+          },
+          {
+            "selector": ".metric b",
+            "property": "margin-block",
+            "line": 414,
+            "at_context": []
+          },
+          {
+            "selector": ".ticket input",
+            "property": "margin-block-start",
+            "line": 480,
+            "at_context": [
+              "@media (max-width: 860px)"
+            ]
+          },
+          {
+            "selector": ".section-heading",
+            "property": "gap",
+            "line": 535,
+            "at_context": [
+              "@media (max-width: 620px)"
+            ]
+          }
+        ]
+      },
+      {
+        "value": "40px",
+        "count": 4,
+        "uses": [
+          {
+            "selector": "button, select, summary",
+            "property": "min-height",
+            "line": 40,
+            "at_context": []
+          },
+          {
+            "selector": ".global-search input,\n    .ticket-search input,\n    select",
+            "property": "min-height",
+            "line": 126,
+            "at_context": []
+          },
+          {
+            "selector": "main",
+            "property": "padding",
+            "line": 174,
+            "at_context": []
+          },
+          {
+            "selector": ".select-cell",
+            "property": "width",
+            "line": 314,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "value": "18px",
+        "count": 3,
+        "uses": [
+          {
+            "selector": ".section-heading h2",
+            "property": "font-size",
+            "line": 187,
+            "at_context": []
+          },
+          {
+            "selector": "input[type=\"checkbox\"]",
+            "property": "width",
+            "line": 319,
+            "at_context": []
+          },
+          {
+            "selector": "input[type=\"checkbox\"]",
+            "property": "height",
+            "line": 320,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "value": "5px",
+        "count": 3,
+        "uses": [
+          {
+            "selector": ".incident",
+            "property": "border-inline-start",
+            "line": 210,
+            "at_context": []
+          },
+          {
+            "selector": ".incident h3",
+            "property": "margin",
+            "line": 224,
+            "at_context": []
+          },
+          {
+            "selector": ".severity",
+            "property": "margin-block-end",
+            "line": 235,
+            "at_context": []
+          }
+        ]
+      }
+    ],
+    "times": [],
+    "boundary": "Frequency is migration evidence, not proof that every repeated value deserves a token. Consolidate only values with shared semantic intent."
+  },
+  "foundation_property_values": {
+    "color": [
+      {
+        "property": "background",
+        "value": "var(--surface)",
+        "count": 8,
+        "uses": [
+          {
+            "selector": ".secondary",
+            "line": 68,
+            "at_context": []
+          },
+          {
+            "selector": ".site-header",
+            "line": 111,
+            "at_context": []
+          },
+          {
+            "selector": ".global-search input,\n    .ticket-search input,\n    select",
+            "line": 129,
+            "at_context": []
+          },
+          {
+            "selector": ".header-menu summary",
+            "line": 150,
+            "at_context": []
+          },
+          {
+            "selector": ".header-menu[open] .menu-panel",
+            "line": 165,
+            "at_context": []
+          },
+          {
+            "selector": ".incident",
+            "line": 208,
+            "at_context": []
+          },
+          {
+            "selector": ".panel",
+            "line": 255,
+            "at_context": []
+          },
+          {
+            "selector": ".metric",
+            "line": 407,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "color",
+        "value": "var(--muted)",
+        "count": 6,
+        "uses": [
+          {
+            "selector": ".section-heading p",
+            "line": 192,
+            "at_context": []
+          },
+          {
+            "selector": ".field label",
+            "line": 286,
+            "at_context": []
+          },
+          {
+            "selector": ".selection-status",
+            "line": 339,
+            "at_context": []
+          },
+          {
+            "selector": ".bar span",
+            "line": 378,
+            "at_context": []
+          },
+          {
+            "selector": ".metric small",
+            "line": 418,
+            "at_context": []
+          },
+          {
+            "selector": ".ticket-meta,\n      .ticket-context",
+            "line": 495,
+            "at_context": [
+              "@media (max-width: 860px)"
+            ]
+          }
+        ]
+      },
+      {
+        "property": "color",
+        "value": "var(--text)",
+        "count": 4,
+        "uses": [
+          {
+            "selector": "body",
+            "line": 33,
+            "at_context": []
+          },
+          {
+            "selector": ".secondary",
+            "line": 67,
+            "at_context": []
+          },
+          {
+            "selector": ".global-search input,\n    .ticket-search input,\n    select",
+            "line": 128,
+            "at_context": []
+          },
+          {
+            "selector": ".header-menu summary",
+            "line": 149,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "background",
+        "value": "var(--accent)",
+        "count": 2,
+        "uses": [
+          {
+            "selector": ".primary",
+            "line": 61,
+            "at_context": []
+          },
+          {
+            "selector": ".bar i",
+            "line": 372,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "color",
+        "value": "#fff",
+        "count": 2,
+        "uses": [
+          {
+            "selector": ".primary",
+            "line": 60,
+            "at_context": []
+          },
+          {
+            "selector": ".skip-link",
+            "line": 84,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "color",
+        "value": "var(--critical)",
+        "count": 2,
+        "uses": [
+          {
+            "selector": ".severity",
+            "line": 236,
+            "at_context": []
+          },
+          {
+            "selector": ".urgent",
+            "line": 326,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "accent-color",
+        "value": "var(--accent)",
+        "count": 1,
+        "uses": [
+          {
+            "selector": "input[type=\"checkbox\"]",
+            "line": 322,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "background",
+        "value": "#111827",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".skip-link",
+            "line": 85,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "background",
+        "value": "#f0f2f5",
+        "count": 1,
+        "uses": [
+          {
+            "selector": "th",
+            "line": 308,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "background",
+        "value": "#f8fafd",
+        "count": 1,
+        "uses": [
+          {
+            "selector": "tbody tr:hover",
+            "line": 311,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "background",
+        "value": "repeating-linear-gradient(to top, transparent 0 37px, #e3e7ed 38px)",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".bars",
+            "line": 359,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "background",
+        "value": "transparent",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".quiet",
+            "line": 74,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "background",
+        "value": "var(--accent-hover)",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".primary:hover",
+            "line": 64,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "background",
+        "value": "var(--canvas)",
+        "count": 1,
+        "uses": [
+          {
+            "selector": "body",
+            "line": 34,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "background",
+        "value": "var(--critical-bg)",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".incident.critical",
+            "line": 216,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "background",
+        "value": "var(--major-bg)",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".incident.major",
+            "line": 221,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "background",
+        "value": "var(--surface-muted)",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".toolbar",
+            "line": 275,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "border-color",
+        "value": "#aeb6c3",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".secondary",
+            "line": 69,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "border-color",
+        "value": "#edaaa6",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".incident.critical",
+            "line": 217,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "border-color",
+        "value": "transparent",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".quiet",
+            "line": 75,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "border-inline-start-color",
+        "value": "var(--critical)",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".incident.critical",
+            "line": 218,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "color",
+        "value": "#394150",
+        "count": 1,
+        "uses": [
+          {
+            "selector": "th",
+            "line": 307,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "color",
+        "value": "#4f2530",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".incident p",
+            "line": 230,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "color",
+        "value": "var(--accent)",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".quiet",
+            "line": 73,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "color",
+        "value": "var(--major)",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".major .severity",
+            "line": 243,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "color-scheme",
+        "value": "light",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ":root",
+            "line": 9,
+            "at_context": []
+          }
+        ]
+      }
+    ],
+    "spacing": [
+      {
+        "property": "margin",
+        "value": "0",
+        "count": 9,
+        "uses": [
+          {
+            "selector": "body",
+            "line": 30,
+            "at_context": []
+          },
+          {
+            "selector": ".site-header h1",
+            "line": 116,
+            "at_context": []
+          },
+          {
+            "selector": ".section-heading h2",
+            "line": 186,
+            "at_context": []
+          },
+          {
+            "selector": ".section-heading p",
+            "line": 191,
+            "at_context": []
+          },
+          {
+            "selector": ".incident p",
+            "line": 229,
+            "at_context": []
+          },
+          {
+            "selector": ".panel-title",
+            "line": 263,
+            "at_context": []
+          },
+          {
+            "selector": "input[type=\"checkbox\"]",
+            "line": 321,
+            "at_context": []
+          },
+          {
+            "selector": ".feed",
+            "line": 384,
+            "at_context": []
+          },
+          {
+            "selector": ".ticket-list",
+            "line": 466,
+            "at_context": [
+              "@media (max-width: 860px)"
+            ]
+          }
+        ]
+      },
+      {
+        "property": "gap",
+        "value": "12px",
+        "count": 4,
+        "uses": [
+          {
+            "selector": ".section-heading",
+            "line": 179,
+            "at_context": []
+          },
+          {
+            "selector": ".incidents",
+            "line": 198,
+            "at_context": []
+          },
+          {
+            "selector": ".incident",
+            "line": 204,
+            "at_context": []
+          },
+          {
+            "selector": ".table-footer",
+            "line": 332,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "gap",
+        "value": "16px",
+        "count": 3,
+        "uses": [
+          {
+            "selector": ".site-header",
+            "line": 107,
+            "at_context": []
+          },
+          {
+            "selector": ".workspace",
+            "line": 248,
+            "at_context": []
+          },
+          {
+            "selector": ".supporting",
+            "line": 345,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "gap",
+        "value": "8px",
+        "count": 3,
+        "uses": [
+          {
+            "selector": ".header-actions,\n    .incident-actions,\n    .toolbar-actions,\n    .pagination",
+            "line": 139,
+            "at_context": []
+          },
+          {
+            "selector": ".toolbar",
+            "line": 272,
+            "at_context": []
+          },
+          {
+            "selector": ".bars",
+            "line": 355,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "padding",
+        "value": "14px",
+        "count": 3,
+        "uses": [
+          {
+            "selector": ".incident",
+            "line": 207,
+            "at_context": []
+          },
+          {
+            "selector": ".metric",
+            "line": 406,
+            "at_context": []
+          },
+          {
+            "selector": ".ticket",
+            "line": 476,
+            "at_context": [
+              "@media (max-width: 860px)"
+            ]
+          }
+        ]
+      },
+      {
+        "property": "gap",
+        "value": "10px",
+        "count": 2,
+        "uses": [
+          {
+            "selector": ".metrics",
+            "line": 401,
+            "at_context": []
+          },
+          {
+            "selector": ".site-header",
+            "line": 507,
+            "at_context": [
+              "@media (max-width: 620px)"
+            ]
+          }
+        ]
+      },
+      {
+        "property": "padding",
+        "value": "0",
+        "count": 2,
+        "uses": [
+          {
+            "selector": ".visually-hidden",
+            "line": 96,
+            "at_context": []
+          },
+          {
+            "selector": ".ticket-list",
+            "line": 467,
+            "at_context": [
+              "@media (max-width: 860px)"
+            ]
+          }
+        ]
+      },
+      {
+        "property": "gap",
+        "value": "2px",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".section-heading",
+            "line": 535,
+            "at_context": [
+              "@media (max-width: 620px)"
+            ]
+          }
+        ]
+      },
+      {
+        "property": "gap",
+        "value": "4px",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".field",
+            "line": 281,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "gap",
+        "value": "8px 12px",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".ticket",
+            "line": 474,
+            "at_context": [
+              "@media (max-width: 860px)"
+            ]
+          }
+        ]
+      },
+      {
+        "property": "inset-block-start",
+        "value": "8px",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".skip-link",
+            "line": 81,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "inset-block-start",
+        "value": "calc(100% + 6px)",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".header-menu[open] .menu-panel",
+            "line": 160,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "inset-inline-end",
+        "value": "0",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".header-menu[open] .menu-panel",
+            "line": 161,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "inset-inline-start",
+        "value": "8px",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".skip-link",
+            "line": 82,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "margin",
+        "value": "-1px",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".visually-hidden",
+            "line": 97,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "margin",
+        "value": "0 0 5px",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".incident h3",
+            "line": 224,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "margin-block",
+        "value": "8px 2px",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".metric b",
+            "line": 414,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "margin-block-end",
+        "value": "10px",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".section-heading",
+            "line": 182,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "margin-block-end",
+        "value": "4px",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".ticket-title",
+            "line": 488,
+            "at_context": [
+              "@media (max-width: 860px)"
+            ]
+          }
+        ]
+      },
+      {
+        "property": "margin-block-end",
+        "value": "5px",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".severity",
+            "line": 235,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "margin-block-start",
+        "value": "20px",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".workspace",
+            "line": 250,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "margin-block-start",
+        "value": "24px",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".metrics-section",
+            "line": 396,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "margin-block-start",
+        "value": "2px",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".ticket input",
+            "line": 480,
+            "at_context": [
+              "@media (max-width: 860px)"
+            ]
+          }
+        ]
+      },
+      {
+        "property": "margin-block-start",
+        "value": "6px",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".bar span",
+            "line": 377,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "margin-inline",
+        "value": "auto",
+        "count": 1,
+        "uses": [
+          {
+            "selector": "main",
+            "line": 173,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "padding",
+        "value": "10px 12px",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".table-footer",
+            "line": 336,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "padding",
+        "value": "10px 14px",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".skip-link",
+            "line": 83,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "padding",
+        "value": "12px",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".toolbar",
+            "line": 274,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "padding",
+        "value": "12px 14px",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".site-header",
+            "line": 508,
+            "at_context": [
+              "@media (max-width: 620px)"
+            ]
+          }
+        ]
+      },
+      {
+        "property": "padding",
+        "value": "12px 14px 16px",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".chart",
+            "line": 349,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "padding",
+        "value": "12px 4px 0",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".bars",
+            "line": 358,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "padding",
+        "value": "14px 16px",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".panel-title",
+            "line": 264,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "padding",
+        "value": "14px clamp(16px, 2.5vw, 32px)",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".site-header",
+            "line": 110,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "padding",
+        "value": "20px clamp(14px, 2vw, 28px) 40px",
+        "count": 1,
+        "uses": [
+          {
+            "selector": "main",
+            "line": 174,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "padding",
+        "value": "4px 14px 14px",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".feed",
+            "line": 385,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "padding",
+        "value": "6px",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".header-menu[open] .menu-panel",
+            "line": 164,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "padding",
+        "value": "8px 10px",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".global-search input,\n    .ticket-search input,\n    select",
+            "line": 127,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "padding",
+        "value": "8px 14px",
+        "count": 1,
+        "uses": [
+          {
+            "selector": "button",
+            "line": 44,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "padding",
+        "value": "9px 8px",
+        "count": 1,
+        "uses": [
+          {
+            "selector": "th, td",
+            "line": 300,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "padding-block",
+        "value": "10px",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".feed li",
+            "line": 390,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "padding-block-start",
+        "value": "16px",
+        "count": 1,
+        "uses": [
+          {
+            "selector": "main",
+            "line": 531,
+            "at_context": [
+              "@media (max-width: 620px)"
+            ]
+          }
+        ]
+      },
+      {
+        "property": "padding-inline",
+        "value": "14px",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".header-menu summary",
+            "line": 147,
+            "at_context": []
+          }
+        ]
+      }
+    ],
+    "radius": [
+      {
+        "property": "border-radius",
+        "value": "var(--radius)",
+        "count": 3,
+        "uses": [
+          {
+            "selector": ".incident",
+            "line": 211,
+            "at_context": []
+          },
+          {
+            "selector": ".panel",
+            "line": 257,
+            "at_context": []
+          },
+          {
+            "selector": ".metric",
+            "line": 409,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "border-radius",
+        "value": "6px",
+        "count": 2,
+        "uses": [
+          {
+            "selector": ".skip-link",
+            "line": 86,
+            "at_context": []
+          },
+          {
+            "selector": ".global-search input,\n    .ticket-search input,\n    select",
+            "line": 131,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "border-radius",
+        "value": "7px",
+        "count": 2,
+        "uses": [
+          {
+            "selector": "button",
+            "line": 46,
+            "at_context": []
+          },
+          {
+            "selector": ".header-menu summary",
+            "line": 152,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "border-radius",
+        "value": "4px 4px 0 0",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".bar i",
+            "line": 373,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "border-radius",
+        "value": "8px",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".header-menu[open] .menu-panel",
+            "line": 167,
+            "at_context": []
+          }
+        ]
+      }
+    ],
+    "shadow": [
+      {
+        "property": "box-shadow",
+        "value": "var(--shadow)",
+        "count": 3,
+        "uses": [
+          {
+            "selector": ".header-menu[open] .menu-panel",
+            "line": 168,
+            "at_context": []
+          },
+          {
+            "selector": ".incident",
+            "line": 212,
+            "at_context": []
+          },
+          {
+            "selector": ".panel",
+            "line": 258,
+            "at_context": []
+          }
+        ]
+      }
+    ],
+    "typography": [
+      {
+        "property": "font-size",
+        "value": "12px",
+        "count": 4,
+        "uses": [
+          {
+            "selector": ".severity",
+            "line": 237,
+            "at_context": []
+          },
+          {
+            "selector": ".field label",
+            "line": 287,
+            "at_context": []
+          },
+          {
+            "selector": "table",
+            "line": 296,
+            "at_context": []
+          },
+          {
+            "selector": ".ticket-meta,\n      .ticket-context",
+            "line": 496,
+            "at_context": [
+              "@media (max-width: 860px)"
+            ]
+          }
+        ]
+      },
+      {
+        "property": "font-weight",
+        "value": "700",
+        "count": 3,
+        "uses": [
+          {
+            "selector": "button",
+            "line": 47,
+            "at_context": []
+          },
+          {
+            "selector": ".header-menu summary",
+            "line": 153,
+            "at_context": []
+          },
+          {
+            "selector": ".field label",
+            "line": 288,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "font-weight",
+        "value": "800",
+        "count": 3,
+        "uses": [
+          {
+            "selector": ".severity",
+            "line": 238,
+            "at_context": []
+          },
+          {
+            "selector": ".urgent",
+            "line": 327,
+            "at_context": []
+          },
+          {
+            "selector": ".ticket-title",
+            "line": 489,
+            "at_context": [
+              "@media (max-width: 860px)"
+            ]
+          }
+        ]
+      },
+      {
+        "property": "font",
+        "value": "14px/1.45 Arial, sans-serif",
+        "count": 1,
+        "uses": [
+          {
+            "selector": "body",
+            "line": 32,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "font",
+        "value": "inherit",
+        "count": 1,
+        "uses": [
+          {
+            "selector": "button, input, select, summary",
+            "line": 37,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "font-size",
+        "value": "11px",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".bar span",
+            "line": 379,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "font-size",
+        "value": "15px",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".incident h3",
+            "line": 225,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "font-size",
+        "value": "16px",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".panel-title",
+            "line": 265,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "font-size",
+        "value": "18px",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".section-heading h2",
+            "line": 187,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "font-size",
+        "value": "20px",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".site-header h1",
+            "line": 117,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "font-size",
+        "value": "24px",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".metric b",
+            "line": 415,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "letter-spacing",
+        "value": ".04em",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".severity",
+            "line": 239,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "line-height",
+        "value": "1.2",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".site-header h1",
+            "line": 118,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "text-transform",
+        "value": "uppercase",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".severity",
+            "line": 240,
+            "at_context": []
+          }
+        ]
+      }
+    ],
+    "motion": [
+      {
+        "property": "transform",
+        "value": "translateY(-160%)",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".skip-link",
+            "line": 87,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "transform",
+        "value": "translateY(0)",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".skip-link:focus",
+            "line": 90,
+            "at_context": []
+          }
+        ]
+      }
+    ],
+    "sizing": [
+      {
+        "property": "min-width",
+        "value": "0",
+        "count": 5,
+        "uses": [
+          {
+            "selector": "body",
+            "line": 31,
+            "at_context": []
+          },
+          {
+            "selector": ".panel",
+            "line": 254,
+            "at_context": []
+          },
+          {
+            "selector": ".field",
+            "line": 282,
+            "at_context": []
+          },
+          {
+            "selector": ".metric",
+            "line": 405,
+            "at_context": []
+          },
+          {
+            "selector": ".ticket-main",
+            "line": 483,
+            "at_context": [
+              "@media (max-width: 860px)"
+            ]
+          }
+        ]
+      },
+      {
+        "property": "width",
+        "value": "100%",
+        "count": 3,
+        "uses": [
+          {
+            "selector": ".global-search input,\n    .ticket-search input,\n    select",
+            "line": 125,
+            "at_context": []
+          },
+          {
+            "selector": "table",
+            "line": 294,
+            "at_context": []
+          },
+          {
+            "selector": ".incident-actions",
+            "line": 543,
+            "at_context": [
+              "@media (max-width: 620px)"
+            ]
+          }
+        ]
+      },
+      {
+        "property": "min-height",
+        "value": "40px",
+        "count": 2,
+        "uses": [
+          {
+            "selector": "button, select, summary",
+            "line": 40,
+            "at_context": []
+          },
+          {
+            "selector": ".global-search input,\n    .ticket-search input,\n    select",
+            "line": 126,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "height",
+        "value": "100%",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".bar",
+            "line": 366,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "height",
+        "value": "18px",
+        "count": 1,
+        "uses": [
+          {
+            "selector": "input[type=\"checkbox\"]",
+            "line": 320,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "height",
+        "value": "190px",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".bars",
+            "line": 357,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "height",
+        "value": "1px",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".visually-hidden",
+            "line": 95,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "min-height",
+        "value": "116px",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".incident",
+            "line": 206,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "min-height",
+        "value": "60px",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".table-footer",
+            "line": 335,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "min-height",
+        "value": "72px",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".site-header",
+            "line": 109,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "min-height",
+        "value": "8px",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".bar i",
+            "line": 371,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "min-width",
+        "value": "140px",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".header-menu[open] .menu-panel",
+            "line": 163,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "width",
+        "value": "18px",
+        "count": 1,
+        "uses": [
+          {
+            "selector": "input[type=\"checkbox\"]",
+            "line": 319,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "width",
+        "value": "1px",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".visually-hidden",
+            "line": 94,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "width",
+        "value": "40px",
+        "count": 1,
+        "uses": [
+          {
+            "selector": ".select-cell",
+            "line": 314,
+            "at_context": []
+          }
+        ]
+      },
+      {
+        "property": "width",
+        "value": "min(1540px, 100%)",
+        "count": 1,
+        "uses": [
+          {
+            "selector": "main",
+            "line": 172,
+            "at_context": []
+          }
+        ]
+      }
+    ]
+  },
+  "evidence_boundaries": {
+    "literal": "A raw literal is source-confirmed. It is not automatically a defect or a new semantic-token candidate.",
+    "token_name": "A custom-property name suggests intent but does not prove role-correct usage, theming, governance, documentation, or adoption.",
+    "contrast": "Color values alone do not prove rendered foreground/background pairs or contrast. Measure exact rendered pairs in each state and appearance.",
+    "component": "Selectors and repeated declarations suggest component boundaries but do not prove a reusable component API or shared implementation.",
+    "visual": "Source inventory cannot establish optical quality, state distinction, interaction behavior, or cross-viewport appearance without renders."
+  }
+}

@@ -1,0 +1,38 @@
+# Заготовка: не запускается на PR. Локально: npm run verify && npm run report
+name: SafetyOS PR
+
+on:
+  workflow_dispatch:
+
+jobs:
+  safetyos:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - run: npm run ci
+      - run: npm run report
+      - name: Full assess (sample + HTML dashboard)
+        run: |
+          npm run safetyos -- assess examples/sample-threat-model.yaml \
+            --scan examples/fixtures \
+            --inventory-tls examples/tls-configs \
+            -o reports
+          npm run safetyos -- playbook examples/sample-threat-model.yaml \
+            --scan examples/fixtures \
+            -o reports/defense-playbook.md
+          npm run safetyos -- export opa -m examples/sample-threat-model.yaml \
+            -o reports/policy-sample.rego
+      - name: SafetyOS gate (IFF + project assurance)
+        run: |
+          npm run safetyos -- gate examples/sample-threat-model.yaml --max-critical 3
+          npm run safetyos -- gate threat-model.yaml --scan src/cli
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: safetyos-reports
+          path: reports/
+          retention-days: 14

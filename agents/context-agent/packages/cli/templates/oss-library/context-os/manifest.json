@@ -1,0 +1,24 @@
+{
+  "version": "1.0.0",
+  "project": "{{PROJECT_SLUG}}",
+  "updated": "{{DATE}}",
+  "description": "AI Context OS — OSS/library context cores for {{PROJECT_NAME}}",
+  "entry_point": "context-os/README.md",
+  "canon": "context-os/CANON.md",
+  "maintenance": "context-os/MAINTENANCE.md",
+  "router": "context-os/router/question-router.md",
+  "routing_map": "context-os/router/routing-map.json",
+  "default_pipeline": "B",
+  "cores": {
+    "business-core": "context-os/cores/business-core.md",
+    "product-core": "context-os/cores/product-core.md",
+    "technical-core": "context-os/cores/technical-core.md",
+    "operational-core": "context-os/cores/operational-core.md"
+  },
+  "framework_repo": "https://github.com/navorina-labs/AI-Context-OS",
+  "implementation_type": "scaffold-oss-library",
+  "read_first_for_agents": [
+    "context-os/CANON.md",
+    "context-os/router/question-router.md"
+  ]
+}

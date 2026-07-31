@@ -1,0 +1,161 @@
+/* Academic preprint styling for arXiv HTML/PDF export */
+@page {
+  margin: 1in;
+}
+
+html {
+  color: #000;
+  background-color: #fff;
+}
+
+body {
+  font-family: "Times New Roman", Times, "Liberation Serif", serif;
+  font-size: 11pt;
+  line-height: 1.35;
+  max-width: 6.5in;
+  margin: 0 auto;
+  padding: 0.75in 0;
+  text-align: justify;
+  hyphens: auto;
+}
+
+header#title-block-header {
+  text-align: center;
+  margin-bottom: 1.5em;
+  border-bottom: none;
+}
+
+header#title-block-header .title {
+  font-size: 17pt;
+  font-weight: bold;
+  line-height: 1.25;
+  margin: 0 0 0.75em;
+  text-align: center;
+}
+
+header#title-block-header .author {
+  font-size: 12pt;
+  margin: 0.25em 0;
+  text-align: center;
+}
+
+header#title-block-header .date {
+  display: none;
+}
+
+.abstract,
+.keywords {
+  margin: 1.25em 0;
+}
+
+.abstract > p:first-child::before {
+  content: "Abstract. ";
+  font-weight: bold;
+}
+
+.abstract-title {
+  display: none;
+}
+
+.keywords > p:first-child::before {
+  content: "Keywords: ";
+  font-weight: bold;
+}
+
+h1 {
+  font-size: 12pt;
+  font-weight: bold;
+  text-align: left;
+  margin-top: 1.25em;
+  margin-bottom: 0.5em;
+  page-break-after: avoid;
+}
+
+h2 {
+  font-size: 11pt;
+  font-weight: bold;
+  margin-top: 1em;
+  margin-bottom: 0.35em;
+  page-break-after: avoid;
+}
+
+h3 {
+  font-size: 11pt;
+  font-weight: bold;
+  font-style: italic;
+  margin-top: 0.75em;
+  margin-bottom: 0.25em;
+}
+
+p {
+  margin: 0.4em 0;
+  orphans: 3;
+  widows: 3;
+}
+
+ul, ol {
+  margin: 0.35em 0 0.35em 1.25em;
+  padding: 0;
+}
+
+li {
+  margin: 0.15em 0;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 9.5pt;
+  margin: 0.75em 0;
+  page-break-inside: avoid;
+}
+
+th, td {
+  border: 1px solid #333;
+  padding: 0.25em 0.4em;
+  vertical-align: top;
+}
+
+th {
+  font-weight: bold;
+  background: #f5f5f5;
+}
+
+code {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 9.5pt;
+}
+
+pre {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 8.5pt;
+  line-height: 1.2;
+  background: #fafafa;
+  border: 1px solid #ddd;
+  padding: 0.5em;
+  overflow-x: auto;
+  page-break-inside: avoid;
+}
+
+a {
+  color: #000;
+  text-decoration: none;
+}
+
+em {
+  font-style: italic;
+}
+
+strong {
+  font-weight: bold;
+}
+
+hr {
+  display: none;
+}
+
+@media print {
+  body {
+    padding: 0;
+  }
+}

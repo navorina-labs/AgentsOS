@@ -1,0 +1,14 @@
+{
+  "run_id": "run-drf-phase-2.1-aggregate",
+  "export_type": "aggregate_only",
+  "exported_at": "2026-06-17T04:00:00.000Z",
+  "source_repo": "Alex0nder/Oiloop",
+  "source_path": "docs/DJANGO-REST-FRAMEWORK-RESULTS.md",
+  "note": "Per-question paired.csv and OL/DR answer files were not preserved in the private workspace. This export records published aggregate metrics only. Re-run required for full reproducibility.",
+  "files": [
+    "SUMMARY.md",
+    "summary.json",
+    "run-meta.json",
+    "manifest.json"
+  ]
+}

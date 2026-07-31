@@ -1,0 +1,75 @@
+% Pandoc LaTeX template — arXiv preprint (article + arxiv.sty)
+\documentclass[11pt]{article}
+
+\usepackage{arxiv}
+\usepackage{fontspec}
+\defaultfontfeatures{Ligatures=TeX}
+\setmainfont{lmroman10-regular.otf}[
+  BoldFont=lmroman10-bold.otf,
+  ItalicFont=lmroman10-italic.otf,
+  BoldItalicFont=lmroman10-bolditalic.otf
+]
+\setmonofont{lmroman10-regular.otf}
+
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{calc}
+\usepackage{microtype}
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{ltcaption}
+\usepackage{enumitem}
+\usepackage{framed}
+
+\newcounter{none}
+\newcommand{\real}[1]{#1}
+
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{2pt}%
+  \setlength{\parskip}{0pt}%
+}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=black,
+  citecolor=black,
+  urlcolor=black,
+  pdftitle={$title$},
+  pdfauthor={$for(author)$$author$$sep$, $endfor$}
+}
+
+$if(title)$
+\title{$title$}
+$endif$
+\author{$for(author)$$author$$sep$ \and $endfor$}
+$if(date)$
+\date{$date$}
+$else$
+\date{}
+$endif$
+
+\begin{document}
+
+\maketitle
+
+$if(abstract)$
+\begin{abstract}
+$abstract$
+\end{abstract}
+$endif$
+
+$if(keywords)$
+\keywords{$for(keywords)$$keywords$$sep$ \and $endfor$}
+$endif$
+
+$body$
+
+\end{document}

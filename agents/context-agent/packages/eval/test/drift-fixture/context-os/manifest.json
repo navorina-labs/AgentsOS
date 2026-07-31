@@ -1,0 +1,9 @@
+{
+  "version": "1.0.0",
+  "project": "drift-fixture",
+  "cores": {
+    "billing-core": "context-os/cores/billing-core.md",
+    "technical-core": "context-os/cores/technical-core.md"
+  },
+  "subcores": {}
+}

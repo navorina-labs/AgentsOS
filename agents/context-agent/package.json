@@ -1,0 +1,47 @@
+{
+  "name": "ai-context-os-monorepo",
+  "private": true,
+  "description": "AI Context OS — research + CLI framework",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "context-os": "node packages/cli/bin/context-os.mjs",
+    "verify:release": "node scripts/verify-release.mjs",
+    "test:install-smoke": "node packages/cli/test/install-smoke.mjs",
+    "test:release": "npm run verify:release && npm run test:install-smoke",
+    "test:framework": "npm run test:node-compat && npm run test:release && npm run test:cli && npm run test:scaffold && npm run test:reference && npm run test:doctor && npm run test:profiles && npm run test:score-architecture && npm run test:maturity && npm run test:adapters && npm run test:check && npm run test:check-gates && npm run test:route-budget && npm run test:routing-lint && npm run test:core-version && npm run test:contracts && npm run test:api-contract && npm run test:audit-report && npm run test:audit-history && npm run test:semantic-offline && npm run test:drift",
+    "test:cli": "node packages/cli/bin/context-os.mjs init --name demo --profile minimal --target /tmp/context-os-demo-test --force && node packages/cli/bin/context-os.mjs validate --root /tmp/context-os-demo-test --schema && node packages/cli/bin/context-os.mjs route \"deploy to production\" --root /tmp/context-os-demo-test",
+    "test:scaffold": "npm run context-os -- validate --root examples/scaffold-saas --schema && npm run context-os -- eval route --root examples/scaffold-saas && npm run context-os -- eval dry-run --root examples/scaffold-saas",
+    "test:reference": "npm run context-os -- validate --root examples/reference-saas --schema && npm run context-os -- score --root examples/reference-saas --min 85 && npm run context-os -- eval route --root examples/reference-saas && npm run context-os -- eval dry-run --root examples/reference-saas && npm run context-os -- check --root examples/reference-saas --min-score 85 && npm run context-os -- maturity --root examples/reference-saas --min operational",
+    "test:doctor": "npm run context-os -- doctor --root examples/scaffold-saas",
+    "test:profiles": "npm run context-os -- profiles validate",
+    "test:score": "npm run context-os -- score --root examples/scaffold-saas --min 35",
+    "test:score-architecture": "node packages/cli/test/score-architecture.mjs",
+    "test:maturity": "npm run context-os -- maturity --root examples/scaffold-saas --min routable && npm run context-os -- maturity --root examples/scaffold-saas --json",
+    "test:adapters": "rm -rf /tmp/context-os-adapters-test && mkdir -p /tmp/context-os-adapters-test && printf '# Existing instructions\\n' > /tmp/context-os-adapters-test/AGENTS.md && npm run context-os -- adapters install agents claude copilot --root /tmp/context-os-adapters-test && npm run context-os -- adapters install agents claude copilot --root /tmp/context-os-adapters-test && grep -q '# Existing instructions' /tmp/context-os-adapters-test/AGENTS.md && test \"$(grep -c 'context-os:start' /tmp/context-os-adapters-test/AGENTS.md)\" = 1 && npm run context-os -- adapters status --root /tmp/context-os-adapters-test --json",
+    "test:check": "npm run context-os -- check --root examples/scaffold-saas --min-score 50",
+    "test:check-gates": "node packages/cli/test/check-gates.mjs",
+    "test:route-budget": "npm run context-os -- check --root examples/reference-saas --min-score 85 --max-route-tokens 600 && if npm run context-os -- check --root examples/reference-saas --min-score 85 --max-route-tokens 500; then exit 1; else echo 'route budget rejection ok'; fi",
+    "test:routing-lint": "npm run context-os -- routing lint --root examples/reference-saas --strict && node packages/cli/test/routing-lint.mjs",
+    "test:core-version": "node packages/cli/test/core-version.mjs",
+    "test:contracts": "node packages/cli/test/contracts.mjs && node packages/cli/bin/context-os.mjs contracts verify --root examples/reference-saas --base HEAD && node packages/cli/bin/context-os.mjs contracts verify --root examples/scaffold-saas --base HEAD",
+    "test:api-contract": "node packages/cli/test/api-contract.mjs",
+    "test:node-compat": "node scripts/check-node-compat.mjs",
+    "test:ci-init": "rm -rf /tmp/context-os-ci-test && mkdir -p /tmp/context-os-ci-test && npm run context-os -- ci init --root /tmp/context-os-ci-test --min-score 80 && test -f /tmp/context-os-ci-test/.github/workflows/context-os.yml && grep -q \"npx context-os check --min-score 80\" /tmp/context-os-ci-test/.github/workflows/context-os.yml && grep -q \"cores verify --base origin/main\" /tmp/context-os-ci-test/.github/workflows/context-os.yml && grep -q \"contracts verify --base origin/main\" /tmp/context-os-ci-test/.github/workflows/context-os.yml",
+    "test:audit-init": "rm -rf /tmp/context-os-audit-test && npm run context-os -- init --name auditdemo --profile minimal --target /tmp/context-os-audit-test --force && npm run context-os -- audit init --root /tmp/context-os-audit-test --auditor CI && test -f /tmp/context-os-audit-test/context-os/audit/project-map.md && test -f /tmp/context-os-audit-test/context-os/audit/cleanup.md && test -f /tmp/context-os-audit-test/context-os/audit/risks.md && grep -q \"auditdemo\" /tmp/context-os-audit-test/context-os/audit/project-map.md",
+    "test:audit-report": "rm -rf /tmp/context-os-audit-report-test && cp -R examples/reference-saas /tmp/context-os-audit-report-test && npm run context-os -- audit report --root /tmp/context-os-audit-report-test --min-score 85 && test -f /tmp/context-os-audit-report-test/context-os/audit/report.md && test -f /tmp/context-os-audit-report-test/context-os/audit/report.json && grep -q 'Overall: \\*\\*PASS\\*\\*' /tmp/context-os-audit-report-test/context-os/audit/report.md && node packages/cli/bin/context-os.mjs audit report --root examples/reference-saas --json > /tmp/context-os-audit-report.json && node -e \"const r=require('/tmp/context-os-audit-report.json'); if(!r.ok || r.summary.maturity!=='operational') process.exit(1)\"",
+    "test:audit-history": "rm -rf /tmp/context-os-audit-history-test && cp -R examples/reference-saas /tmp/context-os-audit-history-test && node packages/cli/bin/context-os.mjs audit record --root /tmp/context-os-audit-history-test --min-score 85 && node packages/cli/bin/context-os.mjs audit record --root /tmp/context-os-audit-history-test --min-score 85 && node packages/cli/bin/context-os.mjs audit history --root /tmp/context-os-audit-history-test --json > /tmp/context-os-audit-history.json && node packages/cli/bin/context-os.mjs audit compare --root /tmp/context-os-audit-history-test --json > /tmp/context-os-audit-compare.json && node -e \"const h=require('/tmp/context-os-audit-history.json'); const c=require('/tmp/context-os-audit-compare.json'); if(h.snapshots.length!==2 || !c.ok) process.exit(1)\" && node packages/cli/test/audit-history.mjs",
+    "test:profile-agent-tool": "npm run context-os -- init --name agentdemo --profile agent-tool --target /tmp/context-os-agent-tool-test --force && npm run context-os -- validate --root /tmp/context-os-agent-tool-test --schema && cp /tmp/context-os-agent-tool-test/context-os/eval/questions.stub.json /tmp/context-os-agent-tool-test/context-os/eval/questions.json && npm run context-os -- eval route --root /tmp/context-os-agent-tool-test",
+    "test:profile-oss-library": "npm run context-os -- init --name libdemo --profile oss-library --target /tmp/context-os-oss-library-test --force && npm run context-os -- validate --root /tmp/context-os-oss-library-test --schema && cp /tmp/context-os-oss-library-test/context-os/eval/questions.stub.json /tmp/context-os-oss-library-test/context-os/eval/questions.json && npm run context-os -- eval route --root /tmp/context-os-oss-library-test",
+    "test:eval-dry-run": "npm run context-os -- eval run --root examples/scaffold-saas --condition b --dry-run --aggregate",
+    "test:eval-aggregate": "npm run context-os -- eval aggregate experiments/oiloop/runs/run-1781660908",
+    "test:graph-build": "npm run context-os -- graph build --root examples/scaffold-saas && node --input-type=module -e \"import fs from 'node:fs'; const j=JSON.parse(fs.readFileSync('examples/scaffold-saas/context-os/graph/graph-index.json','utf8')); if(j.stats.nodes<5) throw new Error('too few nodes'); console.log('graph ok', j.stats);\"",
+    "test:semantic-offline": "node packages/eval/test/semantic-offline.mjs",
+    "test:drift": "node packages/eval/test/drift-offline.mjs",
+    "test:bootstrap": "npm run context-os -- eval bootstrap experiments/oiloop/runs/run-1781660908/paired.csv"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

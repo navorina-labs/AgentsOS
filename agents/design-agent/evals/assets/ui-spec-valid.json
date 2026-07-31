@@ -1,0 +1,426 @@
+{
+  "schema_version": 1,
+  "id": "bank-transfer-confirmation",
+  "title": "Bank transfer confirmation",
+  "status": "review",
+  "context": {
+    "product_surface": "Final review and confirmation step for a bank transfer",
+    "primary_user": {
+      "role": "Authenticated banking customer",
+      "job": "Verify the destination and total debit before submitting one transfer"
+    },
+    "outcome": "The customer understands the commitment, submits once, and can distinguish success from recoverable failure",
+    "platforms": ["Desktop web", "Mobile web"],
+    "viewport_range": {
+      "minimum_css_px": 320,
+      "maximum_css_px": 1440
+    },
+    "constraints": [
+      "Desktop and mobile use the same backend flow",
+      "A submitted transfer cannot be silently reversed",
+      "Do not assume an existing design system"
+    ],
+    "assumptions": [
+      "The recipient and amount were entered in an earlier step"
+    ],
+    "out_of_scope": [
+      "Recipient creation",
+      "Backend transfer architecture",
+      "Fraud and risk policy"
+    ]
+  },
+  "evidence": [
+    {
+      "id": "brief-transfer",
+      "type": "brief",
+      "locator": "Evaluation brief: bank transfer confirmation",
+      "claim": "The review must show recipient, masked account, amount, fee, total debit, date, optional note, and named failure classes",
+      "confidence": "high"
+    },
+    {
+      "id": "design-principles-accessibility",
+      "type": "standard",
+      "locator": "design-agent/references/design-principles.md §9",
+      "claim": "The web interface targets keyboard access, visible focus, semantics, names, announcements, and reflow",
+      "confidence": "high"
+    },
+    {
+      "id": "unknown-system",
+      "type": "assumption",
+      "locator": "Evaluation brief: no existing design system supplied",
+      "claim": "Visual values are proposed defaults until rendered comparison or product guidance exists",
+      "confidence": "high"
+    }
+  ],
+  "decisions": [
+    {
+      "id": "decision-explicit-review",
+      "decision": "Keep review and final commitment as separate user actions",
+      "status": "confirmed",
+      "evidence_ids": ["brief-transfer"],
+      "tradeoff": "Adds one intentional step to prevent an unreviewed irreversible submission"
+    },
+    {
+      "id": "decision-adaptive-composition",
+      "decision": "Use one information order and adapt only the spatial composition",
+      "status": "proposed_default_validate",
+      "evidence_ids": ["brief-transfer", "unknown-system"],
+      "tradeoff": "Preserves parity while requiring rendered checks across content-driven transitions"
+    },
+    {
+      "id": "decision-session-recovery",
+      "decision": "Product must decide whether an expired session preserves the prepared transfer after reauthentication",
+      "status": "requires_decision",
+      "evidence_ids": ["brief-transfer"],
+      "tradeoff": "Preservation reduces re-entry but depends on security and backend policy",
+      "open_question_id": "question-session-preservation"
+    }
+  ],
+  "contracts": [
+    {
+      "id": "contract-review-before-submit",
+      "category": "task",
+      "owner": "Product and frontend",
+      "applies_to": ["view-transfer-review", "component-confirm-action"],
+      "requirement": "Submission is unavailable until the complete review content is present and the customer explicitly activates Confirm transfer",
+      "status": "confirmed",
+      "evidence_ids": ["brief-transfer"],
+      "decision_id": "decision-explicit-review"
+    },
+    {
+      "id": "contract-total-hierarchy",
+      "category": "hierarchy",
+      "owner": "Product design",
+      "applies_to": ["view-transfer-review", "component-review-summary"],
+      "requirement": "Total debit is visually dominant within the financial summary and remains adjacent to amount and fee",
+      "status": "confirmed",
+      "evidence_ids": ["brief-transfer"]
+    },
+    {
+      "id": "contract-failure-recovery",
+      "category": "interaction",
+      "owner": "Frontend and content design",
+      "applies_to": ["view-transfer-review", "component-confirm-action"],
+      "requirement": "Insufficient funds, daily limit, network loss, and expired session produce distinct task-local states with a next action and duplicate-submission protection",
+      "status": "confirmed",
+      "evidence_ids": ["brief-transfer"]
+    },
+    {
+      "id": "contract-responsive-parity",
+      "category": "responsive",
+      "owner": "Frontend",
+      "applies_to": ["view-transfer-review"],
+      "requirement": "Recipient, account, financial summary, date, note, back action, and confirm action remain available from 320 through 1440 CSS pixels without page-level horizontal scrolling",
+      "status": "confirmed",
+      "evidence_ids": ["brief-transfer"],
+      "decision_id": "decision-adaptive-composition"
+    },
+    {
+      "id": "contract-accessible-commit",
+      "category": "accessibility",
+      "owner": "Frontend",
+      "applies_to": ["component-confirm-action"],
+      "requirement": "The confirmation control has a visible label, native button semantics, visible focus, keyboard activation, busy state, and task-local result announcement",
+      "status": "confirmed",
+      "evidence_ids": ["design-principles-accessibility"]
+    },
+    {
+      "id": "contract-content-growth",
+      "category": "content",
+      "owner": "Frontend and localization",
+      "applies_to": ["component-review-summary"],
+      "requirement": "Recipient, note, labels, and monetary values wrap or reflow without losing complete task-critical content under representative localization stress",
+      "status": "proposed_default_validate",
+      "evidence_ids": ["unknown-system"],
+      "decision_id": "decision-adaptive-composition"
+    },
+    {
+      "id": "contract-motion-restraint",
+      "category": "motion",
+      "owner": "Frontend",
+      "applies_to": ["view-transfer-review", "component-confirm-action"],
+      "requirement": "Motion is not required to understand pending, success, or error state and adapts to reduced-motion preference",
+      "status": "proposed_default_validate",
+      "evidence_ids": ["unknown-system"],
+      "decision_id": "decision-adaptive-composition"
+    },
+    {
+      "id": "contract-session-policy",
+      "category": "data_dependency",
+      "owner": "Product and security",
+      "applies_to": ["view-transfer-review"],
+      "requirement": "Expired-session recovery behavior is not implementation-ready until preservation and reauthentication policy is decided",
+      "status": "requires_decision",
+      "evidence_ids": ["brief-transfer"],
+      "decision_id": "decision-session-recovery",
+      "open_question_id": "question-session-preservation"
+    }
+  ],
+  "flows": [
+    {
+      "id": "flow-confirm-transfer",
+      "name": "Review and submit one transfer",
+      "entry": "Recipient and amount are present from the previous step",
+      "steps": [
+        "Review recipient identity, masked account, amount, fee, total debit, execution date, and note",
+        "Return to editing if any reviewed value is wrong",
+        "Activate Confirm transfer once",
+        "Observe pending followed by success or a named recoverable failure"
+      ],
+      "success": "A stable confirmation identifies the submitted transfer and prevents another accidental submission",
+      "alternate_and_recovery": [
+        "Back returns to editing without losing entered values",
+        "Network loss retains the review and exposes retry",
+        "Insufficient funds and daily limit explain the blocking condition",
+        "Expired session follows the unresolved reauthentication policy"
+      ]
+    }
+  ],
+  "views": [
+    {
+      "id": "view-transfer-review",
+      "name": "Transfer review",
+      "purpose": "Enable one informed final commitment",
+      "primary_action": "Confirm transfer",
+      "reading_order": [
+        "Page purpose",
+        "Recipient and masked account",
+        "Amount, fee, and total debit",
+        "Execution date and note",
+        "Failure or result feedback",
+        "Back and Confirm transfer actions"
+      ],
+      "focus_order": [
+        "Back",
+        "Confirm transfer",
+        "Task-local recovery action when present"
+      ],
+      "regions": [
+        "Review heading",
+        "Recipient summary",
+        "Financial summary",
+        "Schedule and note",
+        "Task feedback",
+        "Action region"
+      ],
+      "layout": {
+        "wide": "Use one bounded review column with financial values aligned for scanning and actions adjacent to the decision region",
+        "intermediate": "Preserve the same region order while allowing labels and values to wrap before changing composition",
+        "narrow": "Use one normal-flow column; keep the confirmation action reachable after the complete review without hiding content",
+        "transitions": [
+          "Change composition when reviewed labels, values, and actions no longer fit without collision",
+          "Keep the same DOM and reading order across compositions"
+        ]
+      },
+      "component_ids": [
+        "component-review-summary",
+        "component-confirm-action"
+      ],
+      "contract_ids": [
+        "contract-review-before-submit",
+        "contract-total-hierarchy",
+        "contract-failure-recovery",
+        "contract-responsive-parity",
+        "contract-content-growth",
+        "contract-motion-restraint",
+        "contract-session-policy"
+      ]
+    }
+  ],
+  "foundations": {
+    "color_roles": [
+      "Reuse project semantic roles when discovered; proposed roles are surface, text, muted text, border, accent, danger, and success"
+    ],
+    "typography_roles": [
+      "Use distinct roles for page heading, reviewed label, reviewed value, dominant total, and task feedback"
+    ],
+    "spacing_and_grid": [
+      "Use the existing spacing scale when discovered and preserve one alignment edge for labels, values, and feedback"
+    ],
+    "shape_and_elevation": [
+      "Use existing surface and control treatment; no new decorative card language is required"
+    ],
+    "iconography_and_imagery": [
+      "Icons supplement visible text and never carry financial state alone"
+    ],
+    "motion": [
+      "Use motion only to preserve state continuity; pending and result meaning remain available when motion is removed"
+    ]
+  },
+  "components": [
+    {
+      "id": "component-review-summary",
+      "name": "Transfer review summary",
+      "purpose": "Present every value required for the commitment decision",
+      "interactive": false,
+      "anatomy": [
+        "Recipient identity",
+        "Masked account",
+        "Amount",
+        "Fee",
+        "Total debit",
+        "Execution date",
+        "Optional note"
+      ],
+      "variants": ["Default", "With note", "Without note"],
+      "props": [
+        "recipient",
+        "maskedAccount",
+        "amount",
+        "fee",
+        "totalDebit",
+        "executionDate",
+        "note"
+      ],
+      "states": ["default"],
+      "not_applicable_states": {
+        "focus_visible": "The summary itself is not interactive",
+        "disabled": "Availability belongs to the action",
+        "loading": "The view owns loading before the summary is complete",
+        "error": "Task feedback is rendered adjacent to the action region",
+        "success": "The view replaces the decision state with a stable result"
+      },
+      "interactions": [],
+      "accessibility": {
+        "name_role_value": "Use semantic text and grouping; financial labels remain programmatically associated with values",
+        "keyboard": "No component-specific keyboard interaction",
+        "focus": "Static summary is not added to the tab order",
+        "announcements": "Static review content is not announced as a live update"
+      },
+      "content_constraints": [
+        "Never truncate recipient, total debit, or fee",
+        "Preserve currency and value association",
+        "Omit the note row when the optional note is absent"
+      ],
+      "responsive_behavior": "Reflow label/value pairs and allow content growth without changing information order",
+      "contract_ids": [
+        "contract-total-hierarchy",
+        "contract-content-growth"
+      ]
+    },
+    {
+      "id": "component-confirm-action",
+      "name": "Confirm transfer action",
+      "purpose": "Commit exactly one reviewed transfer and expose its result",
+      "interactive": true,
+      "anatomy": [
+        "Visible action label",
+        "Pending indicator",
+        "Task-local feedback",
+        "Recovery action"
+      ],
+      "variants": ["Primary commit", "Retry"],
+      "props": ["disabledReason", "busy", "result", "onConfirm", "onRetry"],
+      "states": [
+        "default",
+        "hover",
+        "focus_visible",
+        "pressed",
+        "disabled",
+        "loading",
+        "error",
+        "success"
+      ],
+      "not_applicable_states": {
+        "selected": "The action is not a selection control",
+        "empty": "Empty review is a view-level state"
+      },
+      "interactions": [
+        "Enter, Space, or pointer activation submits once",
+        "Loading blocks duplicate activation while keeping the action label recognizable",
+        "Retry submits only after a recoverable failure"
+      ],
+      "accessibility": {
+        "name_role_value": "Native button named Confirm transfer; busy and disabled state are exposed",
+        "keyboard": "Enter and Space activate when available",
+        "focus": "Focus remains task-local through pending and moves only when the stable result requires it",
+        "announcements": "Pending is polite; blocking failure is associated with the action; success is announced once"
+      },
+      "content_constraints": [
+        "Commit label names the consequence",
+        "Failure message identifies the condition and next action",
+        "Do not replace the label with spinner-only feedback"
+      ],
+      "responsive_behavior": "Remain in normal flow and reachable after the review at every supported width",
+      "contract_ids": [
+        "contract-review-before-submit",
+        "contract-failure-recovery",
+        "contract-accessible-commit",
+        "contract-motion-restraint"
+      ]
+    }
+  ],
+  "acceptance_criteria": [
+    {
+      "id": "accept-core-review",
+      "priority": "must",
+      "covers": ["core_task"],
+      "given": "A valid recipient and amount from the previous step",
+      "when": "The transfer review is displayed",
+      "then": "Recipient, masked account, amount, fee, total debit, date, note state, Back, and Confirm transfer are available before submission",
+      "verifies_contract_ids": [
+        "contract-review-before-submit",
+        "contract-total-hierarchy"
+      ],
+      "evidence": "DOM assertions plus matched desktop and mobile renders"
+    },
+    {
+      "id": "accept-state-recovery",
+      "priority": "must",
+      "covers": ["state", "recovery"],
+      "given": "The review is complete",
+      "when": "Submission returns insufficient funds, daily limit, network loss, or expired session",
+      "then": "The named state explains what happened, preserves reviewed context, prevents duplicate submission, and exposes the applicable next action",
+      "verifies_contract_ids": ["contract-failure-recovery"],
+      "evidence": "Interaction traces for every named failure and retry path"
+    },
+    {
+      "id": "accept-responsive-parity",
+      "priority": "must",
+      "covers": ["responsive"],
+      "given": "The same transfer content",
+      "when": "Rendered at narrow, intermediate, and wide content-driven conditions",
+      "then": "All reviewed values and actions remain reachable with no page-level horizontal scroll",
+      "verifies_contract_ids": ["contract-responsive-parity"],
+      "evidence": "Matched viewport screenshots, geometry, and overflow assertions"
+    },
+    {
+      "id": "accept-keyboard",
+      "priority": "must",
+      "covers": ["accessibility"],
+      "given": "A keyboard-only customer",
+      "when": "They review, go back, submit, encounter a recoverable failure, and retry",
+      "then": "The path completes with native semantics, visible focus, logical focus order, and task-local announcements",
+      "verifies_contract_ids": ["contract-accessible-commit"],
+      "evidence": "Complete keyboard trace, accessibility-tree snapshot, and named assistive-technology test for announcements"
+    },
+    {
+      "id": "accept-content-stress",
+      "priority": "must",
+      "covers": ["content_stress"],
+      "given": "Representative long recipient names, notes, localized labels, and formatted monetary values",
+      "when": "The review is rendered from 320 through 1440 CSS pixels and with text enlargement",
+      "then": "Task-critical content remains complete, associated, and reachable without silent truncation",
+      "verifies_contract_ids": ["contract-content-growth"],
+      "evidence": "Pseudo-localized renders, representative locales, text enlargement, and overflow assertions"
+    },
+    {
+      "id": "accept-reduced-motion",
+      "priority": "should",
+      "covers": ["accessibility", "state"],
+      "given": "Reduced-motion preference is active",
+      "when": "Pending, success, and error states change",
+      "then": "State meaning remains complete without required spatial motion",
+      "verifies_contract_ids": ["contract-motion-restraint"],
+      "evidence": "Media assertion, computed styles, and reduced-motion state captures"
+    }
+  ],
+  "open_questions": [
+    {
+      "id": "question-session-preservation",
+      "question": "After reauthentication, is the prepared transfer restored or must the customer start again?",
+      "impact": "Changes expired-session recovery, security review, and acceptance criteria",
+      "owner": "Product, security, and backend engineering"
+    }
+  ]
+}

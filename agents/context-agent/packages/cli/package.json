@@ -1,0 +1,45 @@
+{
+  "name": "context-os",
+  "version": "0.1.0",
+  "description": "CLI to scaffold and validate domain-oriented context cores for AI coding agents",
+  "type": "module",
+  "bin": {
+    "context-os": "./bin/context-os.mjs"
+  },
+  "files": [
+    "bin",
+    "src",
+    "templates"
+  ],
+  "dependencies": {
+    "@context-os/eval": "0.1.0"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "ai",
+    "context",
+    "llm",
+    "routing",
+    "rag",
+    "agents",
+    "context-engineering"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/navorina-labs/AI-Context-OS#readme",
+  "bugs": {
+    "url": "https://github.com/navorina-labs/AI-Context-OS/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/navorina-labs/AI-Context-OS.git",
+    "directory": "packages/cli"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "prepublishOnly": "node bin/context-os.mjs --version"
+  }
+}

@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Transfer review implementation workbench</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 16px/1.45 system-ui, sans-serif; color: #172033; background: #eef1f6; }
+  main { width: 720px; margin: 56px auto; padding: 28px; background: white; border-radius: 18px; }
+  h1 { margin: 0 0 22px; font-size: 28px; }
+  dl { display: grid; grid-template-columns: 180px 1fr; gap: 12px 20px; margin: 0; }
+  dt { color: #667085; } dd { margin: 0; }
+  .recipient { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .total { margin-top: 20px; padding-top: 16px; border-top: 1px solid #d8dee9; font-size: 22px; font-weight: 750; }
+  .actions { display: flex; justify-content: space-between; gap: 12px; margin-top: 28px; }
+  button, a { min-height: 44px; padding: 10px 16px; border-radius: 10px; }
+  button { border: 0; background: #2457d6; color: white; font: inherit; cursor: pointer; }
+  button:focus { outline: none; }
+  .spinner { display: none; animation: spin 700ms linear infinite; }
+  .pending .spinner { display: inline-block; }
+  .error { display: none; margin-top: 16px; color: #b42318; }
+  .failed .error { display: block; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @media (max-width: 740px) {
+    main { margin: 20px; }
+  }
+</style>
+<main id="review">
+  <h1>Review transfer</h1>
+  <dl>
+    <dt>Recipient</dt><dd class="recipient" title="">Alexandra-Maria Konstantinopoulou International Foundation</dd>
+    <dt>Account</dt><dd>•••• 0284</dd>
+    <dt>Amount</dt><dd>$2,400.00</dd>
+    <dt>Fee</dt><dd>$8.00</dd>
+    <dt>Date</dt><dd>Today</dd>
+    <dt>Note</dt><dd>Quarterly project settlement</dd>
+    <dt class="total">Total debit</dt><dd class="total">$2,408.00</dd>
+  </dl>
+  <div class="actions">
+    <a href="#back">Back</a>
+    <button id="confirm"><span class="spinner">◌</span> Confirm transfer</button>
+  </div>
+  <p class="error">Something went wrong.</p>
+</main>
+<script>
+  const review = document.querySelector('#review');
+  const confirm = document.querySelector('#confirm');
+  confirm.addEventListener('click', () => {
+    review.classList.add('pending');
+    setTimeout(() => {
+      review.classList.remove('pending');
+      review.classList.add('failed');
+    }, 400);
+  });
+</script>
+</html>

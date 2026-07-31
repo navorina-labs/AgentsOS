@@ -1,0 +1,12 @@
+# Kubernetes Ingress — слабые TLS-настройки (fixture)
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: api-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-protocols: "TLSv1.0 TLSv1.1 TLSv1.2"
+    nginx.ingress.kubernetes.io/ssl-ciphers: "ECDHE-RSA-AES128-SHA:DES-CBC3-SHA"
+spec:
+  tls:
+    - hosts:
+        - api.example.com

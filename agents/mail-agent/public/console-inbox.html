@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Inbox — MailAgent Console</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta name="theme-color" content="#000000" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body class="app-page" data-site="app" data-doc="dashboard">
+    <div id="site-nav"></div>
+
+    <main class="dash-main">
+      <div class="dash-container">
+        <div id="connect-gate"></div>
+        <header class="dash-toolbar" data-gate-hide>
+          <div>
+            <p class="console-meta" style="margin:0 0 6px"><a href="/dashboard.html">← Overview</a></p>
+            <h1 id="title">Inbox</h1>
+            <p class="dash-toolbar__sub" id="lead">Loading…</p>
+          </div>
+        </header>
+        <div class="dash-panel" id="out-wrap" data-gate-hide><div class="dash-panel__body dash-panel__body--padded" id="out"></div></div>
+      </div>
+    </main>
+
+    <div id="site-footer"></div>
+    <script src="/console-ui.js"></script>
+    <script src="/site-shell.js" defer></script>
+    <script src="/app-connect-gate.js" defer></script>
+    <script src="/app-insights.js" defer></script>
+    <script src="/app-session.js" defer></script>
+    <script>
+      const UI = () => window.MailAgentUI;
+      const App = () => window.MailAgentApp;
+      const Gate = () => window.MailAgentConnectGate;
+      const gateEl = document.getElementById("connect-gate");
+      const MSG_PAGE = 15;
+      const params = new URLSearchParams(location.search);
+      const inboxId = params.get("inbox");
+      const out = document.getElementById("out");
+      const titleEl = document.getElementById("title");
+      const leadEl = document.getElementById("lead");
+
+      let lastDetail = null;
+      let msgVisible = MSG_PAGE;
+      let selectedMsgId = null;
+
+      if (!inboxId) {
+        leadEl.textContent = "Missing ?inbox=INBOX_ID in URL.";
+      }
+
+      function esc(s) {
+        return UI()?.esc(s) ?? String(s ?? "");
+      }
+
+      async function api(path, opts) {
+        return App().api(path, opts);
+      }
+
+      function renderMessageDetail(m, d) {
+        if (!m) {
+          return `<div class="inbox-detail"><p class="inbox-detail__empty">Select a message to preview OTP, links, and reply.</p></div>`;
+        }
+        const replyBtn = d.outbound?.enabled
+          ? `<button type="button" class="app-btn" data-reply="${esc(m.id)}" data-from="${esc(m.from)}" data-subject="${esc(m.subject)}">Reply</button>`
+          : "";
+        return `<div class="inbox-detail">
+          <dl>
+            <dt>From</dt><dd>${esc(m.from)}</dd>
+            <dt>Subject</dt><dd>${esc(m.subject)}</dd>
+            <dt>Received</dt><dd>${esc(new Date(m.receivedAt).toLocaleString())}</dd>
+            <dt>OTP</dt><dd>${m.otp ? `<code>${esc(m.otp)}</code>` : "—"}</dd>
+            ${
+              m.primaryLink
+                ? `<dt>Primary link</dt><dd><a href="${esc(m.primaryLink)}" target="_blank" rel="noopener">${esc(m.primaryLink)}</a></dd>`
+                : ""
+            }
+          </dl>
+          <div class="workspace-actions-row">${replyBtn}
+            ${
+              m.hasRaw
+                ? `<a class="app-btn app-btn--ghost" href="${esc(m.rawUrl)}" target="_blank" rel="noopener">Raw MIME</a>`
+                : ""
+            }
+          </div>
+        </div>`;
+      }
+
+      function renderMessageList(d) {
+        const messages = d.messages || [];
+        const slice = messages.slice(0, msgVisible);
+        const items = slice
+          .map(
+            (m) => `<li><button type="button" class="inbox-msg-item${
+              selectedMsgId === m.id ? " is-active" : ""
+            }" data-msg-id="${esc(m.id)}">
+              <div class="inbox-msg-item__from">${esc(m.from)}</div>
+              <div class="inbox-msg-item__subject">${esc(m.subject)}</div>
+              <div class="inbox-msg-item__meta">${esc(new Date(m.receivedAt).toLocaleString())}${
+              m.otp ? ` · OTP ${esc(m.otp)}` : ""
+            }</div>
+            </button></li>`
+          )
+          .join("");
+        const loadMore =
+          msgVisible < messages.length
+            ? `<button type="button" class="inbox-load-more" id="msg-load-more">Load more (${messages.length - msgVisible} remaining)</button>`
+            : "";
+        const selected = messages.find((m) => m.id === selectedMsgId) || slice[0] || null;
+        if (!selectedMsgId && selected) selectedMsgId = selected.id;
+        const active = messages.find((m) => m.id === selectedMsgId) || selected;
+
+        return `<div class="inbox-split">
+          <div class="inbox-split__list">
+            <div class="inbox-split__head"><span>Messages</span><span class="console-meta">${messages.length} total</span></div>
+            <ul class="inbox-msg-list" role="listbox" aria-label="Inbox messages">${items || '<li class="inbox-detail__empty" style="padding:14px">No messages yet.</li>'}</ul>
+            ${loadMore}
+          </div>
+          <div class="inbox-split__detail" id="msg-detail-pane">${renderMessageDetail(active, d)}</div>
+        </div>`;
+      }
+
+      function bindMessageList(d) {
+        out.querySelectorAll(".inbox-msg-item").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            selectedMsgId = btn.getAttribute("data-msg-id");
+            out.querySelectorAll(".inbox-msg-item").forEach((el) => el.classList.remove("is-active"));
+            btn.classList.add("is-active");
+            const m = (d.messages || []).find((row) => row.id === selectedMsgId);
+            const pane = document.getElementById("msg-detail-pane");
+            if (pane) pane.innerHTML = renderMessageDetail(m, d);
+            bindCompose(d);
+          });
+        });
+        document.getElementById("msg-load-more")?.addEventListener("click", () => {
+          msgVisible += MSG_PAGE;
+          const pane = document.getElementById("inbox-split-mount");
+          if (pane) {
+            pane.innerHTML = renderMessageList(d);
+            bindMessageList(d);
+            bindCompose(d);
+          }
+        });
+      }
+
+      function renderCompose(d) {
+        if (!d.outbound?.enabled) {
+          return `<div class="console-banner">Outbound send unavailable (Resend not configured on API).</div>`;
+        }
+        let banner = "";
+        if (!d.outbound.verifiedFrom) {
+          const hint = d.outbound.hint
+            ? esc(d.outbound.hint)
+            : "Set <code>OUTBOUND_FROM</code> on the Worker for a verified send domain.";
+          banner = `<div class="console-banner">${hint} <a href="/docs/outbound.html">Setup guide</a></div>`;
+        }
+        return `${banner}
+          <div class="console-compose" id="compose">
+            <h2>Send email</h2>
+            <label for="send-to">To</label>
+            <input id="send-to" type="email" placeholder="user@example.com" />
+            <label for="send-subject">Subject</label>
+            <input id="send-subject" type="text" placeholder="Hello from MailAgent" />
+            <label for="send-text">Body</label>
+            <textarea id="send-text" placeholder="Plain text body…"></textarea>
+            <button type="button" class="app-btn" id="send-btn">Send</button>
+          </div>`;
+      }
+
+      function bindCompose(d) {
+        document.getElementById("send-btn")?.addEventListener("click", async () => {
+          const to = document.getElementById("send-to").value.trim();
+          const subject = document.getElementById("send-subject").value.trim();
+          const text = document.getElementById("send-text").value;
+          if (!to || !subject) {
+            await UI().alert({ title: "Missing fields", message: "To and subject are required." });
+            return;
+          }
+          const ok = await UI().confirm({
+            title: "Send email",
+            message: `Send to ${to} with subject "${subject}"?`,
+            confirmLabel: "Send",
+          });
+          if (!ok) return;
+          const r = await api(`/v1/inboxes/${encodeURIComponent(inboxId)}/send`, {
+            method: "POST",
+            body: JSON.stringify({ to, subject, text }),
+          });
+          if (r.ok) {
+            UI().toast("Message sent", "ok");
+            load();
+          } else {
+            await UI().alert({ title: "Send failed", message: r.json.error || r.json.message || "Send failed" });
+          }
+        });
+
+        out.querySelectorAll("[data-reply]").forEach((btn) => {
+          btn.addEventListener("click", async () => {
+            const messageId = btn.getAttribute("data-reply");
+            const from = btn.getAttribute("data-from") || "";
+            const text = await UI().prompt({
+              title: "Reply",
+              label: `Reply to ${from}`,
+              multiline: true,
+              confirmLabel: "Send reply",
+            });
+            if (text == null || !text.trim()) return;
+            const r = await api(
+              `/v1/inboxes/${encodeURIComponent(inboxId)}/messages/${encodeURIComponent(messageId)}/reply`,
+              { method: "POST", body: JSON.stringify({ text }) }
+            );
+            if (r.ok) {
+              UI().toast("Reply sent", "ok");
+              load();
+            } else {
+              await UI().alert({ title: "Reply failed", message: r.json.error || r.json.message || "Reply failed" });
+            }
+          });
+        });
+      }
+
+      function renderNotifyRows(rows) {
+        if (!rows?.length) {
+          return `<p class="console-empty">No notify relay deliveries yet.</p>`;
+        }
+        let t = `<table class="console-table"><thead><tr><th>Status</th><th>To</th><th>Resend</th><th>Msg</th><th>When</th></tr></thead><tbody>`;
+        for (const row of rows) {
+          t += `<tr>
+            <td>${row.ok ? "OK" : "fail"}</td>
+            <td class="debug-mono">${esc(row.notifyEmail)}</td>
+            <td><code>${esc(row.resendId || row.error || "—")}</code></td>
+            <td><code>${esc(row.messageId || "—")}</code></td>
+            <td>${esc(new Date(row.createdAt).toLocaleString())}</td>
+          </tr>`;
+        }
+        return `${t}</tbody></table>`;
+      }
+
+      async function reloadNotify() {
+        const box = document.getElementById("notify-log");
+        if (!box) return;
+        box.textContent = "Loading…";
+        const r = await api(
+          `/v1/inboxes/${encodeURIComponent(inboxId)}/notify-deliveries?limit=50`
+        );
+        if (!r.ok) {
+          box.innerHTML = `<p class="app-err">${esc(r.json.error || r.status)}</p>`;
+          return;
+        }
+        box.innerHTML = renderNotifyRows(r.json.deliveries);
+      }
+
+      function renderCallbackRows(rows) {
+        if (!rows?.length) {
+          return `<p class="console-empty">No webhook deliveries yet.</p>`;
+        }
+        let t = `<table class="console-table"><thead><tr><th>Status</th><th>Code</th><th>URL</th><th>Msg</th><th>When</th></tr></thead><tbody>`;
+        for (const cb of rows) {
+          t += `<tr>
+            <td>${cb.ok ? "OK" : "fail"}</td>
+            <td>${cb.statusCode ?? "—"}</td>
+            <td class="debug-mono">${esc(cb.callbackUrl)}</td>
+            <td><code>${esc(cb.messageId || "—")}</code></td>
+            <td>${esc(new Date(cb.createdAt).toLocaleString())}</td>
+          </tr>`;
+        }
+        return `${t}</tbody></table>`;
+      }
+
+      async function reloadCallbacks() {
+        const box = document.getElementById("callback-log");
+        if (!box) return;
+        box.textContent = "Loading…";
+        const r = await api(
+          `/v1/inboxes/${encodeURIComponent(inboxId)}/callbacks?limit=50`
+        );
+        if (!r.ok) {
+          box.innerHTML = `<p class="app-err">${esc(r.json.error || r.status)}</p>`;
+          return;
+        }
+        box.innerHTML = renderCallbackRows(r.json.deliveries);
+      }
+
+      let simulateScenarios = null;
+
+      async function loadSimulateScenarios() {
+        if (simulateScenarios) return simulateScenarios;
+        const r = await api("/v1/inboxes/simulate/scenarios");
+        if (r.ok && Array.isArray(r.json.scenarios)) {
+          simulateScenarios = r.json.scenarios;
+        } else {
+          simulateScenarios = [];
+        }
+        return simulateScenarios;
+      }
+
+      async function simulateInbox(scenario) {
+        const body = scenario ? { scenario } : { otp: "482910", subject: "MailAgent simulated OTP" };
+        const r = await api(`/v1/inboxes/${encodeURIComponent(inboxId)}/simulate`, {
+          method: "POST",
+          body: JSON.stringify(body),
+        });
+        if (r.ok) load();
+        else await UI().alert({ title: "Simulate failed", message: r.json.error || String(r.status) || "Simulate failed" });
+      }
+
+      function bindSimulate(scenarios) {
+        document.getElementById("sim-inject")?.addEventListener("click", () => {
+          const sel = document.getElementById("sim-scenario");
+          const scenario = sel?.value?.trim() || undefined;
+          simulateInbox(scenario);
+        });
+      }
+
+      function renderSimulate(scenarios) {
+        let opts = `<option value="">custom OTP</option>`;
+        for (const s of scenarios) {
+          opts += `<option value="${esc(s.id)}">${esc(s.id)} — ${esc(s.description || "")}</option>`;
+        }
+        return `<div class="console-key-form" id="simulate-box">
+          <h2>Simulate message</h2>
+          <p class="console-meta">Inject test mail without SMTP — same presets as MCP <code>scenario</code>.</p>
+          <label for="sim-scenario">Scenario</label>
+          <select id="sim-scenario">${opts}</select>
+          <button type="button" class="app-btn app-btn--ghost" id="sim-inject">Inject</button>
+        </div>`;
+      }
+
+      async function renderDetail(d) {
+        titleEl.textContent = d.address || "Inbox";
+        leadEl.textContent = d.label
+          ? `Label: ${d.label} · expires ${new Date(d.expiresAt).toLocaleString()}`
+          : `Expires ${new Date(d.expiresAt).toLocaleString()}`;
+
+        let html = `<p class="console-meta"><code>${esc(d.id)}</code>`;
+        if (d.callbackUrl) html += ` · callback configured`;
+        if (d.notifyEmail) {
+          html += ` · notify <span class="debug-mono">${esc(d.notifyEmail)}</span> (${esc(d.notifyMode || "verification")})`;
+        }
+        html += `</p>`;
+
+        const debugHref = d.debugUiUrl || d.links?.debug || `/debug.html?inbox=${esc(d.id)}`;
+        html += `<div class="console-banner">Timeout or wrong mail?
+          <a href="${esc(debugHref)}"><strong>Debug UI</strong></a>
+          · <a href="${esc(d.links?.diagnose || "#")}" target="_blank" rel="noopener">Diagnose JSON</a>
+        </div>`;
+
+        const scenarios = await loadSimulateScenarios();
+        html += renderSimulate(scenarios);
+
+        html += `<div class="console-key-form" id="search-box">
+          <h2>Search messages</h2>
+          <div class="search-suggest">
+            <label for="search-q">Query</label>
+            <input id="search-q" type="text" placeholder="verification code" autocomplete="off" aria-autocomplete="list" aria-controls="search-suggest" aria-expanded="false" />
+            <ul id="search-suggest" class="search-suggest__list" role="listbox" hidden></ul>
+          </div>
+          <label for="search-mode">Mode</label>
+          <select id="search-mode">
+            <option value="auto">auto</option>
+            <option value="keyword">keyword</option>
+            <option value="semantic">semantic</option>
+          </select>
+          <button type="button" class="app-btn app-btn--ghost" id="search-btn">Search</button>
+          <div id="search-results" class="console-meta"></div>
+        </div>`;
+
+        html += renderCompose(d);
+
+        if (d.troubleshooting?.length) {
+          html += `<h2>Hints</h2><ul class="console-keys">`;
+          for (const h of d.troubleshooting) html += `<li>${esc(h)}</li>`;
+          html += `</ul>`;
+        }
+
+        html += `<div id="inbox-split-mount">${renderMessageList(d)}</div>`;
+
+        html += `<h2>Threads (${d.threads?.length ?? 0})</h2>`;
+        if (!d.threads?.length) {
+          html += `<p class="console-empty">No threads.</p>`;
+        } else {
+          html += `<table class="console-table"><thead><tr><th>Subject</th><th>Msgs</th><th>Last</th></tr></thead><tbody>`;
+          for (const t of d.threads) {
+            html += `<tr>
+              <td>${esc(t.subject || "(no subject)")}</td>
+              <td>${t.messageCount}</td>
+              <td>${esc(new Date(t.lastMessageAt).toLocaleString())}</td>
+            </tr>`;
+          }
+          html += `</tbody></table>`;
+        }
+
+        if (d.notifyEmail) {
+          html += `<h2>Notify relay</h2>
+            <p class="console-meta">OTP/summary to <code>notifyEmail</code>. API: <code>GET …/notify-deliveries</code></p>
+            <button type="button" class="app-btn app-btn--ghost" id="reload-notify">Refresh notify log</button>
+            <div id="notify-log">${renderNotifyRows(d.notifyDeliveries)}</div>`;
+        }
+
+        html += `<h2>Callback deliveries</h2>
+          <p class="console-meta">Per-inbox <code>callbackUrl</code> and team webhook deliveries. API: <code>GET …/callbacks</code></p>
+          <button type="button" class="app-btn app-btn--ghost" id="reload-callbacks">Refresh log</button>
+          <div id="callback-log">${renderCallbackRows(d.callbacks)}</div>`;
+
+        html += `<p class="console-links">
+          <a href="${esc(debugHref)}">Full debug UI</a>
+          · <a href="${esc(d.links?.diagnose || "#")}" target="_blank" rel="noopener">GET diagnose</a>
+        </p>`;
+        out.innerHTML = html;
+        bindCompose(d);
+        bindMessageList(d);
+        bindSimulate(scenarios);
+        bindSearch();
+        document.getElementById("reload-callbacks")?.addEventListener("click", reloadCallbacks);
+        document.getElementById("reload-notify")?.addEventListener("click", reloadNotify);
+        if (location.hash) {
+          document.querySelector(location.hash)?.scrollIntoView({ block: "start" });
+        }
+        reloadCallbacks();
+        if (d.notifyEmail) reloadNotify();
+      }
+
+      const SEARCH_HISTORY_KEY = "mailagent_search_history";
+
+      function loadSearchHistory() {
+        try {
+          return JSON.parse(localStorage.getItem(SEARCH_HISTORY_KEY) || "[]");
+        } catch {
+          return [];
+        }
+      }
+
+      function saveSearchQuery(q) {
+        const clean = q.trim();
+        if (!clean) return;
+        const hist = loadSearchHistory().filter((x) => x !== clean);
+        hist.unshift(clean);
+        localStorage.setItem(SEARCH_HISTORY_KEY, JSON.stringify(hist.slice(0, 8)));
+      }
+
+      async function runSearch() {
+        const q = document.getElementById("search-q")?.value.trim();
+        const mode = document.getElementById("search-mode")?.value || "auto";
+        const box = document.getElementById("search-results");
+        const suggest = document.getElementById("search-suggest");
+        if (suggest) suggest.hidden = true;
+        if (!q) {
+          if (box) box.textContent = "Enter a query.";
+          return;
+        }
+        saveSearchQuery(q);
+        if (box) box.textContent = "Searching…";
+        const r = await api(
+          `/v1/inboxes/${encodeURIComponent(inboxId)}/search?q=${encodeURIComponent(q)}&mode=${encodeURIComponent(mode)}&limit=20`
+        );
+        if (!r.ok) {
+          if (box) box.innerHTML = `<span class="app-err">${esc(r.json.error || r.status)}</span>`;
+          return;
+        }
+        const hits = r.json.results || r.json.matches || [];
+        if (!hits.length) {
+          if (box) box.textContent = "No matches.";
+          return;
+        }
+        const rows = hits
+          .map(
+            (h) =>
+              `<tr><td>${esc(h.from || h.from_addr)}</td><td>${esc(h.subject)}</td><td>${esc(h.snippet || h.preview || "—")}</td></tr>`
+          )
+          .join("");
+        if (box) {
+          box.innerHTML = `<table class="console-table"><thead><tr><th>From</th><th>Subject</th><th>Snippet</th></tr></thead><tbody>${rows}</tbody></table>`;
+        }
+      }
+
+      function bindSearch() {
+        const input = document.getElementById("search-q");
+        const suggest = document.getElementById("search-suggest");
+        const setSuggestOpen = (open) => {
+          if (suggest) suggest.hidden = !open;
+          input?.setAttribute("aria-expanded", open ? "true" : "false");
+        };
+        const debouncedSuggest = UI().debounce(() => {
+          if (!input || !suggest) return;
+          const q = input.value.trim().toLowerCase();
+          const hist = loadSearchHistory().filter((item) => !q || item.toLowerCase().includes(q));
+          if (!hist.length) {
+            setSuggestOpen(false);
+            return;
+          }
+          suggest.innerHTML = hist
+            .slice(0, 6)
+            .map(
+              (item) =>
+                `<li role="presentation"><button type="button" role="option" data-suggest="${esc(item)}">${esc(item)}</button></li>`
+            )
+            .join("");
+          setSuggestOpen(true);
+          suggest.querySelectorAll("[data-suggest]").forEach((btn) => {
+            btn.addEventListener("click", () => {
+              input.value = btn.getAttribute("data-suggest") || "";
+              setSuggestOpen(false);
+              runSearch();
+            });
+            btn.addEventListener("keydown", (event) => {
+              const options = [...suggest.querySelectorAll("[data-suggest]")];
+              const index = options.indexOf(btn);
+              if (event.key === "ArrowDown") {
+                event.preventDefault();
+                options[(index + 1) % options.length]?.focus();
+              } else if (event.key === "ArrowUp") {
+                event.preventDefault();
+                options[(index - 1 + options.length) % options.length]?.focus();
+              } else if (event.key === "Escape") {
+                setSuggestOpen(false);
+                input.focus();
+              }
+            });
+          });
+        }, 280);
+
+        input?.addEventListener("input", debouncedSuggest);
+        input?.addEventListener("focus", debouncedSuggest);
+        input?.addEventListener("keydown", (event) => {
+          if (event.key === "ArrowDown" && suggest && !suggest.hidden) {
+            event.preventDefault();
+            suggest.querySelector("[data-suggest]")?.focus();
+          } else if (event.key === "Escape") {
+            setSuggestOpen(false);
+          }
+        });
+        input?.addEventListener("blur", () => {
+          setTimeout(() => {
+            if (!suggest?.contains(document.activeElement)) setSuggestOpen(false);
+          }, 160);
+        });
+        document.getElementById("search-btn")?.addEventListener("click", runSearch);
+      }
+
+      function showGate() {
+        Gate()?.renderConnectGate(gateEl, {
+          title: "Connect to open inbox",
+          desc: "Paste your API key to load messages, attachments, and simulate OTP for this inbox.",
+        });
+        out.innerHTML = "";
+      }
+
+      async function load() {
+        if (!inboxId) return;
+        if (!App()?.getKey()) {
+          showGate();
+          return;
+        }
+        Gate()?.clearConnectGate(gateEl);
+        out.textContent = "Loading…";
+
+        const r = await api(`/v1/console/inboxes/${encodeURIComponent(inboxId)}`);
+        if (!r.ok) {
+          out.innerHTML = `<p class="app-err">${esc(r.json.error || r.status)}</p>`;
+          return;
+        }
+        lastDetail = r.json;
+        msgVisible = MSG_PAGE;
+        selectedMsgId = null;
+        await renderDetail(lastDetail);
+      }
+
+      document.addEventListener("mailagent:session-ready", () => {
+        if (inboxId && !App()?.getKey()) showGate();
+        else if (inboxId) load();
+      });
+      document.addEventListener("mailagent:connect", load);
+      document.addEventListener("mailagent:disconnect", showGate);
+    </script>
+  </body>
+</html>

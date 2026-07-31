@@ -1,0 +1,27 @@
+[
+  {
+    "id": "Q01",
+    "question": "Why did MRR drop?",
+    "expected_cores": ["revenue-core", "business-core"]
+  },
+  {
+    "id": "Q02",
+    "question": "Stripe webhook is failing",
+    "expected_cores": ["billing-core", "technical-core"]
+  },
+  {
+    "id": "Q03",
+    "question": "How can we improve onboarding activation?",
+    "expected_cores": ["onboarding-core", "product-core"]
+  },
+  {
+    "id": "Q04",
+    "question": "Trial conversion is low on the paywall",
+    "expected_cores": ["paywall-core", "revenue-core"]
+  },
+  {
+    "id": "Q05",
+    "question": "How do we deploy to production?",
+    "expected_cores": ["operational-core", "technical-core"]
+  }
+]

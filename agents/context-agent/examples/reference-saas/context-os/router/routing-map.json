@@ -1,0 +1,23 @@
+{
+  "version": "1.0.0",
+  "project": "beacon-metrics",
+  "fallback_core": "technical-core",
+  "routes": [
+    {
+      "patterns": ["revenue", "mrr", "annual contract", "churn", "pricing", "paid conversion", "retention"],
+      "cores": ["business-core"]
+    },
+    {
+      "patterns": ["feature", "roadmap", "onboarding", "sample mode", "source is connected", "persona"],
+      "cores": ["product-core"]
+    },
+    {
+      "patterns": ["deploy", "release", "incident", "severity-one", "on-call", "rollback", "recovery"],
+      "cores": ["operational-core"]
+    },
+    {
+      "patterns": ["api", "event retries", "idempotent", "dashboard query", "raw events", "architecture", "endpoint"],
+      "cores": ["technical-core"]
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "version": "1.0.0",
+  "project": "{{PROJECT_SLUG}}",
+  "fallback_core": "technical-core",
+  "routes": [
+    {
+      "patterns": ["revenue", "mrr", "arr", "churn", "growth", "retention", "ltv", "cac"],
+      "cores": ["revenue-core", "business-core"]
+    },
+    {
+      "patterns": ["paywall", "trial", "conversion", "upgrade", "free tier"],
+      "cores": ["paywall-core", "revenue-core"]
+    },
+    {
+      "patterns": ["stripe", "webhook", "subscription", "invoice", "billing", "payment failed"],
+      "cores": ["billing-core", "technical-core"]
+    },
+    {
+      "patterns": ["onboarding", "activation", "first value", "signup flow", "welcome"],
+      "cores": ["onboarding-core", "product-core"]
+    },
+    {
+      "patterns": ["feature", "roadmap", "product scope", "persona", "what is {{PROJECT_SLUG}}"],
+      "cores": ["product-core", "business-core"]
+    },
+    {
+      "patterns": ["deploy", "release", "ci", "incident", "monitor", "rollback", "smoke"],
+      "cores": ["operational-core", "technical-core"]
+    },
+    {
+      "patterns": ["api", "database", "architecture", "implement", "bug", "refactor", "endpoint"],
+      "cores": ["technical-core"]
+    },
+    {
+      "patterns": ["pricing", "business", "kpi", "metrics"],
+      "cores": ["business-core"]
+    }
+  ]
+}

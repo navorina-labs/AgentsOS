@@ -1,0 +1,23 @@
+{
+  "version": "1.0.0",
+  "project": "{{PROJECT_SLUG}}",
+  "fallback_core": "technical-core",
+  "routes": [
+    {
+      "patterns": ["adoption", "community", "maintainer", "sponsor", "license", "governance", "roadmap"],
+      "cores": ["business-core"]
+    },
+    {
+      "patterns": ["feature", "roadmap", "docs", "documentation", "example", "tutorial", "developer experience", "api design"],
+      "cores": ["product-core"]
+    },
+    {
+      "patterns": ["release", "ci", "publish", "npm", "pypi", "crate", "semver", "changelog", "security advisory"],
+      "cores": ["operational-core"]
+    },
+    {
+      "patterns": ["api", "architecture", "implement", "bug", "refactor", "compatibility", "breaking change", "deprecation", "type", "sdk", "package"],
+      "cores": ["technical-core"]
+    }
+  ]
+}

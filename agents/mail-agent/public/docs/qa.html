@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-41B4KG53D1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-41B4KG53D1");
+    </script>
+    <title>QA guide — MailAgent</title>
+    <meta
+      name="description"
+      content="Playwright and Cypress email verification with MailAgent disposable inboxes, simulate in CI, isolated labels per worker, and OTP extraction without SMTP."
+    />
+    <link rel="canonical" href="https://webmailagent.com/docs/qa.html" />
+    <meta name="robots" content="index, follow" />
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="MailAgent" />
+    <meta property="og:url" content="https://webmailagent.com/docs/qa.html" />
+    <meta property="og:title" content="QA guide — MailAgent" />
+    <meta
+      property="og:description"
+      content="Playwright and Cypress email verification with disposable inboxes and CI simulate."
+    />
+    <meta property="og:image" content="https://webmailagent.com/logo-512.png" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta name="theme-color" content="#000000" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body class="doc-page" data-site="docs" data-doc="qa">
+    <div id="site-nav"></div>
+    <div class="doc-layout">
+      <aside class="doc-sidebar" id="site-doc-nav" aria-label="Documentation"></aside>
+      <article class="doc-content">
+      <h1>QA / E2E guide</h1>
+      <p class="doc-lead">
+        Open-source QA flows — temporary inbox per test run, OTP and magic links
+        without a shared <code>test@company.com</code>.
+        <a href="https://github.com/Alex0nder/MailAgent" rel="noopener noreferrer">Source on GitHub</a>.
+      </p>
+
+      <h2>Problems we solve</h2>
+      <table class="doc-table">
+        <thead><tr><th>Pain</th><th>Solution</th></tr></thead>
+        <tbody>
+          <tr><td>Shared inbox races in CI</td><td><code>label</code> per run / worker</td></tr>
+          <tr><td>Long waits in tests</td><td><code>POST /v1/inboxes/open</code></td></tr>
+          <tr><td>Wrong email picked</td><td><code>subjectContains</code> + allowlist</td></tr>
+          <tr><td>Parse HTML for OTP</td><td><code>verification.otp</code>, <code>primaryLink</code></td></tr>
+          <tr><td>Debug failed run</td><td><code>GET /v1/inboxes?label=...</code></td></tr>
+        </tbody>
+      </table>
+
+      <h2>30-minute pilot</h2>
+      <p>
+        Fastest: copy
+        <a href="https://github.com/Alex0nder/MailAgent/tree/main/examples/qa-pilot-starter">qa-pilot-starter</a>
+        (simulate in CI · staging via <code>APP_SIGNUP_URL</code>) ·
+        <a href="https://github.com/Alex0nder/MailAgent/tree/main/examples/qa-pilot-cypress-starter">Cypress starter</a>.
+        Guide:
+        <a href="https://github.com/Alex0nder/MailAgent/blob/main/docs/QA-PILOT.md">QA-PILOT.md</a>
+        · validate with <code>npm run wizard:qa-pilot</code>.
+      </p>
+
+      <h2>CI quick start</h2>
+      <pre class="doc-pre"><code>export MAILAGENT_API_URL=https://api.webmailagent.com
+export MAILAGENT_API_KEY=your_key
+export RUN_ID="${GITHUB_RUN_ID:-local}"
+
+curl -sS -X POST "$MAILAGENT_API_URL/v1/inboxes/open" \
+  -H "Authorization: Bearer $MAILAGENT_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d "{
+    \"label\": \"ci-$RUN_ID\",
+    \"service\": \"auth0\",
+    \"subjectContains\": \"verification\",
+    \"timeoutSeconds\": 120
+  }"</code></pre>
+
+      <h2>Recommended E2E order</h2>
+      <ol class="doc-list">
+        <li><code>POST /v1/inboxes</code> with <code>label</code> → get <code>address</code></li>
+        <li>Fill signup form on staging</li>
+        <li><code>GET /v1/inboxes/:id/wait?subjectContains=...</code> then <code>/extract</code></li>
+      </ol>
+
+      <h2>Playwright / <code>@mailagent/qa</code></h2>
+      <pre class="doc-pre"><code>npm install @mailagent/qa@latest</code></pre>
+      <pre class="doc-pre"><code>import { createMailAgentQa, MailAgentQa } from "@mailagent/qa";
+
+const mail = createMailAgentQa(); // MAILAGENT_API_URL + MAILAGENT_API_KEY
+const inbox = await mail.createInbox({
+  label: MailAgentQa.ciLabel("pw"),
+  service: "auth0",
+});
+// page.fill(inbox.address) → submit
+const v = await mail.waitForVerification(inbox.id, {
+  subjectContains: "verify",
+  messageIndex: 0, // 1 = second matching email
+});
+// callbackUrl flows: await mail.waitForCallback(inbox.id, { since: inbox.createdAt });</code></pre>
+      <p>Fixture with auto-delete: <a href="https://github.com/Alex0nder/MailAgent/tree/main/examples/playwright">examples/playwright/mailagent.fixture.ts</a></p>
+
+      <h2>QA fields</h2>
+      <table class="doc-table">
+        <thead><tr><th>Field</th><th>Where</th><th>Purpose</th></tr></thead>
+        <tbody>
+          <tr><td><code>label</code></td><td>create, open</td><td>CI run / worker id</td></tr>
+          <tr><td><code>subjectContains</code></td><td>open, wait</td><td>Filter by subject</td></tr>
+          <tr><td><code>messageIndex</code></td><td>open, wait, verify</td><td>0=newest match, 1=second, …</td></tr>
+          <tr><td><code>callbackUrl</code></td><td>create, open</td><td>HTTPS webhook on new mail</td></tr>
+          <tr><td><code>deleteAfter</code></td><td>open</td><td><code>false</code> to keep inbox for debug</td></tr>
+        </tbody>
+      </table>
+
+      <h2>Cypress</h2>
+      <pre class="doc-pre"><code>import { createMailAgentCypressTasks } from "@mailagent/qa/cypress";
+// setupNodeEvents: on("task", createMailAgentCypressTasks())</code></pre>
+      <p>
+        Example:
+        <a href="https://github.com/Alex0nder/MailAgent/tree/main/examples/cypress">examples/cypress</a>
+      </p>
+
+      <h2>CI secrets</h2>
+      <p>
+        Use a scoped key per pipeline — <code>labelPrefix: "ci-"</code> so a leaked
+        secret cannot touch other runs or team admin.
+        <a href="/docs/scoped-keys.html">Scoped keys guide →</a>
+      </p>
+
+      <h2 id="troubleshooting">Debug after failure</h2>
+      <p>
+        Open <a href="/debug.html">Debug UI</a> with
+        <code>?inbox=INBOX_ID</code> from <code>@mailagent/qa</code> errors.
+      </p>
+      <pre class="doc-pre"><code>GET /v1/inboxes?label=ci-12345
+GET /v1/inboxes/:id/messages
+GET /v1/inboxes/:id/callbacks</code></pre>
+
+      <h2>More guides</h2>
+      <ul class="doc-list">
+        <li><a href="https://github.com/Alex0nder/MailAgent/blob/main/docs/QA-TROUBLESHOOTING.md">Troubleshooting (timeout, OTP, webhook)</a></li>
+        <li><a href="https://github.com/Alex0nder/MailAgent/blob/main/docs/QA-LOCAL-SMTP.md">Local dev with Mailpit</a></li>
+        <li><a href="https://github.com/Alex0nder/MailAgent/blob/main/docs/QA-RELEASE.md">Release checklist (smoke, migrate, publish)</a></li>
+        <li><a href="/docs/scoped-keys.html">Scoped API keys</a></li>
+        <li><a href="https://github.com/Alex0nder/MailAgent/blob/main/docs/QA-PRESETS.md">Service presets matrix</a></li>
+        <li><a href="https://github.com/Alex0nder/MailAgent/blob/main/docs/QA-CALLBACK.md">Callback cookbook</a></li>
+        <li><a href="https://github.com/Alex0nder/MailAgent/blob/main/docs/QA-ONBOARDING.md">QA team onboarding</a></li>
+      </ul>
+
+      <p>
+        <strong>QA roadmap (P0–P2):</strong>
+        <a href="https://github.com/Alex0nder/MailAgent/blob/main/docs/QA-ROADMAP.md">docs/QA-ROADMAP.md</a>
+      </p>
+
+      <p class="doc-note">
+        Debug failed runs in the <a href="/debug.html">Debug console</a>.
+        Pilot access: <a href="mailto:hello@webmailagent.com?subject=MailAgent%20pilot%20access">hello@webmailagent.com</a>.
+      </p>
+      </article>
+    </div>
+    <div id="site-footer"></div>
+    <script src="/site-shell.js" defer></script>
+  </body>
+</html>

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Agent runs — MailAgent</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta name="theme-color" content="#000000" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body class="app-page" data-site="app" data-doc="agent-runs">
+    <div id="site-nav"></div>
+
+    <main class="dash-main">
+      <div class="dash-container dash-container--wide">
+        <div id="connect-gate"></div>
+        <header class="dash-toolbar" data-gate-hide>
+          <div>
+            <h1>Runs</h1>
+            <p class="dash-toolbar__sub">Autonomous agent sessions, timelines, and tool traces.</p>
+          </div>
+        </header>
+        <div class="dash-panel" data-gate-hide>
+          <div class="dash-panel__body dash-panel__body--padded">
+          <div class="workspace-form-grid" style="margin-bottom:16px">
+            <label for="filter">Filter runId (optional)<input id="filter" type="text" placeholder="cursor-session-42" /></label>
+            <label for="label-filter">Filter label prefix (optional)<input id="label-filter" type="text" placeholder="ci-" /></label>
+          </div>
+          <button type="button" class="app-btn app-btn--ghost" id="reload-runs">Refresh</button>
+          <div id="list"></div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <div id="site-footer"></div>
+    <script src="/console-ui.js"></script>
+    <script src="/site-shell.js" defer></script>
+    <script src="/app-connect-gate.js" defer></script>
+    <script src="/app-insights.js" defer></script>
+    <script src="/app-session.js" defer></script>
+    <script>
+      const UI = () => window.MailAgentUI;
+      const App = () => window.MailAgentApp;
+      const Gate = () => window.MailAgentConnectGate;
+      const gateEl = document.getElementById("connect-gate");
+      const filterEl = document.getElementById("filter");
+      const labelFilterEl = document.getElementById("label-filter");
+      const listEl = document.getElementById("list");
+
+      let cachedRuns = [];
+
+      function esc(value) {
+        return UI()?.esc(value) ?? String(value ?? "");
+      }
+
+      function badgeForTimeline(status) {
+        return UI().statusBadge(status);
+      }
+
+      function renderRuns(runs) {
+        if (!runs.length) {
+          listEl.innerHTML =
+            '<p class="app-lead" style="margin-top:24px">No active agent runs. Use <code>runId</code> in MCP or <code>POST /v1/agent/verify</code>.</p>';
+          return;
+        }
+        const timelineHtml = (timeline) => {
+          if (!Array.isArray(timeline) || !timeline.length) {
+            return '<p class="meta">No timeline events yet.</p>';
+          }
+          return `<ol class="timeline-list">${timeline
+            .map(
+              (e) => `<li>
+                <strong>${esc(e.title || e.type)}</strong>
+                ${badgeForTimeline(e.status)}
+                <span class="meta">${esc(e.at)}</span>
+                ${
+                  e.inboxId || e.messageId
+                    ? `<div class="meta">${e.inboxId ? `inbox ${esc(e.inboxId)}` : ""}${
+                        e.messageId ? ` · message ${esc(e.messageId)}` : ""
+                      }</div>`
+                    : ""
+                }
+              </li>`
+            )
+            .join("")}</ol>`;
+        };
+        listEl.innerHTML = runs
+          .map(
+            (r) => `<div class="run-card">
+              <h3><code>${esc(r.runId)}</code> · ${r.inboxCount} inbox(es)</h3>
+              <p class="meta">Latest: ${esc(r.latestAt)}</p>
+              <ul>${r.inboxes
+                .map(
+                  (i) =>
+                    `<li><code>${esc(i.id)}</code> ${esc(i.address)}${i.label ? ` <span class="meta">(${esc(i.label)})</span>` : ""}
+                      — <a href="/console-inbox.html?inbox=${encodeURIComponent(i.id)}">console</a>
+                      · <a href="/console-inbox.html?inbox=${encodeURIComponent(i.id)}#simulate-box">simulate</a>
+                      · <a href="/debug.html?inbox=${encodeURIComponent(i.id)}">debug</a></li>`
+                )
+                .join("")}</ul>
+              ${r.session ? `<h4>Timeline</h4>${timelineHtml(r.session.timeline)}` : ""}
+            </div>`
+          )
+          .join("");
+      }
+
+      function applyClientFilter() {
+        const runId = filterEl.value.trim().toLowerCase();
+        const label = labelFilterEl.value.trim().toLowerCase();
+        let runs = cachedRuns;
+        if (runId) runs = runs.filter((r) => r.runId.toLowerCase().includes(runId));
+        if (label) {
+          runs = runs.filter((r) =>
+            r.inboxes.some((i) => (i.label || "").toLowerCase().includes(label))
+          );
+        }
+        renderRuns(runs);
+      }
+
+      function showEmptyState() {
+        Gate()?.renderConnectGate(gateEl, {
+          title: "Connect to view runs",
+          desc: "Autonomous agent sessions, timelines, and tool traces load after you connect.",
+        });
+        listEl.innerHTML = "";
+      }
+
+      document.addEventListener("mailagent:session-ready", () => {
+        if (!App()?.getKey()) showEmptyState();
+        else loadRuns();
+      });
+
+      async function loadRuns() {
+        if (!App()?.getKey()) {
+          showEmptyState();
+          return;
+        }
+        Gate()?.clearConnectGate(gateEl);
+        listEl.innerHTML = '<p class="app-lead" style="margin-top:24px">Loading…</p>';
+        const q = new URLSearchParams();
+        const runId = filterEl.value.trim();
+        const label = labelFilterEl.value.trim();
+        if (runId) q.set("runId", runId);
+        if (label) q.set("label", label);
+        const path = runId && !label
+          ? `/v1/agent/runs/${encodeURIComponent(runId)}`
+          : `/v1/agent/runs?${q}`;
+        const res = await App().api(path);
+        const data = res.json;
+        if (!res.ok) {
+          listEl.innerHTML = `<p class="app-err">${esc(data.error || res.status)}</p>`;
+          return;
+        }
+        cachedRuns = data.runs ?? (data.runId ? [data] : []);
+        if (runId || label) {
+          renderRuns(cachedRuns);
+        } else {
+          applyClientFilter();
+        }
+      }
+
+      document.getElementById("reload-runs").onclick = loadRuns;
+      document.addEventListener("mailagent:connect", loadRuns);
+      document.addEventListener("mailagent:disconnect", showEmptyState);
+      const debouncedFilter = UI().debounce(applyClientFilter, 320);
+      filterEl.addEventListener("input", debouncedFilter);
+      labelFilterEl.addEventListener("input", debouncedFilter);
+    </script>
+  </body>
+</html>

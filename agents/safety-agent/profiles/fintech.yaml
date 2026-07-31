@@ -1,0 +1,63 @@
+# Профиль: финтех / платежи (долгий retention, HNDL, строгие политики)
+id: fintech
+name: Financial Services
+description: Платежи, KYC, торговые данные — высокий срок конфиденциальности и HNDL
+
+organization_defaults:
+  migration_years: 2
+  quantum_horizon_years: 8
+
+adversary:
+  classical: true
+  quantum_record: true
+  ai_implementation: true
+
+defaults:
+  confidentiality_years: 15
+
+apply_ai_governance_template: true
+
+starter_flows:
+  - id: payment-api-tls
+    name: Payment API (TLS)
+    confidentiality_years: 10
+    storage: ephemeral
+    hndl_exposed: true
+    crypto:
+      key_exchange: [ECDHE-P256]
+      signatures: []
+      symmetric: [AES-256-GCM]
+      hash: [SHA-256]
+    tags: [payments, edge, todo-review]
+  - id: ledger-at-rest
+    name: Ledger / audit log encryption
+    confidentiality_years: 15
+    storage: permanent
+    hndl_exposed: true
+    crypto:
+      key_exchange: [RSA-2048]
+      signatures: [ECDSA-P256]
+      symmetric: [AES-256-GCM]
+      hash: [SHA-256]
+    tags: [ledger, compliance, todo-review]
+
+recommended_policies:
+  - id: fintech-no-rsa-permanent
+    when:
+      retention_tier: permanent
+      has_algorithm: RSA-2048
+    action: block
+    recommend:
+      key_exchange: ML-KEM-1024
+      hybrid_with: X25519
+  - id: fintech-no-weak-hash
+    when:
+      retention_tier: long
+      has_algorithm: SHA-1
+    action: block
+  - id: fintech-pqc-long-storage
+    when:
+      retention_tier: long
+    action: recommend
+    recommend:
+      key_exchange: ML-KEM-768

@@ -1,0 +1,11 @@
+{
+  "description": "Drift CI for scaffold-saas example",
+  "path_patterns": [
+    {
+      "patterns": ["context-os/cores/**", "context-os/subcores/**"],
+      "cores": ["business-core", "product-core", "technical-core", "operational-core"]
+    }
+  ],
+  "codePrefixes": ["context-os/cores/", "context-os/subcores/"],
+  "warnUnmapped": false
+}

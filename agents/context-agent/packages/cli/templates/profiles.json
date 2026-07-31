@@ -1,0 +1,18 @@
+{
+  "minimal": {
+    "description": "4 generic cores: business, product, technical, operational",
+    "use_when": "You need the generic four-core scaffold."
+  },
+  "saas": {
+    "description": "minimal + SaaS subcores: revenue, paywall, billing, onboarding",
+    "use_when": "The project has revenue, paywall, billing, and onboarding decisions."
+  },
+  "agent-tool": {
+    "description": "for AI agents, developer tools, plugins, and automation products",
+    "use_when": "The project is an AI agent, developer tool, plugin, connector, or automation product."
+  },
+  "oss-library": {
+    "description": "for open-source libraries, SDKs, packages, and reusable developer APIs",
+    "use_when": "The project is a public library, SDK, package, or reusable developer API."
+  }
+}

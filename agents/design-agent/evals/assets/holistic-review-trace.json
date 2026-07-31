@@ -1,0 +1,650 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-07-30T13:10:20.184865+00:00",
+  "source": {
+    "path": "holistic-review-workbench.html",
+    "sha256": "e526cc1310e0d8259ecdffb3cc24247636e3e09925ee942d1e25bc0b37544065"
+  },
+  "browser": {
+    "protocolVersion": "1.3",
+    "product": "Chrome/150.0.7871.188",
+    "revision": "@4ded7fd52d59b479c4d99da8bce9d31226a3ec5e",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/150.0.0.0 Safari/537.36",
+    "jsVersion": "15.0.245.21"
+  },
+  "evidence_boundaries": [
+    "Computed contrast is WCAG 2 relative luminance for the recorded CSS colors, not APCA.",
+    "DOM and focus observations are not a named screen-reader transcript.",
+    "The narrow capture proves page-level overflow at 390 CSS px only.",
+    "A source-level transition-property value does not prove runtime smoothness or compositor behavior.",
+    "One dialog path does not prove every keyboard, pointer, touch, or error path."
+  ],
+  "states": [
+    {
+      "id": "default",
+      "screenshot": "holistic-review-default-1280x900.png",
+      "actions": [
+        {
+          "type": "navigate"
+        }
+      ],
+      "evidence": {
+        "viewport": {
+          "width": 1280,
+          "height": 900,
+          "dpr": 1,
+          "documentClientWidth": 1280,
+          "documentScrollWidth": 1280,
+          "horizontalOverflow": false
+        },
+        "labState": {
+          "dialogOpen": false,
+          "errorVisible": false,
+          "activeElement": "BODY"
+        },
+        "focus": {
+          "activeElement": "BODY",
+          "trigger": {
+            "color": "rgb(255, 255, 255)",
+            "backgroundColor": "rgb(210, 59, 66)",
+            "fontSize": "14px",
+            "fontWeight": "700",
+            "lineHeight": "20.3px",
+            "overflow": "visible",
+            "textOverflow": "clip",
+            "whiteSpace": "normal",
+            "borderRadius": "10px",
+            "transitionProperty": "all",
+            "outlineStyle": "none",
+            "outlineWidth": "3px"
+          },
+          "closeAccessibleName": "×",
+          "closeAriaLabel": null,
+          "backgroundInert": false,
+          "dialogAriaModal": null,
+          "dialogLabelledBy": null
+        },
+        "typography": {
+          "lede": {
+            "color": "rgb(154, 163, 178)",
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "fontSize": "13px",
+            "fontWeight": "300",
+            "lineHeight": "14px",
+            "overflow": "visible",
+            "textOverflow": "clip",
+            "whiteSpace": "normal",
+            "borderRadius": "0px",
+            "transitionProperty": "all",
+            "outlineStyle": "none",
+            "outlineWidth": "3px"
+          },
+          "memberName": {
+            "color": "rgb(30, 37, 48)",
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "fontSize": "14px",
+            "fontWeight": "800",
+            "lineHeight": "20.3px",
+            "overflow": "hidden",
+            "textOverflow": "ellipsis",
+            "whiteSpace": "nowrap",
+            "borderRadius": "0px",
+            "transitionProperty": "all",
+            "outlineStyle": "none",
+            "outlineWidth": "3px"
+          },
+          "memberNameClipped": true,
+          "memberNameFullTextReachable": false,
+          "memberEmail": {
+            "color": "rgb(154, 163, 178)",
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "17.4px",
+            "overflow": "hidden",
+            "textOverflow": "ellipsis",
+            "whiteSpace": "nowrap",
+            "borderRadius": "0px",
+            "transitionProperty": "all",
+            "outlineStyle": "none",
+            "outlineWidth": "3px"
+          },
+          "memberEmailClipped": true,
+          "memberEmailFullTextReachable": false
+        },
+        "color": {
+          "mutedForeground": "rgb(154, 163, 178)",
+          "surfaceBackground": "rgb(255, 255, 255)",
+          "mutedContrastRatio": 2.54,
+          "selectedRowBackground": "rgb(255, 242, 243)",
+          "selectedCheckboxChecked": true
+        },
+        "layout": {
+          "tableRect": {
+            "x": 109,
+            "y": 260.796875,
+            "width": 1062,
+            "height": 284.75,
+            "right": 1171,
+            "bottom": 545.546875
+          },
+          "reviewCardRect": {
+            "x": 108,
+            "y": 190.796875,
+            "width": 1064,
+            "height": 355.75,
+            "right": 1172,
+            "bottom": 546.546875
+          },
+          "triggerRect": {
+            "x": 1066.34375,
+            "y": 205.796875,
+            "width": 88.65625,
+            "height": 40,
+            "right": 1155,
+            "bottom": 245.796875
+          },
+          "tableClippedByCard": false,
+          "internalHorizontalScroller": false
+        },
+        "ui": {
+          "buttonTransition": "all",
+          "dialogRadius": "14px",
+          "dialogInnerRadius": "14px"
+        },
+        "content": {
+          "triggerText": "Continue",
+          "confirmText": "OK",
+          "errorText": "Oops! Something went wrong.",
+          "errorRole": null,
+          "recoveryActionPresent": false
+        }
+      }
+    },
+    {
+      "id": "dialog-open",
+      "screenshot": "holistic-review-dialog-open-1280x900.png",
+      "actions": [
+        {
+          "type": "pointer-click",
+          "selector": "#deactivate-trigger",
+          "point": {
+            "x": 1110.671875,
+            "y": 225.796875
+          }
+        }
+      ],
+      "evidence": {
+        "viewport": {
+          "width": 1280,
+          "height": 900,
+          "dpr": 1,
+          "documentClientWidth": 1280,
+          "documentScrollWidth": 1280,
+          "horizontalOverflow": false
+        },
+        "labState": {
+          "dialogOpen": true,
+          "errorVisible": false,
+          "activeElement": "deactivate-trigger"
+        },
+        "focus": {
+          "activeElement": "deactivate-trigger",
+          "trigger": {
+            "color": "rgb(255, 255, 255)",
+            "backgroundColor": "rgb(210, 59, 66)",
+            "fontSize": "14px",
+            "fontWeight": "700",
+            "lineHeight": "20.3px",
+            "overflow": "visible",
+            "textOverflow": "clip",
+            "whiteSpace": "normal",
+            "borderRadius": "10px",
+            "transitionProperty": "all",
+            "outlineStyle": "none",
+            "outlineWidth": "3px"
+          },
+          "closeAccessibleName": "×",
+          "closeAriaLabel": null,
+          "backgroundInert": false,
+          "dialogAriaModal": null,
+          "dialogLabelledBy": null
+        },
+        "typography": {
+          "lede": {
+            "color": "rgb(154, 163, 178)",
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "fontSize": "13px",
+            "fontWeight": "300",
+            "lineHeight": "14px",
+            "overflow": "visible",
+            "textOverflow": "clip",
+            "whiteSpace": "normal",
+            "borderRadius": "0px",
+            "transitionProperty": "all",
+            "outlineStyle": "none",
+            "outlineWidth": "3px"
+          },
+          "memberName": {
+            "color": "rgb(30, 37, 48)",
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "fontSize": "14px",
+            "fontWeight": "800",
+            "lineHeight": "20.3px",
+            "overflow": "hidden",
+            "textOverflow": "ellipsis",
+            "whiteSpace": "nowrap",
+            "borderRadius": "0px",
+            "transitionProperty": "all",
+            "outlineStyle": "none",
+            "outlineWidth": "3px"
+          },
+          "memberNameClipped": true,
+          "memberNameFullTextReachable": false,
+          "memberEmail": {
+            "color": "rgb(154, 163, 178)",
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "17.4px",
+            "overflow": "hidden",
+            "textOverflow": "ellipsis",
+            "whiteSpace": "nowrap",
+            "borderRadius": "0px",
+            "transitionProperty": "all",
+            "outlineStyle": "none",
+            "outlineWidth": "3px"
+          },
+          "memberEmailClipped": true,
+          "memberEmailFullTextReachable": false
+        },
+        "color": {
+          "mutedForeground": "rgb(154, 163, 178)",
+          "surfaceBackground": "rgb(255, 255, 255)",
+          "mutedContrastRatio": 2.54,
+          "selectedRowBackground": "rgb(255, 242, 243)",
+          "selectedCheckboxChecked": true
+        },
+        "layout": {
+          "tableRect": {
+            "x": 109,
+            "y": 260.796875,
+            "width": 1062,
+            "height": 284.75,
+            "right": 1171,
+            "bottom": 545.546875
+          },
+          "reviewCardRect": {
+            "x": 108,
+            "y": 190.796875,
+            "width": 1064,
+            "height": 355.75,
+            "right": 1172,
+            "bottom": 546.546875
+          },
+          "triggerRect": {
+            "x": 1066.34375,
+            "y": 205.796875,
+            "width": 88.65625,
+            "height": 40,
+            "right": 1155,
+            "bottom": 245.796875
+          },
+          "tableClippedByCard": false,
+          "internalHorizontalScroller": false
+        },
+        "ui": {
+          "buttonTransition": "all",
+          "dialogRadius": "14px",
+          "dialogInnerRadius": "14px"
+        },
+        "content": {
+          "triggerText": "Continue",
+          "confirmText": "OK",
+          "errorText": "Oops! Something went wrong.",
+          "errorRole": null,
+          "recoveryActionPresent": false
+        }
+      }
+    },
+    {
+      "id": "dialog-error",
+      "screenshot": "holistic-review-dialog-error-1280x900.png",
+      "actions": [
+        {
+          "type": "pointer-click",
+          "selector": "#deactivate-trigger",
+          "point": {
+            "x": 1110.671875,
+            "y": 225.796875
+          }
+        },
+        {
+          "type": "pointer-click",
+          "selector": "#dialog-confirm",
+          "point": {
+            "x": 812.5,
+            "y": 499.9375
+          }
+        }
+      ],
+      "evidence": {
+        "viewport": {
+          "width": 1280,
+          "height": 900,
+          "dpr": 1,
+          "documentClientWidth": 1280,
+          "documentScrollWidth": 1280,
+          "horizontalOverflow": false
+        },
+        "labState": {
+          "dialogOpen": true,
+          "errorVisible": true,
+          "activeElement": "dialog-confirm"
+        },
+        "focus": {
+          "activeElement": "dialog-confirm",
+          "trigger": {
+            "color": "rgb(255, 255, 255)",
+            "backgroundColor": "rgb(210, 59, 66)",
+            "fontSize": "14px",
+            "fontWeight": "700",
+            "lineHeight": "20.3px",
+            "overflow": "visible",
+            "textOverflow": "clip",
+            "whiteSpace": "normal",
+            "borderRadius": "10px",
+            "transitionProperty": "all",
+            "outlineStyle": "none",
+            "outlineWidth": "3px"
+          },
+          "closeAccessibleName": "×",
+          "closeAriaLabel": null,
+          "backgroundInert": false,
+          "dialogAriaModal": null,
+          "dialogLabelledBy": null
+        },
+        "typography": {
+          "lede": {
+            "color": "rgb(154, 163, 178)",
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "fontSize": "13px",
+            "fontWeight": "300",
+            "lineHeight": "14px",
+            "overflow": "visible",
+            "textOverflow": "clip",
+            "whiteSpace": "normal",
+            "borderRadius": "0px",
+            "transitionProperty": "all",
+            "outlineStyle": "none",
+            "outlineWidth": "3px"
+          },
+          "memberName": {
+            "color": "rgb(30, 37, 48)",
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "fontSize": "14px",
+            "fontWeight": "800",
+            "lineHeight": "20.3px",
+            "overflow": "hidden",
+            "textOverflow": "ellipsis",
+            "whiteSpace": "nowrap",
+            "borderRadius": "0px",
+            "transitionProperty": "all",
+            "outlineStyle": "none",
+            "outlineWidth": "3px"
+          },
+          "memberNameClipped": true,
+          "memberNameFullTextReachable": false,
+          "memberEmail": {
+            "color": "rgb(154, 163, 178)",
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "17.4px",
+            "overflow": "hidden",
+            "textOverflow": "ellipsis",
+            "whiteSpace": "nowrap",
+            "borderRadius": "0px",
+            "transitionProperty": "all",
+            "outlineStyle": "none",
+            "outlineWidth": "3px"
+          },
+          "memberEmailClipped": true,
+          "memberEmailFullTextReachable": false
+        },
+        "color": {
+          "mutedForeground": "rgb(154, 163, 178)",
+          "surfaceBackground": "rgb(255, 255, 255)",
+          "mutedContrastRatio": 2.54,
+          "selectedRowBackground": "rgb(255, 242, 243)",
+          "selectedCheckboxChecked": true
+        },
+        "layout": {
+          "tableRect": {
+            "x": 109,
+            "y": 260.796875,
+            "width": 1062,
+            "height": 284.75,
+            "right": 1171,
+            "bottom": 545.546875
+          },
+          "reviewCardRect": {
+            "x": 108,
+            "y": 190.796875,
+            "width": 1064,
+            "height": 355.75,
+            "right": 1172,
+            "bottom": 546.546875
+          },
+          "triggerRect": {
+            "x": 1066.34375,
+            "y": 205.796875,
+            "width": 88.65625,
+            "height": 40,
+            "right": 1155,
+            "bottom": 245.796875
+          },
+          "tableClippedByCard": false,
+          "internalHorizontalScroller": false
+        },
+        "ui": {
+          "buttonTransition": "all",
+          "dialogRadius": "14px",
+          "dialogInnerRadius": "14px"
+        },
+        "content": {
+          "triggerText": "Continue",
+          "confirmText": "OK",
+          "errorText": "Oops! Something went wrong.",
+          "errorRole": null,
+          "recoveryActionPresent": false
+        }
+      }
+    },
+    {
+      "id": "narrow",
+      "screenshot": "holistic-review-narrow-390x900.png",
+      "actions": [
+        {
+          "type": "navigate"
+        }
+      ],
+      "evidence": {
+        "viewport": {
+          "width": 390,
+          "height": 900,
+          "dpr": 1,
+          "documentClientWidth": 390,
+          "documentScrollWidth": 390,
+          "horizontalOverflow": false
+        },
+        "labState": {
+          "dialogOpen": false,
+          "errorVisible": false,
+          "activeElement": "BODY"
+        },
+        "focus": {
+          "activeElement": "BODY",
+          "trigger": {
+            "color": "rgb(255, 255, 255)",
+            "backgroundColor": "rgb(210, 59, 66)",
+            "fontSize": "14px",
+            "fontWeight": "700",
+            "lineHeight": "20.3px",
+            "overflow": "visible",
+            "textOverflow": "clip",
+            "whiteSpace": "normal",
+            "borderRadius": "10px",
+            "transitionProperty": "all",
+            "outlineStyle": "none",
+            "outlineWidth": "3px"
+          },
+          "closeAccessibleName": "×",
+          "closeAriaLabel": null,
+          "backgroundInert": false,
+          "dialogAriaModal": null,
+          "dialogLabelledBy": null
+        },
+        "typography": {
+          "lede": {
+            "color": "rgb(154, 163, 178)",
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "fontSize": "13px",
+            "fontWeight": "300",
+            "lineHeight": "14px",
+            "overflow": "visible",
+            "textOverflow": "clip",
+            "whiteSpace": "normal",
+            "borderRadius": "0px",
+            "transitionProperty": "all",
+            "outlineStyle": "none",
+            "outlineWidth": "3px"
+          },
+          "memberName": {
+            "color": "rgb(30, 37, 48)",
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "fontSize": "14px",
+            "fontWeight": "800",
+            "lineHeight": "20.3px",
+            "overflow": "hidden",
+            "textOverflow": "ellipsis",
+            "whiteSpace": "nowrap",
+            "borderRadius": "0px",
+            "transitionProperty": "all",
+            "outlineStyle": "none",
+            "outlineWidth": "3px"
+          },
+          "memberNameClipped": true,
+          "memberNameFullTextReachable": false,
+          "memberEmail": {
+            "color": "rgb(154, 163, 178)",
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "fontSize": "12px",
+            "fontWeight": "400",
+            "lineHeight": "17.4px",
+            "overflow": "hidden",
+            "textOverflow": "ellipsis",
+            "whiteSpace": "nowrap",
+            "borderRadius": "0px",
+            "transitionProperty": "all",
+            "outlineStyle": "none",
+            "outlineWidth": "3px"
+          },
+          "memberEmailClipped": true,
+          "memberEmailFullTextReachable": false
+        },
+        "color": {
+          "mutedForeground": "rgb(154, 163, 178)",
+          "surfaceBackground": "rgb(255, 255, 255)",
+          "mutedContrastRatio": 2.54,
+          "selectedRowBackground": "rgb(255, 242, 243)",
+          "selectedCheckboxChecked": true
+        },
+        "layout": {
+          "tableRect": {
+            "x": 15,
+            "y": 415.875,
+            "width": 978,
+            "height": 284.75,
+            "right": 993,
+            "bottom": 700.625
+          },
+          "reviewCardRect": {
+            "x": 14,
+            "y": 236.1875,
+            "width": 362,
+            "height": 465.4375,
+            "right": 376,
+            "bottom": 701.625
+          },
+          "triggerRect": {
+            "x": 270.34375,
+            "y": 360.875,
+            "width": 88.65625,
+            "height": 40,
+            "right": 359,
+            "bottom": 400.875
+          },
+          "tableClippedByCard": true,
+          "internalHorizontalScroller": false
+        },
+        "ui": {
+          "buttonTransition": "all",
+          "dialogRadius": "14px",
+          "dialogInnerRadius": "14px"
+        },
+        "content": {
+          "triggerText": "Continue",
+          "confirmText": "OK",
+          "errorText": "Oops! Something went wrong.",
+          "errorRole": null,
+          "recoveryActionPresent": false
+        }
+      }
+    }
+  ],
+  "contract_failures": [
+    {
+      "contract": "task-critical table columns remain reachable at 390 CSS px",
+      "state": "narrow",
+      "expected": {
+        "tableClippedByCard": false,
+        "internalHorizontalScroller": true
+      },
+      "observed": {
+        "tableClippedByCard": true,
+        "internalHorizontalScroller": false
+      }
+    },
+    {
+      "contract": "dialog receives focus on open",
+      "state": "dialog-open",
+      "expected": "dialog descendant",
+      "observed": "deactivate-trigger"
+    },
+    {
+      "contract": "background becomes inert while modal is open",
+      "state": "dialog-open",
+      "expected": true,
+      "observed": false
+    },
+    {
+      "contract": "destructive confirmation names the consequence",
+      "state": "dialog-open",
+      "expected": "Deactivate 4 accounts",
+      "observed": "OK"
+    },
+    {
+      "contract": "error explains recovery",
+      "state": "dialog-error",
+      "expected": "specific failure plus recovery",
+      "observed": "Oops! Something went wrong."
+    },
+    {
+      "contract": "task-supporting muted text meets 4.5:1",
+      "state": "default",
+      "expected": ">= 4.5",
+      "observed": 2.54
+    }
+  ]
+}

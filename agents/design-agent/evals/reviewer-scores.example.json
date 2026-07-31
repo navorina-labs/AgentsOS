@@ -1,0 +1,56 @@
+{
+  "reviewer": {
+    "id": "replace-with-reviewer-id",
+    "role": "replace-with-reviewer-role"
+  },
+  "scores": {
+    "framing": {
+      "score": 0,
+      "evidence": "Replace with an exact excerpt or section locator.",
+      "justification": "Replace with the reason this evidence supports the score."
+    },
+    "hierarchy": {
+      "score": 0,
+      "evidence": "Replace with an exact excerpt or section locator.",
+      "justification": "Replace with the reason this evidence supports the score."
+    },
+    "behavior": {
+      "score": 0,
+      "evidence": "Replace with an exact excerpt or section locator.",
+      "justification": "Replace with the reason this evidence supports the score."
+    },
+    "accessibility": {
+      "score": 0,
+      "evidence": "Replace with an exact excerpt or section locator.",
+      "justification": "Replace with the reason this evidence supports the score."
+    },
+    "resilience": {
+      "score": 0,
+      "evidence": "Replace with an exact excerpt or section locator.",
+      "justification": "Replace with the reason this evidence supports the score."
+    },
+    "system": {
+      "score": 0,
+      "evidence": "Replace with an exact excerpt or section locator.",
+      "justification": "Replace with the reason this evidence supports the score."
+    },
+    "feasibility": {
+      "score": 0,
+      "evidence": "Replace with an exact excerpt or section locator.",
+      "justification": "Replace with the reason this evidence supports the score."
+    },
+    "evidence": {
+      "score": 0,
+      "evidence": "Replace with an exact excerpt or section locator.",
+      "justification": "Replace with the reason this evidence supports the score."
+    },
+    "clarity": {
+      "score": 0,
+      "evidence": "Replace with an exact excerpt or section locator.",
+      "justification": "Replace with the reason this evidence supports the score."
+    }
+  },
+  "fatal_errors": [],
+  "defect_tags": [],
+  "notes": "Replace with concise overall review notes."
+}

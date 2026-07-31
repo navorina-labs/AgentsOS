@@ -1,0 +1,38 @@
+{
+  "paired_csv": "/Users/alex0nder/Projects/AI-Context-OS/experiments/oiloop/runs/run-1781660908/paired.csv",
+  "generated_at": "2026-06-19T18:45:47.848Z",
+  "b_vs_a": {
+    "metric": "accuracy_delta_b_vs_a",
+    "n_questions": 20,
+    "iterations": 10000,
+    "seed": 42,
+    "observed_mean_delta": 1.95,
+    "ci_95": {
+      "low": 1.6,
+      "median": 1.95,
+      "high": 2.3
+    },
+    "bootstrap_win_rate_delta_gt_0": 1,
+    "bootstrap_win_rate_delta_gte_0": 1,
+    "questions_b_beat_a": 19,
+    "questions_tie": 1,
+    "questions_b_lose": 0
+  },
+  "c_vs_a": {
+    "metric": "accuracy_delta_c_vs_a",
+    "n_questions": 20,
+    "iterations": 10000,
+    "seed": 43,
+    "observed_mean_delta": 1.6,
+    "ci_95": {
+      "low": 1.25,
+      "median": 1.6,
+      "high": 1.95
+    },
+    "bootstrap_win_rate_delta_gt_0": 1,
+    "bootstrap_win_rate_delta_gte_0": 1,
+    "questions_b_beat_a": 18,
+    "questions_tie": 2,
+    "questions_b_lose": 0
+  }
+}

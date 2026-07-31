@@ -1,0 +1,7 @@
+node_modules/
+dist/
+*.log
+.DS_Store
+reports/
+!reports/.gitkeep
+safetyos/threat-model.draft.yaml

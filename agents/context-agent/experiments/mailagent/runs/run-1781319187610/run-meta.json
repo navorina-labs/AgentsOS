@@ -1,0 +1,519 @@
+{
+  "run_at": "2026-06-13T03:32:18.726Z",
+  "questions": 45,
+  "conditions": [
+    "A",
+    "B",
+    "C"
+  ],
+  "dry_run": false,
+  "skip_judge": false,
+  "baseline_chars": 320000,
+  "model": "gpt-4o-mini",
+  "router_mode": "keyword",
+  "router_mean_f1": 1,
+  "routing": [
+    {
+      "question_id": "MA01",
+      "expected": [
+        "otp-core",
+        "serialization-core"
+      ],
+      "routed": [
+        "otp-core",
+        "serialization-core"
+      ],
+      "f1": 1
+    },
+    {
+      "question_id": "MA02",
+      "expected": [
+        "deployment-testing-core"
+      ],
+      "routed": [
+        "deployment-testing-core"
+      ],
+      "f1": 1
+    },
+    {
+      "question_id": "MA03",
+      "expected": [
+        "email-core",
+        "technical-core"
+      ],
+      "routed": [
+        "email-core",
+        "technical-core"
+      ],
+      "f1": 1
+    },
+    {
+      "question_id": "MA04",
+      "expected": [
+        "business-core",
+        "product-core"
+      ],
+      "routed": [
+        "business-core",
+        "product-core"
+      ],
+      "f1": 1
+    },
+    {
+      "question_id": "MA05",
+      "expected": [
+        "otp-core",
+        "serialization-core"
+      ],
+      "routed": [
+        "otp-core",
+        "serialization-core"
+      ],
+      "f1": 1
+    },
+    {
+      "question_id": "MA06",
+      "expected": [
+        "inbox-core"
+      ],
+      "routed": [
+        "inbox-core"
+      ],
+      "f1": 1
+    },
+    {
+      "question_id": "MA07",
+      "expected": [
+        "api-core"
+      ],
+      "routed": [
+        "api-core"
+      ],
+      "f1": 1
+    },
+    {
+      "question_id": "MA08",
+      "expected": [
+        "worker-core"
+      ],
+      "routed": [
+        "worker-core"
+      ],
+      "f1": 1
+    },
+    {
+      "question_id": "MA09",
+      "expected": [
+        "data-model-core"
+      ],
+      "routed": [
+        "data-model-core"
+      ],
+      "f1": 1
+    },
+    {
+      "question_id": "MA10",
+      "expected": [
+        "deployment-testing-core"
+      ],
+      "routed": [
+        "deployment-testing-core"
+      ],
+      "f1": 1
+    },
+    {
+      "question_id": "MA11",
+      "expected": [
+        "technical-core",
+        "inbox-core"
+      ],
+      "routed": [
+        "technical-core",
+        "inbox-core"
+      ],
+      "f1": 1
+    },
+    {
+      "question_id": "MA12",
+      "expected": [
+        "deployment-testing-core"
+      ],
+      "routed": [
+        "deployment-testing-core"
+      ],
+      "f1": 1
+    },
+    {
+      "question_id": "MA13",
+      "expected": [
+        "security-core",
+        "auth-billing-core"
+      ],
+      "routed": [
+        "security-core",
+        "auth-billing-core"
+      ],
+      "f1": 1
+    },
+    {
+      "question_id": "MA14",
+      "expected": [
+        "product-core",
+        "technical-core"
+      ],
+      "routed": [
+        "product-core",
+        "technical-core"
+      ],
+      "f1": 1
+    },
+    {
+      "question_id": "MA15",
+      "expected": [
+        "auth-billing-core",
+        "api-core"
+      ],
+      "routed": [
+        "auth-billing-core",
+        "api-core"
+      ],
+      "f1": 1
+    },
+    {
+      "question_id": "MA16",
+      "expected": [
+        "auth-billing-core",
+        "business-core"
+      ],
+      "routed": [
+        "auth-billing-core",
+        "business-core"
+      ],
+      "f1": 1
+    },
+    {
+      "question_id": "MA17",
+      "expected": [
+        "email-core",
+        "api-core"
+      ],
+      "routed": [
+        "email-core",
+        "api-core"
+      ],
+      "f1": 1
+    },
+    {
+      "question_id": "MA18",
+      "expected": [
+        "email-core"
+      ],
+      "routed": [
+        "email-core"
+      ],
+      "f1": 1
+    },
+    {
+      "question_id": "MA19",
+      "expected": [
+        "deployment-testing-core",
+        "email-core"
+      ],
+      "routed": [
+        "deployment-testing-core",
+        "email-core"
+      ],
+      "f1": 1
+    },
+    {
+      "question_id": "MA20",
+      "expected": [
+        "business-core",
+        "auth-billing-core"
+      ],
+      "routed": [
+        "business-core",
+        "auth-billing-core"
+      ],
+      "f1": 1
+    },
+    {
+      "question_id": "MA21",
+      "expected": [
+        "otp-core",
+        "inbox-core"
+      ],
+      "routed": [
+        "otp-core",
+        "inbox-core"
+      ],
+      "f1": 1
+    },
+    {
+      "question_id": "MA22",
+      "expected": [
+        "worker-core"
+      ],
+      "routed": [
+        "worker-core"
+      ],
+      "f1": 1
+    },
+    {
+      "question_id": "MA23",
+      "expected": [
+        "security-core",
+        "serialization-core",
+        "inbox-core"
+      ],
+      "routed": [
+        "security-core",
+        "serialization-core",
+        "inbox-core"
+      ],
+      "f1": 1
+    },
+    {
+      "question_id": "MA24",
+      "expected": [
+        "deployment-testing-core"
+      ],
+      "routed": [
+        "deployment-testing-core"
+      ],
+      "f1": 1
+    },
+    {
+      "question_id": "MA25",
+      "expected": [
+        "auth-billing-core",
+        "deployment-testing-core"
+      ],
+      "routed": [
+        "auth-billing-core",
+        "deployment-testing-core"
+      ],
+      "f1": 1
+    },
+    {
+      "question_id": "MA26",
+      "expected": [
+        "product-core",
+        "email-core"
+      ],
+      "routed": [
+        "product-core",
+        "email-core"
+      ],
+      "f1": 1
+    },
+    {
+      "question_id": "MA27",
+      "expected": [
+        "data-model-core",
+        "email-core"
+      ],
+      "routed": [
+        "data-model-core",
+        "email-core"
+      ],
+      "f1": 1
+    },
+    {
+      "question_id": "MA28",
+      "expected": [
+        "inbox-core",
+        "worker-core"
+      ],
+      "routed": [
+        "inbox-core",
+        "worker-core"
+      ],
+      "f1": 1
+    },
+    {
+      "question_id": "MA29",
+      "expected": [
+        "product-core",
+        "deployment-testing-core"
+      ],
+      "routed": [
+        "product-core",
+        "deployment-testing-core"
+      ],
+      "f1": 1
+    },
+    {
+      "question_id": "MA30",
+      "expected": [
+        "audit/duplicate-docs"
+      ],
+      "routed": [
+        "audit/duplicate-docs"
+      ],
+      "f1": 1
+    },
+    {
+      "question_id": "MA31",
+      "expected": [
+        "audit/cleanup-candidates",
+        "business-core"
+      ],
+      "routed": [
+        "audit/cleanup-candidates",
+        "business-core"
+      ],
+      "f1": 1
+    },
+    {
+      "question_id": "MA32",
+      "expected": [
+        "audit/project-map"
+      ],
+      "routed": [
+        "audit/project-map"
+      ],
+      "f1": 1
+    },
+    {
+      "question_id": "MA33",
+      "expected": [
+        "inbox-core",
+        "api-core"
+      ],
+      "routed": [
+        "inbox-core",
+        "api-core"
+      ],
+      "f1": 1
+    },
+    {
+      "question_id": "MA34",
+      "expected": [
+        "technical-core",
+        "email-core"
+      ],
+      "routed": [
+        "technical-core",
+        "email-core"
+      ],
+      "f1": 1
+    },
+    {
+      "question_id": "MA35",
+      "expected": [
+        "product-core",
+        "otp-core"
+      ],
+      "routed": [
+        "product-core",
+        "otp-core"
+      ],
+      "f1": 1
+    },
+    {
+      "question_id": "MA36",
+      "expected": [
+        "auth-billing-core"
+      ],
+      "routed": [
+        "auth-billing-core"
+      ],
+      "f1": 1
+    },
+    {
+      "question_id": "MA37",
+      "expected": [
+        "auth-billing-core"
+      ],
+      "routed": [
+        "auth-billing-core"
+      ],
+      "f1": 1
+    },
+    {
+      "question_id": "MA38",
+      "expected": [
+        "serialization-core"
+      ],
+      "routed": [
+        "serialization-core"
+      ],
+      "f1": 1
+    },
+    {
+      "question_id": "MA39",
+      "expected": [
+        "serialization-core"
+      ],
+      "routed": [
+        "serialization-core"
+      ],
+      "f1": 1
+    },
+    {
+      "question_id": "MA40",
+      "expected": [
+        "auth-billing-core"
+      ],
+      "routed": [
+        "auth-billing-core"
+      ],
+      "f1": 1
+    },
+    {
+      "question_id": "MA41",
+      "expected": [
+        "data-model-core"
+      ],
+      "routed": [
+        "data-model-core"
+      ],
+      "f1": 1
+    },
+    {
+      "question_id": "MA42",
+      "expected": [
+        "deployment-testing-core"
+      ],
+      "routed": [
+        "deployment-testing-core"
+      ],
+      "f1": 1
+    },
+    {
+      "question_id": "MA43",
+      "expected": [
+        "deployment-testing-core"
+      ],
+      "routed": [
+        "deployment-testing-core"
+      ],
+      "f1": 1
+    },
+    {
+      "question_id": "MA44",
+      "expected": [
+        "serialization-core"
+      ],
+      "routed": [
+        "serialization-core"
+      ],
+      "f1": 1
+    },
+    {
+      "question_id": "MA45",
+      "expected": [
+        "auth-billing-core"
+      ],
+      "routed": [
+        "auth-billing-core"
+      ],
+      "f1": 1
+    }
+  ],
+  "exported_at": "2026-06-13T03:32:27.755Z",
+  "paired_questions": 45,
+  "source_repo": "Alex0nder/MailAgent",
+  "mailagent_commit": null
+}

@@ -1,0 +1,23 @@
+# Fixture: Ingress + cert-manager + weak ssl-protocols annotation
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: app
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/ssl-protocols: "TLSv1 TLSv1.1 TLSv1.2"
+spec:
+  tls:
+    - hosts:
+        - app.example.com
+      secretName: app-tls
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: app-tls
+spec:
+  secretName: app-tls
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer

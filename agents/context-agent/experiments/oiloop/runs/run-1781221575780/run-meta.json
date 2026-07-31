@@ -1,0 +1,121 @@
+{
+  "run_at": "2026-06-11T23:53:06.125Z",
+  "questions": 10,
+  "conditions": [
+    "A",
+    "B",
+    "C"
+  ],
+  "dry_run": false,
+  "skip_judge": false,
+  "baseline_chars": 400000,
+  "model": "gpt-4o-mini",
+  "router_mode": "keyword",
+  "router_mean_f1": 0.9,
+  "routing": [
+    {
+      "question_id": "OL01",
+      "expected": [
+        "personal-core"
+      ],
+      "routed": [
+        "personal-core"
+      ],
+      "f1": 1
+    },
+    {
+      "question_id": "OL02",
+      "expected": [
+        "personal-core"
+      ],
+      "routed": [
+        "personal-core"
+      ],
+      "f1": 1
+    },
+    {
+      "question_id": "OL03",
+      "expected": [
+        "personal-core"
+      ],
+      "routed": [
+        "personal-core"
+      ],
+      "f1": 1
+    },
+    {
+      "question_id": "OL04",
+      "expected": [
+        "personal-core"
+      ],
+      "routed": [
+        "personal-core"
+      ],
+      "f1": 1
+    },
+    {
+      "question_id": "OL05",
+      "expected": [
+        "workspace-core"
+      ],
+      "routed": [
+        "workspace-core"
+      ],
+      "f1": 1
+    },
+    {
+      "question_id": "OL06",
+      "expected": [
+        "workspace-core"
+      ],
+      "routed": [
+        "workspace-core"
+      ],
+      "f1": 1
+    },
+    {
+      "question_id": "OL07",
+      "expected": [
+        "workspace-core"
+      ],
+      "routed": [
+        "workspace-core"
+      ],
+      "f1": 1
+    },
+    {
+      "question_id": "OL08",
+      "expected": [
+        "workspace-core"
+      ],
+      "routed": [
+        "technical-core"
+      ],
+      "f1": 0
+    },
+    {
+      "question_id": "OL09",
+      "expected": [
+        "communication-core"
+      ],
+      "routed": [
+        "communication-core"
+      ],
+      "f1": 1
+    },
+    {
+      "question_id": "OL10",
+      "expected": [
+        "communication-core"
+      ],
+      "routed": [
+        "communication-core"
+      ],
+      "f1": 1
+    }
+  ],
+  "exported_at": "2026-06-11T23:53:11.934Z",
+  "paired_questions": 10,
+  "source_repo": "Alex0nder/Oiloop",
+  "oiloop_commit": null
+}

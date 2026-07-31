@@ -1,0 +1,93 @@
+{
+  "project": "navorina",
+  "phase": "2.1",
+  "status": "proposed",
+  "model": "gpt-4o-mini",
+  "total_questions": 42,
+  "clusters": [
+    {
+      "id": "revenue-paywall-billing",
+      "count": 9,
+      "expected_cores": ["business-core", "revenue-subcore"],
+      "questions": [
+        { "id": "NV01", "text": "Why did MRR drop last week?", "domain": "revenue", "cross_cutting": false },
+        { "id": "NV02", "text": "How does the Stripe webhook handle failed payments?", "domain": "billing", "cross_cutting": false },
+        { "id": "NV03", "text": "What is the difference between Plus and Pro tiers?", "domain": "product", "cross_cutting": false },
+        { "id": "NV04", "text": "Where is subscription renewal logic implemented?", "domain": "technical", "cross_cutting": false },
+        { "id": "NV05", "text": "What paywall gates access to nucleus features?", "domain": "revenue", "cross_cutting": false },
+        { "id": "NV06", "text": "How do we calculate trial-to-paid conversion?", "domain": "business", "cross_cutting": false },
+        { "id": "NV07", "text": "What happens when a user downgrades mid-cycle?", "domain": "billing", "cross_cutting": false },
+        { "id": "NV08", "text": "Which Stripe events trigger revenue recognition?", "domain": "revenue", "cross_cutting": false },
+        { "id": "NV09", "text": "What is the refund policy for annual subscriptions?", "domain": "business", "cross_cutting": false }
+      ]
+    },
+    {
+      "id": "nucleus-fm",
+      "count": 12,
+      "expected_cores": ["technical-core", "nucleus-subcore"],
+      "questions": [
+        { "id": "NV10", "text": "What is the month-close workflow in nucleus?", "domain": "operational", "cross_cutting": false },
+        { "id": "NV11", "text": "How does RN invoicing integrate with nucleus?", "domain": "technical", "cross_cutting": false },
+        { "id": "NV12", "text": "Where is crypto CP payment processing handled?", "domain": "technical", "cross_cutting": false },
+        { "id": "NV13", "text": "What FM reports are generated at month end?", "domain": "operational", "cross_cutting": false },
+        { "id": "NV14", "text": "How do nucleus hubs map to billing entities?", "domain": "technical", "cross_cutting": false },
+        { "id": "NV15", "text": "What triggers a nucleus reconciliation job?", "domain": "operational", "cross_cutting": false },
+        { "id": "NV16", "text": "Which API endpoints serve FM dashboard data?", "domain": "technical", "cross_cutting": false },
+        { "id": "NV17", "text": "How are crypto settlements reconciled with Stripe?", "domain": "billing", "cross_cutting": true },
+        { "id": "NV18", "text": "What is the data model for nucleus transactions?", "domain": "technical", "cross_cutting": false },
+        { "id": "NV19", "text": "When does month-close block new invoicing?", "domain": "operational", "cross_cutting": false },
+        { "id": "NV20", "text": "How do we handle partial month-close failures?", "domain": "operational", "cross_cutting": false },
+        { "id": "NV21", "text": "What permissions are required for FM admin actions?", "domain": "technical", "cross_cutting": false }
+      ]
+    },
+    {
+      "id": "assistant-ai",
+      "count": 4,
+      "expected_cores": ["product-core", "assistant-subcore"],
+      "questions": [
+        { "id": "NV22", "text": "What are the daily usage limits for the AI assistant?", "domain": "product", "cross_cutting": false },
+        { "id": "NV23", "text": "How does voice mode differ from text chat?", "domain": "product", "cross_cutting": false },
+        { "id": "NV24", "text": "How is chat context isolated per user session?", "domain": "technical", "cross_cutting": false },
+        { "id": "NV25", "text": "Which model provider powers the assistant?", "domain": "technical", "cross_cutting": false }
+      ]
+    },
+    {
+      "id": "release-ops",
+      "count": 6,
+      "expected_cores": ["operational-core"],
+      "questions": [
+        { "id": "NV26", "text": "What is the pre-release checklist?", "domain": "operational", "cross_cutting": false },
+        { "id": "NV27", "text": "How do emulators differ from production config?", "domain": "operational", "cross_cutting": false },
+        { "id": "NV28", "text": "What is the integrations pilot rollout process?", "domain": "operational", "cross_cutting": false },
+        { "id": "NV29", "text": "Where are deployment secrets managed?", "domain": "technical", "cross_cutting": false },
+        { "id": "NV30", "text": "What monitoring alerts fire on payment failures?", "domain": "operational", "cross_cutting": false },
+        { "id": "NV31", "text": "How do we roll back a bad nucleus release?", "domain": "operational", "cross_cutting": false }
+      ]
+    },
+    {
+      "id": "product-onboarding",
+      "count": 6,
+      "expected_cores": ["product-core", "business-core"],
+      "questions": [
+        { "id": "NV32", "text": "What is in scope for v2 onboarding?", "domain": "product", "cross_cutting": false },
+        { "id": "NV33", "text": "What activation events define a successful signup?", "domain": "product", "cross_cutting": false },
+        { "id": "NV34", "text": "What churn signals do we track in the first 7 days?", "domain": "business", "cross_cutting": false },
+        { "id": "NV35", "text": "How does onboarding differ for crypto vs fiat users?", "domain": "product", "cross_cutting": true },
+        { "id": "NV36", "text": "What A/B tests are running on the signup flow?", "domain": "product", "cross_cutting": false },
+        { "id": "NV37", "text": "Which onboarding steps are optional vs required?", "domain": "product", "cross_cutting": false }
+      ]
+    },
+    {
+      "id": "cross-cutting",
+      "count": 5,
+      "expected_cores": ["business-core", "technical-core", "nucleus-subcore"],
+      "questions": [
+        { "id": "NV38", "text": "How does crypto paywall interact with month-close in nucleus?", "domain": "cross-cutting", "cross_cutting": true },
+        { "id": "NV39", "text": "Where is the UI invoicing tab implemented and what billing API does it call?", "domain": "cross-cutting", "cross_cutting": true },
+        { "id": "NV40", "text": "If MRR drops and month-close is pending, what should ops check first?", "domain": "cross-cutting", "cross_cutting": true },
+        { "id": "NV41", "text": "How do Plus tier limits affect nucleus FM exports?", "domain": "cross-cutting", "cross_cutting": true },
+        { "id": "NV42", "text": "What docs should an agent read before changing crypto payment + paywall together?", "domain": "cross-cutting", "cross_cutting": true }
+      ]
+    }
+  ]
+}

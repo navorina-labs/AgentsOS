@@ -1,0 +1,23 @@
+{
+  "version": "1.0.0",
+  "project": "{{PROJECT_SLUG}}",
+  "fallback_core": "technical-core",
+  "routes": [
+    {
+      "patterns": ["pricing", "usage limits", "cost", "plan", "quota", "market", "distribution"],
+      "cores": ["business-core"]
+    },
+    {
+      "patterns": ["feature", "roadmap", "onboarding", "user flow", "product scope", "persona", "workflow", "ux"],
+      "cores": ["product-core"]
+    },
+    {
+      "patterns": ["deploy", "release", "ci", "incident", "monitor", "on-call", "rollback", "rate limit", "outage"],
+      "cores": ["operational-core"]
+    },
+    {
+      "patterns": ["api", "database", "architecture", "implement", "bug", "refactor", "endpoint", "auth", "permission", "sandbox", "tool call", "connector", "plugin", "mcp"],
+      "cores": ["technical-core"]
+    }
+  ]
+}

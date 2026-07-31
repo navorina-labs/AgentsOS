@@ -1,0 +1,901 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-07-29T11:53:07.893089+00:00",
+  "source": {
+    "file": "visual-dashboard-after.html",
+    "sha256": "d73b9b02a552358c0b773afb826cc36ac6aa25cf9b225a342485cc6498ee8753"
+  },
+  "harness": {
+    "file": "dashboard-interactions.js",
+    "sha256": "40482e625121a3ed9890a1a59dba4bac21fe15675fadd5cbe294f798a4f61302"
+  },
+  "evidence_boundaries": {
+    "keyboard": "The recorded key sequence proves only the reproduced Chrome path and observed focus targets.",
+    "accessibility_tree": "Chrome's AX tree is semantic evidence, not a screen-reader transcript.",
+    "forced_colors": "Media emulation plus a screenshot proves the emulated rendering only.",
+    "reduced_motion": "A matching media query proves preference activation, not that every transition is safe or that assistive technology was used.",
+    "reflow": "The 720 CSS px viewport at device scale factor 2 is a 200%-scale reflow equivalent for a 1440 px capture, not actual browser zoom."
+  },
+  "states": [
+    {
+      "id": "keyboard-assign-focus-1440x1000",
+      "viewport": {
+        "width": 1440,
+        "height": 1000,
+        "device_scale_factor": 1
+      },
+      "actions": [
+        {
+          "type": "keyboard",
+          "key": "Tab",
+          "repeat": 6
+        }
+      ],
+      "checks": [
+        {
+          "expression": "document.activeElement.id",
+          "expected": "assign-owner",
+          "observed": "assign-owner",
+          "passed": true,
+          "enforced": true
+        },
+        {
+          "expression": "document.activeElement.matches(':focus-visible')",
+          "expected": true,
+          "observed": true,
+          "passed": true,
+          "enforced": true
+        }
+      ],
+      "screenshot": "dashboard-a11y-keyboard-assign-focus-1440x1000.png",
+      "capture": {
+        "bytes": 153545
+      },
+      "focus_sequence": [
+        {
+          "tag": "a",
+          "id": null,
+          "type": null,
+          "text": "Skip to operations",
+          "ariaLabel": null,
+          "disabled": false,
+          "expanded": null,
+          "detailsOpen": null
+        },
+        {
+          "tag": "input",
+          "id": "global-search",
+          "type": "search",
+          "text": "",
+          "ariaLabel": null,
+          "disabled": false,
+          "expanded": null,
+          "detailsOpen": null
+        },
+        {
+          "tag": "button",
+          "id": null,
+          "type": "button",
+          "text": "Create ticket",
+          "ariaLabel": null,
+          "disabled": false,
+          "expanded": null,
+          "detailsOpen": null
+        },
+        {
+          "tag": "button",
+          "id": null,
+          "type": "button",
+          "text": "Export",
+          "ariaLabel": null,
+          "disabled": false,
+          "expanded": null,
+          "detailsOpen": null
+        },
+        {
+          "tag": "button",
+          "id": null,
+          "type": "button",
+          "text": "Settings",
+          "ariaLabel": null,
+          "disabled": false,
+          "expanded": null,
+          "detailsOpen": null
+        },
+        {
+          "tag": "button",
+          "id": "assign-owner",
+          "type": "button",
+          "text": "Assign owner",
+          "ariaLabel": null,
+          "disabled": false,
+          "expanded": null,
+          "detailsOpen": null
+        }
+      ],
+      "focus_order_labels": [
+        "Skip to operations",
+        "global-search",
+        "Create ticket",
+        "Export",
+        "Settings",
+        "assign-owner"
+      ]
+    },
+    {
+      "id": "keyboard-loading-1440x1000",
+      "viewport": {
+        "width": 1440,
+        "height": 1000,
+        "device_scale_factor": 1
+      },
+      "actions": [
+        {
+          "type": "keyboard",
+          "key": "Enter"
+        }
+      ],
+      "checks": [
+        {
+          "expression": "window.__interactionHarness.assignment",
+          "expected": "loading",
+          "observed": "loading",
+          "passed": true,
+          "enforced": true
+        },
+        {
+          "expression": "document.querySelector('#assign-owner').disabled",
+          "expected": true,
+          "observed": true,
+          "passed": true,
+          "enforced": true
+        },
+        {
+          "expression": "document.querySelector('#assign-owner').getAttribute('aria-busy')",
+          "expected": "true",
+          "observed": "true",
+          "passed": true,
+          "enforced": true
+        },
+        {
+          "expression": "document.activeElement.id",
+          "expected": "assign-owner",
+          "observed": "",
+          "passed": false,
+          "enforced": false,
+          "note": "Focus is expected to remain task-local. Native disabled often removes the active control from focus."
+        }
+      ],
+      "screenshot": "dashboard-a11y-keyboard-loading-1440x1000.png",
+      "capture": {
+        "bytes": 154689
+      },
+      "active_element": {
+        "tag": "body",
+        "id": null,
+        "type": null,
+        "text": "Skip to operations Operations overview Search everything Create ticket Export Settings Active incidents 3 incidents · 26",
+        "ariaLabel": null,
+        "disabled": false,
+        "expanded": null,
+        "detailsOpen": null
+      }
+    },
+    {
+      "id": "keyboard-error-focus-1440x1000",
+      "viewport": {
+        "width": 1440,
+        "height": 1000,
+        "device_scale_factor": 1
+      },
+      "actions": [
+        {
+          "type": "wait",
+          "milliseconds": 1000
+        }
+      ],
+      "checks": [
+        {
+          "expression": "window.__interactionHarness.assignment",
+          "expected": "error",
+          "observed": "error",
+          "passed": true,
+          "enforced": true
+        },
+        {
+          "expression": "document.querySelector('#assignment-error').hidden",
+          "expected": false,
+          "observed": false,
+          "passed": true,
+          "enforced": true
+        },
+        {
+          "expression": "document.activeElement.id",
+          "expected": "assign-owner",
+          "observed": "",
+          "passed": false,
+          "enforced": false,
+          "note": "Error recovery should preserve or restore focus to the retry action."
+        }
+      ],
+      "screenshot": "dashboard-a11y-keyboard-error-focus-1440x1000.png",
+      "capture": {
+        "bytes": 154661
+      },
+      "active_element": {
+        "tag": "body",
+        "id": null,
+        "type": null,
+        "text": "Skip to operations Operations overview Search everything Create ticket Export Settings Active incidents 3 incidents · 26",
+        "ariaLabel": null,
+        "disabled": false,
+        "expanded": null,
+        "detailsOpen": null
+      }
+    },
+    {
+      "id": "keyboard-success-focus-1440x1000",
+      "viewport": {
+        "width": 1440,
+        "height": 1000,
+        "device_scale_factor": 1
+      },
+      "actions": [
+        {
+          "type": "keyboard",
+          "key": "Tab",
+          "repeat": 26
+        },
+        {
+          "type": "keyboard",
+          "key": "Enter"
+        },
+        {
+          "type": "wait",
+          "milliseconds": 1000
+        }
+      ],
+      "checks": [
+        {
+          "expression": "window.__interactionHarness.assignment",
+          "expected": "success",
+          "observed": "success",
+          "passed": true,
+          "enforced": true
+        },
+        {
+          "expression": "document.querySelector('#assignment-status').textContent",
+          "expected": "Payments API assigned to Maya.",
+          "observed": "Payments API assigned to Maya.",
+          "passed": true,
+          "enforced": true
+        },
+        {
+          "expression": "document.activeElement.id",
+          "expected": "assign-owner",
+          "observed": "",
+          "passed": false,
+          "enforced": false,
+          "note": "Completion should not strand focus on the document body."
+        }
+      ],
+      "screenshot": "dashboard-a11y-keyboard-success-focus-1440x1000.png",
+      "capture": {
+        "bytes": 155289
+      },
+      "retry_focus_sequence": [
+        {
+          "tag": "button",
+          "id": null,
+          "type": "button",
+          "text": "Open",
+          "ariaLabel": null,
+          "disabled": false,
+          "expanded": null,
+          "detailsOpen": null
+        },
+        {
+          "tag": "button",
+          "id": null,
+          "type": "button",
+          "text": "Open",
+          "ariaLabel": null,
+          "disabled": false,
+          "expanded": null,
+          "detailsOpen": null
+        },
+        {
+          "tag": "button",
+          "id": null,
+          "type": "button",
+          "text": "Open",
+          "ariaLabel": null,
+          "disabled": false,
+          "expanded": null,
+          "detailsOpen": null
+        },
+        {
+          "tag": "input",
+          "id": "ticket-search",
+          "type": "search",
+          "text": "",
+          "ariaLabel": null,
+          "disabled": false,
+          "expanded": null,
+          "detailsOpen": null
+        },
+        {
+          "tag": "select",
+          "id": "view",
+          "type": null,
+          "text": "All views",
+          "ariaLabel": null,
+          "disabled": false,
+          "expanded": null,
+          "detailsOpen": null
+        },
+        {
+          "tag": "select",
+          "id": "status",
+          "type": null,
+          "text": "All statuses",
+          "ariaLabel": null,
+          "disabled": false,
+          "expanded": null,
+          "detailsOpen": null
+        },
+        {
+          "tag": "select",
+          "id": "priority",
+          "type": null,
+          "text": "All priorities",
+          "ariaLabel": null,
+          "disabled": false,
+          "expanded": null,
+          "detailsOpen": null
+        },
+        {
+          "tag": "select",
+          "id": "owner",
+          "type": null,
+          "text": "All owners",
+          "ariaLabel": null,
+          "disabled": false,
+          "expanded": null,
+          "detailsOpen": null
+        },
+        {
+          "tag": "select",
+          "id": "channel",
+          "type": null,
+          "text": "All channels",
+          "ariaLabel": null,
+          "disabled": false,
+          "expanded": null,
+          "detailsOpen": null
+        },
+        {
+          "tag": "button",
+          "id": null,
+          "type": "submit",
+          "text": "Apply",
+          "ariaLabel": null,
+          "disabled": false,
+          "expanded": null,
+          "detailsOpen": null
+        },
+        {
+          "tag": "input",
+          "id": "select-all",
+          "type": "checkbox",
+          "text": "",
+          "ariaLabel": null,
+          "disabled": false,
+          "expanded": null,
+          "detailsOpen": null
+        },
+        {
+          "tag": "input",
+          "id": "t8941",
+          "type": "checkbox",
+          "text": "",
+          "ariaLabel": null,
+          "disabled": false,
+          "expanded": null,
+          "detailsOpen": null
+        },
+        {
+          "tag": "input",
+          "id": "t8937",
+          "type": "checkbox",
+          "text": "",
+          "ariaLabel": null,
+          "disabled": false,
+          "expanded": null,
+          "detailsOpen": null
+        },
+        {
+          "tag": "input",
+          "id": "t8928",
+          "type": "checkbox",
+          "text": "",
+          "ariaLabel": null,
+          "disabled": false,
+          "expanded": null,
+          "detailsOpen": null
+        },
+        {
+          "tag": "input",
+          "id": "t8919",
+          "type": "checkbox",
+          "text": "",
+          "ariaLabel": null,
+          "disabled": false,
+          "expanded": null,
+          "detailsOpen": null
+        },
+        {
+          "tag": "input",
+          "id": "t8911",
+          "type": "checkbox",
+          "text": "",
+          "ariaLabel": null,
+          "disabled": false,
+          "expanded": null,
+          "detailsOpen": null
+        },
+        {
+          "tag": "button",
+          "id": null,
+          "type": "button",
+          "text": "Previous",
+          "ariaLabel": null,
+          "disabled": false,
+          "expanded": null,
+          "detailsOpen": null
+        },
+        {
+          "tag": "button",
+          "id": null,
+          "type": "button",
+          "text": "Next",
+          "ariaLabel": null,
+          "disabled": false,
+          "expanded": null,
+          "detailsOpen": null
+        },
+        {
+          "tag": "button",
+          "id": null,
+          "type": "button",
+          "text": "Export",
+          "ariaLabel": null,
+          "disabled": false,
+          "expanded": null,
+          "detailsOpen": null
+        },
+        {
+          "tag": "body",
+          "id": null,
+          "type": null,
+          "text": "Skip to operations Operations overview Search everything Create ticket Export Settings Active incidents 3 incidents · 26",
+          "ariaLabel": null,
+          "disabled": false,
+          "expanded": null,
+          "detailsOpen": null
+        },
+        {
+          "tag": "a",
+          "id": null,
+          "type": null,
+          "text": "Skip to operations",
+          "ariaLabel": null,
+          "disabled": false,
+          "expanded": null,
+          "detailsOpen": null
+        },
+        {
+          "tag": "input",
+          "id": "global-search",
+          "type": "search",
+          "text": "",
+          "ariaLabel": null,
+          "disabled": false,
+          "expanded": null,
+          "detailsOpen": null
+        },
+        {
+          "tag": "button",
+          "id": null,
+          "type": "button",
+          "text": "Create ticket",
+          "ariaLabel": null,
+          "disabled": false,
+          "expanded": null,
+          "detailsOpen": null
+        },
+        {
+          "tag": "button",
+          "id": null,
+          "type": "button",
+          "text": "Export",
+          "ariaLabel": null,
+          "disabled": false,
+          "expanded": null,
+          "detailsOpen": null
+        },
+        {
+          "tag": "button",
+          "id": null,
+          "type": "button",
+          "text": "Settings",
+          "ariaLabel": null,
+          "disabled": false,
+          "expanded": null,
+          "detailsOpen": null
+        },
+        {
+          "tag": "button",
+          "id": "assign-owner",
+          "type": "button",
+          "text": "Retry assignment",
+          "ariaLabel": null,
+          "disabled": false,
+          "expanded": null,
+          "detailsOpen": null
+        }
+      ],
+      "retry_focus_order_labels": [
+        "Open",
+        "Open",
+        "Open",
+        "ticket-search",
+        "view",
+        "status",
+        "priority",
+        "owner",
+        "channel",
+        "Apply",
+        "select-all",
+        "t8941",
+        "t8937",
+        "t8928",
+        "t8919",
+        "t8911",
+        "Previous",
+        "Next",
+        "Export",
+        "Skip to operations Operations overview Search everything Create ticket Export Settings Active incidents 3 incidents · 26",
+        "Skip to operations",
+        "global-search",
+        "Create ticket",
+        "Export",
+        "Settings",
+        "assign-owner"
+      ],
+      "active_element": {
+        "tag": "body",
+        "id": null,
+        "type": null,
+        "text": "Skip to operations Operations overview Search everything Create ticket Export Settings Active incidents 3 incidents · 26",
+        "ariaLabel": null,
+        "disabled": false,
+        "expanded": null,
+        "detailsOpen": null
+      }
+    },
+    {
+      "id": "mobile-menu-focus-390x1000",
+      "viewport": {
+        "width": 390,
+        "height": 1000,
+        "device_scale_factor": 1
+      },
+      "actions": [
+        {
+          "type": "keyboard",
+          "key": "Tab",
+          "repeat": 4
+        }
+      ],
+      "checks": [
+        {
+          "expression": "document.activeElement.tagName",
+          "expected": "SUMMARY",
+          "observed": "SUMMARY",
+          "passed": true,
+          "enforced": true
+        },
+        {
+          "expression": "document.activeElement.matches(':focus-visible')",
+          "expected": true,
+          "observed": true,
+          "passed": true,
+          "enforced": true
+        }
+      ],
+      "screenshot": "dashboard-a11y-mobile-menu-focus-390x1000.png",
+      "capture": {
+        "bytes": 58882
+      },
+      "focus_sequence": [
+        {
+          "tag": "a",
+          "id": null,
+          "type": null,
+          "text": "Skip to operations",
+          "ariaLabel": null,
+          "disabled": false,
+          "expanded": null,
+          "detailsOpen": null
+        },
+        {
+          "tag": "input",
+          "id": "global-search",
+          "type": "search",
+          "text": "",
+          "ariaLabel": null,
+          "disabled": false,
+          "expanded": null,
+          "detailsOpen": null
+        },
+        {
+          "tag": "button",
+          "id": null,
+          "type": "button",
+          "text": "Create ticket",
+          "ariaLabel": null,
+          "disabled": false,
+          "expanded": null,
+          "detailsOpen": null
+        },
+        {
+          "tag": "summary",
+          "id": null,
+          "type": null,
+          "text": "More",
+          "ariaLabel": null,
+          "disabled": false,
+          "expanded": null,
+          "detailsOpen": false
+        }
+      ],
+      "focus_order_labels": [
+        "Skip to operations",
+        "global-search",
+        "Create ticket",
+        "More"
+      ],
+      "dom_visual_order_note": "The trace records DOM focus order; compare it with the screenshot's visual header order before making an order claim."
+    },
+    {
+      "id": "mobile-menu-open-390x1000",
+      "viewport": {
+        "width": 390,
+        "height": 1000,
+        "device_scale_factor": 1
+      },
+      "actions": [
+        {
+          "type": "keyboard",
+          "key": "Enter"
+        }
+      ],
+      "checks": [
+        {
+          "expression": "document.querySelector('.header-menu').open",
+          "expected": true,
+          "observed": true,
+          "passed": true,
+          "enforced": true
+        },
+        {
+          "expression": "document.activeElement.tagName",
+          "expected": "SUMMARY",
+          "observed": "SUMMARY",
+          "passed": true,
+          "enforced": true
+        }
+      ],
+      "screenshot": "dashboard-a11y-mobile-menu-open-390x1000.png",
+      "capture": {
+        "bytes": 62243
+      }
+    },
+    {
+      "id": "mobile-menu-escape-390x1000",
+      "viewport": {
+        "width": 390,
+        "height": 1000,
+        "device_scale_factor": 1
+      },
+      "actions": [
+        {
+          "type": "keyboard",
+          "key": "Escape"
+        }
+      ],
+      "checks": [
+        {
+          "expression": "document.querySelector('.header-menu').open",
+          "expected": false,
+          "observed": true,
+          "passed": false,
+          "enforced": false,
+          "note": "Dismissible disclosure contract: Escape closes the last-opened UI."
+        },
+        {
+          "expression": "document.activeElement.tagName",
+          "expected": "SUMMARY",
+          "observed": "SUMMARY",
+          "passed": true,
+          "enforced": false,
+          "note": "After dismissal, focus should remain on the trigger."
+        }
+      ],
+      "screenshot": "dashboard-a11y-mobile-menu-escape-390x1000.png",
+      "capture": {
+        "bytes": 62238
+      }
+    },
+    {
+      "id": "forced-colors-1440x1000",
+      "viewport": {
+        "width": 1440,
+        "height": 1000,
+        "device_scale_factor": 1
+      },
+      "actions": [
+        {
+          "type": "emulate-media",
+          "feature": "forced-colors",
+          "value": "active"
+        }
+      ],
+      "checks": [
+        {
+          "expression": "matchMedia('(forced-colors: active)').matches",
+          "expected": true,
+          "observed": true,
+          "passed": true,
+          "enforced": true
+        }
+      ],
+      "screenshot": "dashboard-a11y-forced-colors-1440x1000.png",
+      "capture": {
+        "bytes": 123882
+      }
+    },
+    {
+      "id": "reduced-motion-1440x1000",
+      "viewport": {
+        "width": 1440,
+        "height": 1000,
+        "device_scale_factor": 1
+      },
+      "actions": [
+        {
+          "type": "emulate-media",
+          "feature": "prefers-reduced-motion",
+          "value": "reduce"
+        }
+      ],
+      "checks": [
+        {
+          "expression": "matchMedia('(prefers-reduced-motion: reduce)').matches",
+          "expected": true,
+          "observed": true,
+          "passed": true,
+          "enforced": true
+        },
+        {
+          "expression": "matchMedia('(forced-colors: active)').matches",
+          "expected": false,
+          "observed": false,
+          "passed": true,
+          "enforced": true
+        }
+      ],
+      "screenshot": "dashboard-a11y-reduced-motion-1440x1000.png",
+      "capture": {
+        "bytes": 152593
+      },
+      "computed_motion_inventory": [],
+      "motion_claim_boundary": "The inventory reports computed CSS only; JS, canvas, video, scroll-linked motion, and subjective comfort remain unverified."
+    },
+    {
+      "id": "reflow-200pct-equivalent-720x500-at-2x",
+      "viewport": {
+        "width": 720,
+        "height": 500,
+        "device_scale_factor": 2
+      },
+      "actions": [
+        {
+          "type": "device-metrics",
+          "method": "200%-scale reflow equivalent",
+          "source_width_css_px": 1440,
+          "effective_width_css_px": 720,
+          "device_scale_factor": 2,
+          "actual_browser_zoom": false
+        }
+      ],
+      "checks": [
+        {
+          "expression": "innerWidth",
+          "expected": 720,
+          "observed": 720,
+          "passed": true,
+          "enforced": true
+        },
+        {
+          "expression": "devicePixelRatio",
+          "expected": 2,
+          "observed": 2,
+          "passed": true,
+          "enforced": true
+        },
+        {
+          "expression": "document.documentElement.scrollWidth <= document.documentElement.clientWidth",
+          "expected": true,
+          "observed": true,
+          "passed": true,
+          "enforced": false,
+          "note": "This checks page-level horizontal overflow only; internal two-dimensional regions and reachability require inspection."
+        }
+      ],
+      "screenshot": "dashboard-a11y-reflow-200pct-equivalent-720x500-at-2x.png",
+      "capture": {
+        "bytes": 98338
+      },
+      "metrics": {
+        "innerWidth": 720,
+        "innerHeight": 500,
+        "devicePixelRatio": 2,
+        "documentScrollWidth": 705,
+        "documentClientWidth": 705,
+        "horizontalDocumentOverflow": false
+      }
+    }
+  ],
+  "browser": {
+    "protocolVersion": "1.3",
+    "product": "Chrome/150.0.7871.187",
+    "revision": "@30f6543ae91e6a860e73b76e3216b663b050f4e5",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/150.0.0.0 Safari/537.36",
+    "jsVersion": "15.0.245.21"
+  },
+  "summary": {
+    "recorded_states": 10,
+    "contract_failures": [
+      {
+        "state": "keyboard-loading-1440x1000",
+        "expression": "document.activeElement.id",
+        "expected": "assign-owner",
+        "observed": "",
+        "note": "Focus is expected to remain task-local. Native disabled often removes the active control from focus."
+      },
+      {
+        "state": "keyboard-error-focus-1440x1000",
+        "expression": "document.activeElement.id",
+        "expected": "assign-owner",
+        "observed": "",
+        "note": "Error recovery should preserve or restore focus to the retry action."
+      },
+      {
+        "state": "keyboard-success-focus-1440x1000",
+        "expression": "document.activeElement.id",
+        "expected": "assign-owner",
+        "observed": "",
+        "note": "Completion should not strand focus on the document body."
+      },
+      {
+        "state": "mobile-menu-escape-390x1000",
+        "expression": "document.querySelector('.header-menu').open",
+        "expected": false,
+        "observed": true,
+        "note": "Dismissible disclosure contract: Escape closes the last-opened UI."
+      }
+    ]
+  }
+}

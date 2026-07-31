@@ -1,0 +1,11 @@
+{
+  "run_id": "run-hybrid-1781664794",
+  "exported_at": "2026-06-17T03:00:00.000Z",
+  "source_repo": "Alex0nder/Oiloop",
+  "source_path": "context-os/eval/results/run-hybrid-1781664794",
+  "oiloop_commit": "ba395f0",
+  "phase": "3.1-run2",
+  "router_mode": "gold",
+  "filter": "cross-cutting",
+  "conditions": ["B", "C", "D"]
+}

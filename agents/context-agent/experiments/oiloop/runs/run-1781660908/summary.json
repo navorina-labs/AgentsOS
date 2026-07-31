@@ -1,0 +1,25 @@
+{
+  "results_dir": "/Users/alex0nder/Projects/AI-Context-OS/experiments/oiloop/runs/run-1781660908",
+  "paired_questions": 20,
+  "conditions": [
+    "A",
+    "B",
+    "C"
+  ],
+  "mean_accuracy_a": 0.75,
+  "mean_accuracy_b": 2.7,
+  "mean_accuracy_c": 2.35,
+  "mean_accuracy_delta_b_vs_a": 1.95,
+  "mean_ccr_context_chars_b": 29.145544271361217,
+  "mean_ccr_tokens_est_b": 29.14195640010907,
+  "mean_latency_a_ms": 2511.6,
+  "mean_latency_b_ms": 2086.3,
+  "mean_latency_c_ms": 2650.75,
+  "mean_tokens_in_a": 76662.7,
+  "mean_tokens_in_b": 6333.75,
+  "mean_tokens_in_c": 8962.65,
+  "hallucination_rate_a": 0.3,
+  "hallucination_rate_b": 0,
+  "hallucination_rate_c": 0.1,
+  "hypothesis_supported": true
+}

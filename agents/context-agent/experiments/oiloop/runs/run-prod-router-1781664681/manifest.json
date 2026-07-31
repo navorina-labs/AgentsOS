@@ -1,0 +1,10 @@
+{
+  "run_id": "run-prod-router-1781664681",
+  "exported_at": "2026-06-17T03:00:00.000Z",
+  "source_repo": "Alex0nder/Oiloop",
+  "source_path": "context-os/eval/results/run-prod-router-1781664681",
+  "oiloop_commit": "ba395f0",
+  "phase": "3.1-run3",
+  "router_mode": "keyword",
+  "conditions": ["B"]
+}

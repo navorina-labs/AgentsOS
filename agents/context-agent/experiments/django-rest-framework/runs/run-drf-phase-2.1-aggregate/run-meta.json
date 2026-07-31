@@ -1,0 +1,13 @@
+{
+  "run_at": "2026-06-13T00:00:00.000Z",
+  "project": "django-rest-framework",
+  "questions": 42,
+  "conditions": ["A", "B", "C"],
+  "model": "gpt-4o-mini",
+  "router_mode": "keyword",
+  "router_mean_f1": 0.72,
+  "router_semantic_f1": 0.85,
+  "export_type": "aggregate_only",
+  "per_question_artifacts": false,
+  "provenance": "Oiloop private workspace; copied from DJANGO-REST-FRAMEWORK-RESULTS.md"
+}

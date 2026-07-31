@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Operations overview</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font: 14px/1.35 Arial, sans-serif; color: #20242b; background: #eef0f4; }
+    header { height: 72px; padding: 16px 22px; background: #fff; border-bottom: 1px solid #cbd0d8; display: flex; align-items: center; gap: 14px; }
+    header h1 { margin: 0; font-size: 20px; }
+    header input { width: 390px; margin-left: 24px; padding: 10px; border: 1px solid #9aa2ad; }
+    button { padding: 10px 14px; border: 0; border-radius: 3px; background: #1769e0; color: white; font-weight: 700; }
+    .ghost { background: #1769e0; }
+    main { padding: 14px; }
+    .cards { display: grid; grid-template-columns: repeat(8, 1fr); gap: 8px; }
+    .card { min-height: 104px; padding: 12px; background: #fff; border: 1px solid #cbd0d8; border-radius: 10px; box-shadow: 0 2px 6px rgba(21,31,45,.08); }
+    .card b { display: block; margin-top: 18px; font-size: 25px; }
+    .card small { color: #677181; }
+    .alerts { margin-top: 10px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .alert { padding: 12px; color: #7b1515; background: #fee8e7; border: 1px solid #e58984; border-radius: 10px; }
+    .alert h2 { margin: 0 0 8px; font-size: 15px; }
+    .alert button { float: right; }
+    .workspace { margin-top: 10px; display: grid; grid-template-columns: 1fr 310px; gap: 8px; }
+    .panel { background: white; border: 1px solid #cbd0d8; border-radius: 10px; }
+    .toolbar { padding: 9px; border-bottom: 1px solid #cbd0d8; display: flex; gap: 6px; align-items: center; }
+    .toolbar select, .toolbar input { height: 35px; border: 1px solid #9aa2ad; padding: 5px 7px; }
+    .toolbar input { width: 180px; }
+    table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    th, td { padding: 8px 6px; border: 1px solid #d8dce2; text-align: left; white-space: nowrap; }
+    th { background: #f2f3f6; }
+    .critical { color: #b42318; font-weight: 700; }
+    aside h2 { margin: 0; padding: 12px; font-size: 16px; border-bottom: 1px solid #cbd0d8; }
+    .chart { height: 230px; margin: 10px; padding: 12px; border: 1px solid #cbd0d8; background: repeating-linear-gradient(to top, #fff 0 34px, #e5e8ed 35px); }
+    .bars { height: 100%; display: flex; align-items: end; gap: 8px; }
+    .bars i { flex: 1; background: #1769e0; }
+    .feed { margin: 10px; padding: 0; list-style: none; }
+    .feed li { padding: 10px 4px; border-bottom: 1px solid #d8dce2; }
+    .footer-actions { padding: 10px; border-top: 1px solid #cbd0d8; display: flex; justify-content: flex-end; gap: 6px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Operations overview</h1>
+    <input aria-label="Global search" placeholder="Search everything">
+    <button>Create ticket</button>
+    <button class="ghost">Export</button>
+    <button class="ghost">Settings</button>
+  </header>
+  <main>
+    <section class="cards">
+      <div class="card">Open tickets<b>1,284</b><small>+8% today</small></div>
+      <div class="card">First response<b>18m</b><small>+2m today</small></div>
+      <div class="card">SLA risk<b>74</b><small>12 critical</small></div>
+      <div class="card">CSAT<b>91%</b><small>-1.2%</small></div>
+      <div class="card">Backlog<b>684</b><small>+43 today</small></div>
+      <div class="card">Resolved<b>392</b><small>Today</small></div>
+      <div class="card">Escalated<b>28</b><small>+6 today</small></div>
+      <div class="card">Unassigned<b>116</b><small>Needs review</small></div>
+    </section>
+    <section class="alerts">
+      <article class="alert"><button>Open</button><h2>Critical · Payments API</h2><div>Owner: Unassigned · 142 tickets</div></article>
+      <article class="alert"><button>Open</button><h2>Major · Login latency</h2><div>Owner: Maya · 86 tickets</div></article>
+      <article class="alert"><button>Open</button><h2>Major · Webhooks delayed</h2><div>Owner: Devon · 39 tickets</div></article>
+    </section>
+    <section class="workspace">
+      <div class="panel">
+        <div class="toolbar">
+          <input placeholder="Search tickets">
+          <select><option>All views</option></select>
+          <select><option>Status</option></select>
+          <select><option>Priority</option></select>
+          <select><option>Owner</option></select>
+          <select><option>Channel</option></select>
+          <button>Apply</button><button>Bulk edit</button>
+        </div>
+        <table>
+          <thead><tr><th>✓</th><th>ID</th><th>Priority</th><th>Subject</th><th>Status</th><th>Owner</th><th>Incident</th><th>SLA</th><th>Customer</th><th>Channel</th><th>Updated</th></tr></thead>
+          <tbody>
+            <tr><td>□</td><td>#8941</td><td class="critical">Urgent</td><td>Card payment reversed twice</td><td>Open</td><td>Unassigned</td><td>Payments API</td><td>12m</td><td>Northwind</td><td>Email</td><td>2m</td></tr>
+            <tr><td>□</td><td>#8937</td><td>High</td><td>Unable to sign in after reset</td><td>Pending</td><td>Maya</td><td>Login latency</td><td>38m</td><td>Contoso</td><td>Chat</td><td>8m</td></tr>
+            <tr><td>□</td><td>#8928</td><td>High</td><td>Webhook events arriving late</td><td>Open</td><td>Devon</td><td>Webhooks</td><td>44m</td><td>Acme Inc.</td><td>API</td><td>11m</td></tr>
+            <tr><td>□</td><td>#8919</td><td>Normal</td><td>Incorrect invoice address</td><td>New</td><td>Lee</td><td>—</td><td>2h</td><td>Globex</td><td>Email</td><td>19m</td></tr>
+            <tr><td>□</td><td>#8911</td><td>Normal</td><td>Need copy of last receipt</td><td>Solved</td><td>Jo</td><td>—</td><td>4h</td><td>Initech</td><td>Phone</td><td>24m</td></tr>
+          </tbody>
+        </table>
+        <div class="footer-actions"><button>Previous</button><button>Next</button><button>Export</button></div>
+      </div>
+      <aside class="panel">
+        <h2>Ticket volume</h2>
+        <div class="chart"><div class="bars"><i style="height:35%"></i><i style="height:48%"></i><i style="height:40%"></i><i style="height:82%"></i><i style="height:68%"></i><i style="height:91%"></i></div></div>
+        <h2>Activity</h2>
+        <ul class="feed"><li>Maya assigned #8937</li><li>Incident updated</li><li>Devon replied to #8928</li><li>116 tickets remain unassigned</li></ul>
+      </aside>
+    </section>
+  </main>
+</body>
+</html>

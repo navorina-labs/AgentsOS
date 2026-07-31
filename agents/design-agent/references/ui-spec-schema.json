@@ -1,0 +1,577 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://design-agent.local/schemas/ui-spec-v1.json",
+  "title": "Design Agent UI specification",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "id",
+    "title",
+    "status",
+    "context",
+    "evidence",
+    "decisions",
+    "contracts",
+    "flows",
+    "views",
+    "foundations",
+    "components",
+    "acceptance_criteria",
+    "open_questions"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "id": {
+      "$ref": "#/$defs/id"
+    },
+    "title": {
+      "$ref": "#/$defs/non_empty"
+    },
+    "status": {
+      "enum": ["draft", "review", "approved"]
+    },
+    "context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "product_surface",
+        "primary_user",
+        "outcome",
+        "platforms",
+        "viewport_range",
+        "constraints",
+        "assumptions",
+        "out_of_scope"
+      ],
+      "properties": {
+        "product_surface": {
+          "$ref": "#/$defs/non_empty"
+        },
+        "primary_user": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["role", "job"],
+          "properties": {
+            "role": {
+              "$ref": "#/$defs/non_empty"
+            },
+            "job": {
+              "$ref": "#/$defs/non_empty"
+            }
+          }
+        },
+        "outcome": {
+          "$ref": "#/$defs/non_empty"
+        },
+        "platforms": {
+          "$ref": "#/$defs/non_empty_array"
+        },
+        "viewport_range": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["minimum_css_px", "maximum_css_px"],
+          "properties": {
+            "minimum_css_px": {
+              "type": ["integer", "null"],
+              "minimum": 240
+            },
+            "maximum_css_px": {
+              "type": ["integer", "null"],
+              "minimum": 240
+            }
+          }
+        },
+        "constraints": {
+          "$ref": "#/$defs/string_array"
+        },
+        "assumptions": {
+          "$ref": "#/$defs/string_array"
+        },
+        "out_of_scope": {
+          "$ref": "#/$defs/string_array"
+        }
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "type", "locator", "claim", "confidence"],
+        "properties": {
+          "id": {
+            "$ref": "#/$defs/id"
+          },
+          "type": {
+            "enum": [
+              "brief",
+              "source",
+              "render",
+              "trace",
+              "research",
+              "standard",
+              "assumption"
+            ]
+          },
+          "locator": {
+            "$ref": "#/$defs/non_empty"
+          },
+          "claim": {
+            "$ref": "#/$defs/non_empty"
+          },
+          "confidence": {
+            "enum": ["high", "medium", "low"]
+          }
+        }
+      }
+    },
+    "decisions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "decision",
+          "status",
+          "evidence_ids",
+          "tradeoff"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "#/$defs/id"
+          },
+          "decision": {
+            "$ref": "#/$defs/non_empty"
+          },
+          "status": {
+            "$ref": "#/$defs/decision_status"
+          },
+          "evidence_ids": {
+            "$ref": "#/$defs/id_array"
+          },
+          "tradeoff": {
+            "$ref": "#/$defs/non_empty"
+          },
+          "open_question_id": {
+            "$ref": "#/$defs/id"
+          }
+        }
+      }
+    },
+    "contracts": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "category",
+          "owner",
+          "applies_to",
+          "requirement",
+          "status",
+          "evidence_ids"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "#/$defs/id"
+          },
+          "category": {
+            "enum": [
+              "task",
+              "hierarchy",
+              "layout",
+              "content",
+              "component",
+              "interaction",
+              "responsive",
+              "accessibility",
+              "motion",
+              "system",
+              "data_dependency"
+            ]
+          },
+          "owner": {
+            "$ref": "#/$defs/non_empty"
+          },
+          "applies_to": {
+            "$ref": "#/$defs/non_empty_array"
+          },
+          "requirement": {
+            "$ref": "#/$defs/non_empty"
+          },
+          "status": {
+            "$ref": "#/$defs/decision_status"
+          },
+          "evidence_ids": {
+            "$ref": "#/$defs/id_array"
+          },
+          "decision_id": {
+            "$ref": "#/$defs/id"
+          },
+          "open_question_id": {
+            "$ref": "#/$defs/id"
+          }
+        }
+      }
+    },
+    "flows": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "name",
+          "entry",
+          "steps",
+          "success",
+          "alternate_and_recovery"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "#/$defs/id"
+          },
+          "name": {
+            "$ref": "#/$defs/non_empty"
+          },
+          "entry": {
+            "$ref": "#/$defs/non_empty"
+          },
+          "steps": {
+            "$ref": "#/$defs/non_empty_array"
+          },
+          "success": {
+            "$ref": "#/$defs/non_empty"
+          },
+          "alternate_and_recovery": {
+            "$ref": "#/$defs/non_empty_array"
+          }
+        }
+      }
+    },
+    "views": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "name",
+          "purpose",
+          "primary_action",
+          "reading_order",
+          "focus_order",
+          "regions",
+          "layout",
+          "component_ids",
+          "contract_ids"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "#/$defs/id"
+          },
+          "name": {
+            "$ref": "#/$defs/non_empty"
+          },
+          "purpose": {
+            "$ref": "#/$defs/non_empty"
+          },
+          "primary_action": {
+            "$ref": "#/$defs/non_empty"
+          },
+          "reading_order": {
+            "$ref": "#/$defs/non_empty_array"
+          },
+          "focus_order": {
+            "$ref": "#/$defs/non_empty_array"
+          },
+          "regions": {
+            "$ref": "#/$defs/non_empty_array"
+          },
+          "layout": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["wide", "intermediate", "narrow", "transitions"],
+            "properties": {
+              "wide": {
+                "$ref": "#/$defs/non_empty"
+              },
+              "intermediate": {
+                "$ref": "#/$defs/non_empty"
+              },
+              "narrow": {
+                "$ref": "#/$defs/non_empty"
+              },
+              "transitions": {
+                "$ref": "#/$defs/non_empty_array"
+              }
+            }
+          },
+          "component_ids": {
+            "$ref": "#/$defs/id_array_non_empty"
+          },
+          "contract_ids": {
+            "$ref": "#/$defs/id_array_non_empty"
+          }
+        }
+      }
+    },
+    "foundations": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "color_roles",
+        "typography_roles",
+        "spacing_and_grid",
+        "shape_and_elevation",
+        "iconography_and_imagery",
+        "motion"
+      ],
+      "properties": {
+        "color_roles": {
+          "$ref": "#/$defs/non_empty_array"
+        },
+        "typography_roles": {
+          "$ref": "#/$defs/non_empty_array"
+        },
+        "spacing_and_grid": {
+          "$ref": "#/$defs/non_empty_array"
+        },
+        "shape_and_elevation": {
+          "$ref": "#/$defs/non_empty_array"
+        },
+        "iconography_and_imagery": {
+          "$ref": "#/$defs/non_empty_array"
+        },
+        "motion": {
+          "$ref": "#/$defs/non_empty_array"
+        }
+      }
+    },
+    "components": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "name",
+          "purpose",
+          "interactive",
+          "anatomy",
+          "variants",
+          "props",
+          "states",
+          "not_applicable_states",
+          "interactions",
+          "accessibility",
+          "content_constraints",
+          "responsive_behavior",
+          "contract_ids"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "#/$defs/id"
+          },
+          "name": {
+            "$ref": "#/$defs/non_empty"
+          },
+          "purpose": {
+            "$ref": "#/$defs/non_empty"
+          },
+          "interactive": {
+            "type": "boolean"
+          },
+          "anatomy": {
+            "$ref": "#/$defs/non_empty_array"
+          },
+          "variants": {
+            "$ref": "#/$defs/string_array"
+          },
+          "props": {
+            "$ref": "#/$defs/string_array"
+          },
+          "states": {
+            "$ref": "#/$defs/string_array"
+          },
+          "not_applicable_states": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/$defs/non_empty"
+            }
+          },
+          "interactions": {
+            "$ref": "#/$defs/string_array"
+          },
+          "accessibility": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "name_role_value",
+              "keyboard",
+              "focus",
+              "announcements"
+            ],
+            "properties": {
+              "name_role_value": {
+                "$ref": "#/$defs/non_empty"
+              },
+              "keyboard": {
+                "$ref": "#/$defs/non_empty"
+              },
+              "focus": {
+                "$ref": "#/$defs/non_empty"
+              },
+              "announcements": {
+                "$ref": "#/$defs/non_empty"
+              }
+            }
+          },
+          "content_constraints": {
+            "$ref": "#/$defs/non_empty_array"
+          },
+          "responsive_behavior": {
+            "$ref": "#/$defs/non_empty"
+          },
+          "contract_ids": {
+            "$ref": "#/$defs/id_array_non_empty"
+          }
+        }
+      }
+    },
+    "acceptance_criteria": {
+      "type": "array",
+      "minItems": 6,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "priority",
+          "covers",
+          "given",
+          "when",
+          "then",
+          "verifies_contract_ids",
+          "evidence"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "#/$defs/id"
+          },
+          "priority": {
+            "enum": ["must", "should", "could"]
+          },
+          "covers": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "enum": [
+                "core_task",
+                "state",
+                "responsive",
+                "accessibility",
+                "content_stress",
+                "recovery"
+              ]
+            }
+          },
+          "given": {
+            "$ref": "#/$defs/non_empty"
+          },
+          "when": {
+            "$ref": "#/$defs/non_empty"
+          },
+          "then": {
+            "$ref": "#/$defs/non_empty"
+          },
+          "verifies_contract_ids": {
+            "$ref": "#/$defs/id_array_non_empty"
+          },
+          "evidence": {
+            "$ref": "#/$defs/non_empty"
+          }
+        }
+      }
+    },
+    "open_questions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "question", "impact", "owner"],
+        "properties": {
+          "id": {
+            "$ref": "#/$defs/id"
+          },
+          "question": {
+            "$ref": "#/$defs/non_empty"
+          },
+          "impact": {
+            "$ref": "#/$defs/non_empty"
+          },
+          "owner": {
+            "$ref": "#/$defs/non_empty"
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]{1,63}$"
+    },
+    "non_empty": {
+      "type": "string",
+      "minLength": 3
+    },
+    "string_array": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/non_empty"
+      }
+    },
+    "non_empty_array": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/non_empty"
+      }
+    },
+    "id_array": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/id"
+      }
+    },
+    "id_array_non_empty": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/id"
+      }
+    },
+    "decision_status": {
+      "enum": [
+        "confirmed",
+        "proposed_default_validate",
+        "requires_decision"
+      ]
+    }
+  }
+}

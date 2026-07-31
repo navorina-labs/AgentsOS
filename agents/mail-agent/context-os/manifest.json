@@ -1,0 +1,181 @@
+{
+  "name": "mailagent-context-os",
+  "version": "1.1.0",
+  "created": "2026-06-10",
+  "repository": "Alex0nder/MailAgent",
+  "productVersion": "0.1.0",
+  "mcpServerVersion": "0.8.2",
+  "cores": [
+    {
+      "id": "business",
+      "file": "cores/business-core.md",
+      "topics": [
+        "purpose",
+        "users",
+        "scenarios",
+        "metrics",
+        "positioning"
+      ]
+    },
+    {
+      "id": "product",
+      "file": "cores/product-core.md",
+      "topics": [
+        "inbox-flow",
+        "email-flow",
+        "otp-flow",
+        "qa-flow",
+        "agent-flow",
+        "mcp-tools"
+      ]
+    },
+    {
+      "id": "technical",
+      "file": "cores/technical-core.md",
+      "topics": [
+        "worker",
+        "api",
+        "neon",
+        "resend",
+        "queues",
+        "durable-objects",
+        "sse",
+        "mcp",
+        "r2",
+        "workers-ai"
+      ]
+    },
+    {
+      "id": "operational",
+      "file": "cores/operational-core.md",
+      "topics": [
+        "deploy",
+        "ci",
+        "env",
+        "secrets",
+        "testing",
+        "monitoring",
+        "operator"
+      ]
+    }
+  ],
+  "subcores": [
+    {
+      "id": "inbox",
+      "file": "subcores/inbox-core.md",
+      "parent": "product"
+    },
+    {
+      "id": "email",
+      "file": "subcores/email-core.md",
+      "parent": "technical"
+    },
+    {
+      "id": "otp",
+      "file": "subcores/otp-core.md",
+      "parent": "product"
+    },
+    {
+      "id": "api",
+      "file": "subcores/api-core.md",
+      "parent": "technical"
+    },
+    {
+      "id": "worker",
+      "file": "subcores/worker-core.md",
+      "parent": "technical"
+    },
+    {
+      "id": "database",
+      "file": "subcores/database-core.md",
+      "parent": "technical"
+    },
+    {
+      "id": "deployment",
+      "file": "subcores/deployment-core.md",
+      "parent": "operational"
+    },
+    {
+      "id": "security",
+      "file": "subcores/security-core.md",
+      "parent": "operational"
+    },
+    {
+      "id": "auth-billing",
+      "file": "subcores/auth-billing-core.md",
+      "parent": "technical",
+      "topics": [
+        "auth",
+        "billing",
+        "oauth",
+        "stripe",
+        "scopes",
+        "rate-limit"
+      ]
+    },
+    {
+      "id": "data-model",
+      "file": "subcores/data-model-core.md",
+      "parent": "technical",
+      "topics": [
+        "schema",
+        "migrations",
+        "neon",
+        "tables",
+        "idempotency"
+      ]
+    },
+    {
+      "id": "serialization",
+      "file": "subcores/serialization-core.md",
+      "parent": "technical",
+      "topics": [
+        "validation",
+        "extract",
+        "openapi",
+        "verification-json"
+      ]
+    },
+    {
+      "id": "deployment-testing",
+      "file": "subcores/deployment-testing-core.md",
+      "parent": "operational",
+      "topics": [
+        "deploy",
+        "ci",
+        "testing",
+        "env",
+        "wrangler"
+      ]
+    }
+  ],
+  "router": {
+    "rules": "router/question-router.md",
+    "map": "router/routing-map.json"
+  },
+  "audit": {
+    "projectMap": "audit/project-map.md",
+    "cleanup": "audit/cleanup-candidates.md",
+    "risks": "audit/risks.md",
+    "duplicateDocs": "audit/duplicate-docs.md"
+  },
+  "stats": {
+    "mcpTools": 70,
+    "dbMigrations": 28,
+    "docsMd": 55,
+    "srcTsFiles": 130,
+    "npmPackages": 3,
+    "githubWorkflows": 7,
+    "servicePresets": 25
+  },
+  "sourceCommit": "405b3c12f48c6448ad191a47b6277499da8a879e",
+  "sourceCommitShort": "405b3c1",
+  "syncedAt": "2026-06-25T10:54:34.250Z",
+  "syncSources": [
+    "src/mcp/manifest.ts",
+    "src/lib/service-presets.ts",
+    "package.json",
+    "migrations/",
+    ".github/workflows/"
+  ]
+}

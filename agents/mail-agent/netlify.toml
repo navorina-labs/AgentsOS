@@ -1,0 +1,4 @@
+# Optional: Netlify. Prod landing is recommended on Cloudflare Worker — see docs/HOSTING-CLOUDFLARE.md
+[build]
+  publish = "public"
+  command = ""

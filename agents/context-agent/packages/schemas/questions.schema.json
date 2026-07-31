@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ai-context-os.dev/schemas/questions.schema.json",
+  "title": "Context OS Eval Questions",
+  "description": "Schema for context-os/eval/questions.json",
+  "oneOf": [
+    {
+      "type": "array",
+      "items": { "$ref": "#/$defs/question" }
+    },
+    {
+      "type": "object",
+      "required": ["questions"],
+      "additionalProperties": true,
+      "properties": {
+        "pilot_ids": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "questions": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/question" }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "question": {
+      "type": "object",
+      "required": ["id", "question", "expected_cores"],
+      "additionalProperties": true,
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "question_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "question": {
+          "type": "string",
+          "minLength": 1
+        },
+        "domain": {
+          "type": "string"
+        },
+        "expected_cores": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]*$"
+          },
+          "minItems": 1
+        },
+        "gold": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    }
+  }
+}

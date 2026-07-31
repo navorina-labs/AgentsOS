@@ -1,0 +1,137 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ai-context-os.dev/schemas/core.schema.json",
+  "title": "Context Core",
+  "description": "Schema for a domain-oriented context core in AI Context OS",
+  "type": "object",
+  "required": [
+    "id",
+    "name",
+    "version",
+    "parent_core",
+    "purpose",
+    "scope",
+    "key_entities",
+    "invariants",
+    "sources",
+    "exclusions",
+    "typical_outputs",
+    "metadata"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*$",
+      "description": "Unique core identifier, e.g. revenue-core"
+    },
+    "name": {
+      "type": "string",
+      "description": "Human-readable core name"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Semantic version of this core artifact"
+    },
+    "parent_core": {
+      "type": ["string", "null"],
+      "description": "Parent core id, or null for top-level cores"
+    },
+    "purpose": {
+      "type": "string",
+      "minLength": 20,
+      "description": "Why this core exists"
+    },
+    "scope": {
+      "type": "object",
+      "required": ["in_scope", "out_of_scope"],
+      "properties": {
+        "in_scope": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 1,
+          "description": "Questions and decisions this core owns"
+        },
+        "out_of_scope": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 1,
+          "description": "Questions deferred to other cores"
+        }
+      }
+    },
+    "key_entities": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "description"],
+        "properties": {
+          "name": { "type": "string" },
+          "description": { "type": "string" },
+          "attributes": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        }
+      },
+      "description": "Decision-relevant entities, not file lists"
+    },
+    "invariants": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Facts that must remain true for decisions in this domain"
+    },
+    "decision_history": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["date", "decision", "rationale"],
+        "properties": {
+          "date": { "type": "string", "format": "date" },
+          "decision": { "type": "string" },
+          "rationale": { "type": "string" },
+          "source": { "type": "string" }
+        }
+      }
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["type", "reference"],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["file", "url", "dashboard", "document", "service", "other"]
+          },
+          "reference": { "type": "string" },
+          "description": { "type": "string" },
+          "line_range": { "type": "string" }
+        }
+      },
+      "description": "Pointers to authoritative artifacts"
+    },
+    "exclusions": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Explicit exclusions and why"
+    },
+    "typical_outputs": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Kinds of answers this core produces"
+    },
+    "metadata": {
+      "type": "object",
+      "required": ["project", "last_updated", "token_estimate"],
+      "properties": {
+        "project": { "type": "string" },
+        "last_updated": { "type": "string", "format": "date" },
+        "last_audit": { "type": "string", "format": "date" },
+        "token_estimate": { "type": "integer", "minimum": 0 },
+        "author": { "type": "string" },
+        "notes": { "type": "string" }
+      }
+    }
+  }
+}

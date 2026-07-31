@@ -1,0 +1,22 @@
+[
+  {
+    "id": "Q01",
+    "question": "Which governance constraints affect the roadmap?",
+    "expected_cores": ["business-core"]
+  },
+  {
+    "id": "Q02",
+    "question": "How should we publish the next semver release?",
+    "expected_cores": ["operational-core"]
+  },
+  {
+    "id": "Q03",
+    "question": "Which documentation examples should be improved first?",
+    "expected_cores": ["product-core"]
+  },
+  {
+    "id": "Q04",
+    "question": "Would this API change be breaking for SDK users?",
+    "expected_cores": ["technical-core"]
+  }
+]

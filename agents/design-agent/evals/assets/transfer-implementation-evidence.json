@@ -1,0 +1,509 @@
+{
+  "schema_version": 1,
+  "comparison_id": "transfer-review-fixture-v1",
+  "specification": {
+    "path": "ui-spec-valid.json",
+    "sha256": "0437c78e23447aabb00c47ebc28e0490782e0a03f2ce7df9d354f112d9c0a5d2"
+  },
+  "implementation": {
+    "path": "transfer-implementation-workbench.html",
+    "sha256": "c63bbbbed802c8f2d353f9d63c22883d80e5d44f448f3c055697258172d86d7d"
+  },
+  "environment": {
+    "browser": "Chrome/150.0.7871.188",
+    "viewports": [
+      {
+        "width": 720,
+        "height": 900,
+        "device_scale_factor": 1
+      },
+      {
+        "width": 320,
+        "height": 900,
+        "device_scale_factor": 1
+      }
+    ],
+    "reduced_motion_emulated": true,
+    "states": [
+      {
+        "id": "default-720x900",
+        "screenshot": "transfer-implementation-default-720x900.png",
+        "actions": [
+          {
+            "type": "navigate"
+          }
+        ],
+        "observed": {
+          "viewport": {
+            "width": 720,
+            "height": 900,
+            "clientWidth": 720,
+            "scrollWidth": 740,
+            "horizontalOverflow": true
+          },
+          "content": {
+            "recipientText": "Alexandra-Maria Konstantinopoulou International Foundation",
+            "recipientClipped": false,
+            "recipientFullTextReachable": false,
+            "totalText": "$2,408.00",
+            "summaryLabelOrder": [
+              "Recipient",
+              "Account",
+              "Amount",
+              "Fee",
+              "Date",
+              "Note",
+              "Total debit"
+            ],
+            "confirmText": "◌ Confirm transfer",
+            "errorText": "Something went wrong.",
+            "errorVisible": false,
+            "recoveryActionPresent": false
+          },
+          "semantics": {
+            "confirmTag": "BUTTON",
+            "confirmDisabled": false,
+            "confirmAriaBusy": null,
+            "resultLiveRegion": false
+          },
+          "styles": {
+            "focusOutlineStyle": "none",
+            "focusOutlineWidth": "3px",
+            "spinnerAnimationName": "spin",
+            "spinnerAnimationDuration": "0.7s",
+            "spinnerAnimationIterationCount": "infinite"
+          },
+          "geometry": {
+            "main": {
+              "left": 20,
+              "right": 740,
+              "width": 720,
+              "top": 20,
+              "bottom": 490.609375
+            },
+            "confirm": {
+              "left": 561.21875,
+              "right": 712,
+              "width": 150.78125,
+              "top": 418.609375,
+              "bottom": 462.609375
+            }
+          }
+        }
+      },
+      {
+        "id": "error-720x900",
+        "screenshot": "transfer-implementation-error-720x900.png",
+        "actions": [
+          {
+            "type": "pointer-click",
+            "selector": "#confirm",
+            "point": {
+              "x": 636.609375,
+              "y": 440.609375
+            }
+          }
+        ],
+        "observed": {
+          "viewport": {
+            "width": 720,
+            "height": 900,
+            "clientWidth": 720,
+            "scrollWidth": 740,
+            "horizontalOverflow": true
+          },
+          "content": {
+            "recipientText": "Alexandra-Maria Konstantinopoulou International Foundation",
+            "recipientClipped": false,
+            "recipientFullTextReachable": false,
+            "totalText": "$2,408.00",
+            "summaryLabelOrder": [
+              "Recipient",
+              "Account",
+              "Amount",
+              "Fee",
+              "Date",
+              "Note",
+              "Total debit"
+            ],
+            "confirmText": "◌ Confirm transfer",
+            "errorText": "Something went wrong.",
+            "errorVisible": true,
+            "recoveryActionPresent": false
+          },
+          "semantics": {
+            "confirmTag": "BUTTON",
+            "confirmDisabled": false,
+            "confirmAriaBusy": null,
+            "resultLiveRegion": false
+          },
+          "styles": {
+            "focusOutlineStyle": "none",
+            "focusOutlineWidth": "3px",
+            "spinnerAnimationName": "spin",
+            "spinnerAnimationDuration": "0.7s",
+            "spinnerAnimationIterationCount": "infinite"
+          },
+          "geometry": {
+            "main": {
+              "left": 20,
+              "right": 740,
+              "width": 720,
+              "top": 20,
+              "bottom": 545.796875
+            },
+            "confirm": {
+              "left": 561.21875,
+              "right": 712,
+              "width": 150.78125,
+              "top": 418.609375,
+              "bottom": 462.609375
+            }
+          }
+        }
+      },
+      {
+        "id": "narrow-320x900",
+        "screenshot": "transfer-implementation-narrow-320x900.png",
+        "actions": [
+          {
+            "type": "navigate"
+          }
+        ],
+        "observed": {
+          "viewport": {
+            "width": 320,
+            "height": 900,
+            "clientWidth": 320,
+            "scrollWidth": 740,
+            "horizontalOverflow": true
+          },
+          "content": {
+            "recipientText": "Alexandra-Maria Konstantinopoulou International Foundation",
+            "recipientClipped": false,
+            "recipientFullTextReachable": false,
+            "totalText": "$2,408.00",
+            "summaryLabelOrder": [
+              "Recipient",
+              "Account",
+              "Amount",
+              "Fee",
+              "Date",
+              "Note",
+              "Total debit"
+            ],
+            "confirmText": "◌ Confirm transfer",
+            "errorText": "Something went wrong.",
+            "errorVisible": false,
+            "recoveryActionPresent": false
+          },
+          "semantics": {
+            "confirmTag": "BUTTON",
+            "confirmDisabled": false,
+            "confirmAriaBusy": null,
+            "resultLiveRegion": false
+          },
+          "styles": {
+            "focusOutlineStyle": "none",
+            "focusOutlineWidth": "3px",
+            "spinnerAnimationName": "spin",
+            "spinnerAnimationDuration": "0.7s",
+            "spinnerAnimationIterationCount": "infinite"
+          },
+          "geometry": {
+            "main": {
+              "left": 20,
+              "right": 740,
+              "width": 720,
+              "top": 20,
+              "bottom": 490.609375
+            },
+            "confirm": {
+              "left": 561.21875,
+              "right": 712,
+              "width": 150.78125,
+              "top": 418.609375,
+              "bottom": 462.609375
+            }
+          }
+        }
+      },
+      {
+        "id": "reduced-motion-720x900",
+        "screenshot": "transfer-implementation-reduced-motion-720x900.png",
+        "actions": [
+          {
+            "type": "navigate"
+          }
+        ],
+        "observed": {
+          "viewport": {
+            "width": 720,
+            "height": 900,
+            "clientWidth": 720,
+            "scrollWidth": 740,
+            "horizontalOverflow": true
+          },
+          "content": {
+            "recipientText": "Alexandra-Maria Konstantinopoulou International Foundation",
+            "recipientClipped": false,
+            "recipientFullTextReachable": false,
+            "totalText": "$2,408.00",
+            "summaryLabelOrder": [
+              "Recipient",
+              "Account",
+              "Amount",
+              "Fee",
+              "Date",
+              "Note",
+              "Total debit"
+            ],
+            "confirmText": "◌ Confirm transfer",
+            "errorText": "Something went wrong.",
+            "errorVisible": false,
+            "recoveryActionPresent": false
+          },
+          "semantics": {
+            "confirmTag": "BUTTON",
+            "confirmDisabled": false,
+            "confirmAriaBusy": null,
+            "resultLiveRegion": false
+          },
+          "styles": {
+            "focusOutlineStyle": "none",
+            "focusOutlineWidth": "3px",
+            "spinnerAnimationName": "spin",
+            "spinnerAnimationDuration": "0.7s",
+            "spinnerAnimationIterationCount": "infinite"
+          },
+          "geometry": {
+            "main": {
+              "left": 20,
+              "right": 740,
+              "width": 720,
+              "top": 20,
+              "bottom": 490.609375
+            },
+            "confirm": {
+              "left": 561.21875,
+              "right": 712,
+              "width": 150.78125,
+              "top": 418.609375,
+              "bottom": 462.609375
+            }
+          }
+        }
+      }
+    ]
+  },
+  "contract_results": [
+    {
+      "contract_id": "contract-review-before-submit",
+      "status": "unverified",
+      "assertions": [
+        {
+          "id": "incomplete-review-gating",
+          "expected": "submission unavailable until complete review content is present",
+          "observed": "Only a complete default review state was captured",
+          "passed": null,
+          "surface": "interaction_trace",
+          "evidence": [
+            "transfer-implementation-default-720x900.png",
+            "transfer-implementation-workbench.html:#confirm"
+          ]
+        }
+      ],
+      "notes": "The complete state exposes an explicit confirmation action, but no incomplete state proves the gating requirement."
+    },
+    {
+      "contract_id": "contract-total-hierarchy",
+      "status": "fail",
+      "assertions": [
+        {
+          "id": "total-adjacent-to-amount-and-fee",
+          "expected": "Amount, Fee, and Total debit remain adjacent",
+          "observed": [
+            "Recipient",
+            "Account",
+            "Amount",
+            "Fee",
+            "Date",
+            "Note",
+            "Total debit"
+          ],
+          "passed": false,
+          "surface": "dom",
+          "evidence": [
+            "transfer-implementation-default-720x900.png",
+            "transfer-implementation-workbench.html:dl"
+          ]
+        },
+        {
+          "id": "total-visually-dominant",
+          "expected": "Total debit uses stronger type",
+          "observed": {
+            "text": "$2,408.00",
+            "source": ".total"
+          },
+          "passed": true,
+          "surface": "screenshot",
+          "evidence": [
+            "transfer-implementation-default-720x900.png",
+            "transfer-implementation-workbench.html:.total"
+          ]
+        }
+      ],
+      "notes": "Total debit is visually dominant, but Date and Note separate it from Amount and Fee."
+    },
+    {
+      "contract_id": "contract-failure-recovery",
+      "status": "fail",
+      "assertions": [
+        {
+          "id": "distinct-failure-and-recovery",
+          "expected": "named failure plus next action",
+          "observed": {
+            "error": "Something went wrong.",
+            "recoveryActionPresent": false
+          },
+          "passed": false,
+          "surface": "interaction_trace",
+          "evidence": [
+            "transfer-implementation-error-720x900.png",
+            "pointer click #confirm then 500 ms"
+          ]
+        },
+        {
+          "id": "duplicate-submit-protection",
+          "expected": "button busy or disabled during submission",
+          "observed": {
+            "disabled": false,
+            "ariaBusy": null
+          },
+          "passed": false,
+          "surface": "dom",
+          "evidence": [
+            "transfer-implementation-error-720x900.png"
+          ]
+        }
+      ],
+      "notes": "The generic error has no recovery action and submission protection was not exposed."
+    },
+    {
+      "contract_id": "contract-responsive-parity",
+      "status": "fail",
+      "assertions": [
+        {
+          "id": "no-page-horizontal-scroll-320",
+          "expected": false,
+          "observed": true,
+          "passed": false,
+          "surface": "dom",
+          "evidence": [
+            "transfer-implementation-narrow-320x900.png"
+          ]
+        }
+      ],
+      "notes": "The fixed-width main surface causes page-level horizontal overflow at 320 CSS px."
+    },
+    {
+      "contract_id": "contract-accessible-commit",
+      "status": "fail",
+      "assertions": [
+        {
+          "id": "visible-focus",
+          "expected": "non-none focus indicator",
+          "observed": {
+            "outlineStyle": "none",
+            "outlineWidth": "3px"
+          },
+          "passed": false,
+          "surface": "computed_style",
+          "evidence": [
+            "transfer-implementation-workbench.html:button:focus"
+          ]
+        },
+        {
+          "id": "task-local-result-announcement",
+          "expected": true,
+          "observed": false,
+          "passed": false,
+          "surface": "dom",
+          "evidence": [
+            "transfer-implementation-error-720x900.png"
+          ]
+        },
+        {
+          "id": "native-button-semantics",
+          "expected": "BUTTON",
+          "observed": "BUTTON",
+          "passed": true,
+          "surface": "dom",
+          "evidence": [
+            "transfer-implementation-workbench.html:#confirm"
+          ]
+        }
+      ],
+      "notes": "Native button semantics pass, but focus visibility and result announcement fail."
+    },
+    {
+      "contract_id": "contract-content-growth",
+      "status": "fail",
+      "assertions": [
+        {
+          "id": "recipient-content-complete",
+          "expected": "wrap, reflow, or full text reachable",
+          "observed": {
+            "clipped": false,
+            "fullTextReachable": false
+          },
+          "passed": false,
+          "surface": "dom",
+          "evidence": [
+            "transfer-implementation-narrow-320x900.png",
+            "transfer-implementation-workbench.html:.recipient"
+          ]
+        }
+      ],
+      "notes": "The long recipient is silently truncated and its empty title does not expose full content."
+    },
+    {
+      "contract_id": "contract-motion-restraint",
+      "status": "fail",
+      "assertions": [
+        {
+          "id": "reduced-motion-media-active",
+          "expected": true,
+          "observed": true,
+          "passed": true,
+          "surface": "dom",
+          "evidence": [
+            "transfer-implementation-reduced-motion-720x900.png"
+          ]
+        },
+        {
+          "id": "spinner-adapts-under-reduce",
+          "expected": "no infinite rotation",
+          "observed": {
+            "animationName": "spin",
+            "iterationCount": "infinite"
+          },
+          "passed": false,
+          "surface": "computed_style",
+          "evidence": [
+            "transfer-implementation-reduced-motion-720x900.png",
+            "transfer-implementation-workbench.html:@keyframes spin"
+          ]
+        }
+      ],
+      "notes": "The emulated preference matches, while the infinite spinner remains authored unchanged."
+    }
+  ],
+  "evidence_boundaries": [
+    "The pointer trace proves one local browser path, not complete keyboard, touch, retry, race, or network behavior.",
+    "DOM and computed-style evidence is not a named screen-reader or assistive-technology test.",
+    "The local timeout is not backend submission, persistence, authorization, or real network recovery.",
+    "Screenshots and short state samples do not prove usability outcomes, performance, or product-wide conformance.",
+    "The requires_decision session-policy contract is excluded from implementation conformance."
+  ]
+}

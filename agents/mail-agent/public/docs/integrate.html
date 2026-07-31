@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-41B4KG53D1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-41B4KG53D1");
+    </script>
+    <title>Integrate in your project — MailAgent</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta name="theme-color" content="#000000" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body class="doc-page" data-site="docs" data-doc="integrate">
+    <div id="site-nav"></div>
+    <div class="doc-layout">
+      <aside class="doc-sidebar" id="site-doc-nav" aria-label="Documentation"></aside>
+      <article class="doc-content">
+      <h1>Use MailAgent in your project</h1>
+      <p class="doc-lead">
+        <strong>Full openness</strong> = your Cloudflare Worker, your Resend inbox domain, your
+        API key. No dependency on our hosted API or approval from us.
+      </p>
+
+      <h2>Self-host (recommended)</h2>
+      <ol class="doc-list">
+        <li>Clone <a href="https://github.com/Alex0nder/MailAgent" rel="noopener noreferrer">GitHub</a> (MIT)</li>
+        <li>Neon + Resend + <code>npm run db:migrate</code></li>
+        <li><code>npm run deploy</code> → your <code>*.workers.dev</code></li>
+        <li>Set your own <code>API_KEY</code> (wrangler secret)</li>
+        <li>Resend webhook → <code>https://your-worker/webhooks/resend</code></li>
+      </ol>
+      <p>
+        Full steps:
+        <a
+          href="https://github.com/Alex0nder/MailAgent/blob/main/SETUP.md"
+          rel="noopener noreferrer"
+          >SETUP.md on GitHub</a
+        >
+        ·
+        <a
+          href="https://github.com/Alex0nder/MailAgent/blob/main/docs/INTEGRATE.md"
+          rel="noopener noreferrer"
+          >INTEGRATE.md</a
+        >
+      </p>
+
+      <h2>Cursor agent (MCP)</h2>
+      <p>Add to <strong>your</strong> repo root:</p>
+      <pre class="doc-pre"><code>// .cursor/mcp.json
+{
+  "mcpServers": {
+    "mailagent": {
+      "command": "node",
+      "args": ["/path/to/MailAgent/mcp/dist/index.js"],
+      "env": {
+        "MAILAGENT_API_URL": "https://your-worker.workers.dev",
+        "MAILAGENT_API_KEY": "your-secret"
+      }
+    }
+  }
+}</code></pre>
+      <p>Run <code>npm run build:mcp</code> in MailAgent. Copy skill from <code>.cursor/skills/mailagent-mcp/</code> optional.</p>
+
+      <h2>Any agent (HTTP only)</h2>
+      <pre class="doc-pre"><code>POST /v1/inboxes/open
+Authorization: Bearer YOUR_API_KEY</code></pre>
+      <p><a href="/docs/">API reference</a> · <a href="https://api.webmailagent.com/v1/openapi.json" rel="noopener noreferrer">OpenAPI</a></p>
+
+      <h2>Hosted API (optional)</h2>
+      <p>
+        Don't want to run infra? Use
+        <code>api.webmailagent.com</code> —
+        <a href="mailto:hello@webmailagent.com?subject=MailAgent%20hosted%20API%20key"
+          >request a key</a
+        >. Not required for self-host.
+      </p>
+
+      </article>
+    </div>
+    <div id="site-footer"></div>
+    <script src="/site-shell.js" defer></script>
+  </body>
+</html>

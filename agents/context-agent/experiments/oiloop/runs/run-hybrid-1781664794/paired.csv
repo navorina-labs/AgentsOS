@@ -1,0 +1,9 @@
+question_id,accuracy_a,accuracy_b,accuracy_delta_b_vs_a,hallucination_a,hallucination_b,latency_a,latency_b,tokens_in_a,tokens_in_b,context_chars_a,context_chars_b,ccr_context_chars_b,ccr_tokens_est_b,accuracy_c,accuracy_delta_c_vs_a,accuracy_delta_c_vs_b,hallucination_c,latency_c,tokens_in_c,context_chars_c,ccr_context_chars_c,ccr_tokens_est_c,accuracy_d,accuracy_delta_d_vs_a,accuracy_delta_d_vs_b,accuracy_delta_d_vs_c,hallucination_d,latency_d,tokens_in_d,context_chars_d,ccr_context_chars_d,ccr_tokens_est_d
+OL07,,3,,,false,,3720,,13955,,45738,,,3,,0,false,2798,6278,27454,,,3,,0,0,false,5082,17365,60774,,
+OL09,,3,,,false,,1343,,7800,,26130,,,2,,-1,false,4799,9012,36877,,,2,,-1,0,false,3181,11290,41166,,
+OL12,,2,,,false,,1209,,7802,,26130,,,2,,0,false,1840,7615,30970,,,3,,1,1,false,4949,11395,41166,,
+OL13,,3,,,false,,1816,,14402,,47081,,,3,,0,false,2632,8240,36492,,,3,,0,0,false,3886,17813,62117,,
+OL15,,3,,,false,,2286,,3192,,12772,,,3,,0,false,6218,11039,48901,,,2,,-1,-1,false,1957,6619,27808,,
+OL16,,3,,,false,,1813,,13822,,45271,,,1,,-2,true,4992,6615,28754,,,3,,0,2,false,2450,17236,60307,,
+OL17,,3,,,false,,1390,,3261,,12998,,,3,,0,false,1272,8137,35520,,,3,,0,0,false,1243,6663,28009,,
+OL19,,3,,,false,,1390,,4138,,15083,,,2,,-1,true,2677,6304,27817,,,1,,-2,-1,true,2306,7488,30119,,

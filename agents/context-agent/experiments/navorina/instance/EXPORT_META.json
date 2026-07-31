@@ -1,0 +1,11 @@
+{
+  "exported_at": "2026-06-11T16:39:12.847Z",
+  "source_repo": "navorina",
+  "commit": "7f9a41f554c2cb73153cabb07c3b3bbbb413d9dc",
+  "target_framework_path": "experiments/navorina/instance/",
+  "framework_repo": "https://github.com/navorina-labs/AI-Context-OS",
+  "canon": "context-os/CANON.md",
+  "ci": [
+    ".github/workflows/context-os-ci.yml"
+  ]
+}

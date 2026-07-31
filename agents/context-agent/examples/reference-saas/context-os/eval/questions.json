@@ -1,0 +1,50 @@
+[
+  {
+    "id": "BUS-01",
+    "question": "How should annual contracts contribute to MRR?",
+    "expected_cores": ["business-core"],
+    "gold": ["Use one twelfth of active annual contract value.", "Exclude inactive subscriptions."]
+  },
+  {
+    "id": "BUS-02",
+    "question": "What risks must a pricing change evaluate?",
+    "expected_cores": ["business-core"],
+    "gold": ["Estimate activation impact.", "Estimate paid conversion and logo churn impact."]
+  },
+  {
+    "id": "PROD-01",
+    "question": "Can onboarding show a dashboard before a source is connected?",
+    "expected_cores": ["product-core"],
+    "gold": ["Yes, sample mode requires no credentials.", "Production activation still requires a successful synchronization."]
+  },
+  {
+    "id": "PROD-02",
+    "question": "What is the next roadmap priority after connection diagnostics?",
+    "expected_cores": ["product-core"],
+    "gold": ["Dashboard sharing precedes additional chart types."]
+  },
+  {
+    "id": "TECH-01",
+    "question": "How does the ingestion API make event retries idempotent?",
+    "expected_cores": ["technical-core"],
+    "gold": ["Event identifiers are idempotency keys within a workspace."]
+  },
+  {
+    "id": "TECH-02",
+    "question": "May a dashboard query aggregate raw events synchronously?",
+    "expected_cores": ["technical-core"],
+    "gold": ["No.", "Interactive queries read hourly metric aggregates."]
+  },
+  {
+    "id": "OPS-01",
+    "question": "When should an ingestion release rollback?",
+    "expected_cores": ["operational-core"],
+    "gold": ["Roll back on sustained ingestion rejection or dashboard error-budget burn."]
+  },
+  {
+    "id": "OPS-02",
+    "question": "Who coordinates a severity-one incident?",
+    "expected_cores": ["operational-core"],
+    "gold": ["An incident commander.", "Status updates occur every 30 minutes."]
+  }
+]

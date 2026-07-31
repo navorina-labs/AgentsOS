@@ -1,0 +1,742 @@
+% Pandoc LaTeX template — arXiv preprint (article + arxiv.sty)
+\documentclass[11pt]{article}
+
+\usepackage{arxiv}
+\usepackage{fontspec}
+\defaultfontfeatures{Ligatures=TeX}
+\setmainfont{lmroman10-regular.otf}[
+  BoldFont=lmroman10-bold.otf,
+  ItalicFont=lmroman10-italic.otf,
+  BoldItalicFont=lmroman10-bolditalic.otf
+]
+\setmonofont{lmroman10-regular.otf}
+
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{calc}
+\usepackage{microtype}
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{ltcaption}
+\usepackage{enumitem}
+\usepackage{framed}
+
+\newcounter{none}
+\newcommand{\real}[1]{#1}
+
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{2pt}%
+  \setlength{\parskip}{0pt}%
+}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=black,
+  citecolor=black,
+  urlcolor=black,
+  pdftitle={Domain-Oriented Context Cores: Bounded Context for AI
+Decision Support in Software Projects},
+  pdfauthor={Alexander Young}
+}
+
+\title{Domain-Oriented Context Cores: Bounded Context for AI Decision
+Support in Software Projects}
+\author{Alexander Young}
+\date{June 2026}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Modern AI-assisted software development often loads repository-scale
+context into large language models (LLMs), increasing cost, latency, and
+attention dilution on scoped decision questions. We introduce AI Context
+OS, a framework that models repository knowledge as Context Cores -
+domain-oriented context partitions with lightweight multi-core routing.
+We report exploratory within-subjects A/B/C experiments on four
+codebases (149 decision-scoped questions; gpt-4o-mini; LLM-as-judge):
+MailAgent, Django REST Framework, Navorina, and Oiloop (private macOS).
+Context Cores (Condition B) achieved 8× to 38× token compression
+(CCR\_tokens) and large cost reductions versus full-repository baselines
+(Condition A). On three open-source projects, B mean accuracy exceeded A
+by 19-24 percentage points. On Oiloop (Phase 3.1, 20 questions, v1.1
+cores), B reached 2.70 versus A 0.75 (bootstrap 95\% CI on paired Δ:
+{[}+1.60, +2.30{]}); a production keyword router preserved gains (B
+2.75, F1 1.0, hallucination 0\%). Hybrid core-plus-graph retrieval
+(Condition D) did not beat multi-core B on cross-cutting questions
+(H\(_{1f}\) rejected). The primary hypothesis is supported on
+decision-scoped questions: efficiency gains are consistent; accuracy
+gains require adequate core metadata and multi-core routing on
+integrated codebases. A 10-question author-rated blind pilot preferred B
+in 70\% of cases, with the remaining 30\% rated equal (n=10; not
+independent experts). Masked decode preference on prior runs: 75\%
+B-or-equal. We release protocols, raw runs (three of four full; Django
+aggregate-only), and routing artifacts for replication.
+\end{abstract}
+
+\keywords{Context engineering \and Large language models \and Software
+engineering \and Retrieval-augmented generation \and Domain-driven
+design}
+
+\section{Introduction}\label{introduction}
+
+The integration of large language models (LLMs) into software
+engineering workflows has progressed from function-level code completion
+to repository-level understanding and reasoning. Contemporary commercial
+LLMs expose context windows of up to two million tokens, encouraging a
+direct engineering response: loading the entire workspace - source
+files, dependencies, documentation, and configuration - into the prompt
+baseline.
+
+This brute-force approach simplifies retrieval pipelines but introduces
+three systematic costs:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{Token cost inflation.} Processing tens of thousands of tokens
+  per query is financially unsustainable at high query volumes.
+\item
+  \textbf{Latency degradation.} Inference time scales with prompt
+  length, introducing multi-second delays that disrupt developer focus.
+\item
+  \textbf{Attention dilution.} LLMs frequently fail to locate and
+  prioritize critical details when surrounded by large volumes of
+  irrelevant code, yielding incorrect recommendations, omissions, or
+  hallucinations {[}1{]}.
+\end{enumerate}
+
+To address these limitations, we propose \textbf{Context Cores}, a
+structured alternative grounded in domain-driven design (DDD) {[}3{]}.
+Instead of treating a repository as a monolithic file index, we
+construct minimal, self-contained semantic units aligned with distinct
+architectural responsibilities. A lightweight query router selects
+active cores for each query, compiling only essential guidelines and
+code symbols.
+
+We present the \textbf{AI Context OS} framework and report a multi-phase
+evaluation across three open-source codebases and one proprietary macOS
+application. We compare:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Condition A (full-repository baseline):} The entire repository
+  structure and files loaded into the LLM context.
+\item
+  \textbf{Condition B (routed Context Cores):} Scoped domain guidelines
+  and relevant entities loaded via keyword or semantic routing.
+\item
+  \textbf{Condition C (graph-based retrieval):} A dependency graph built
+  via static AST analysis, loading nodes and code snippets within two
+  hops of query seeds.
+\end{itemize}
+
+\subsection{Contributions}\label{contributions}
+
+This paper makes the following contributions:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{AI Context OS}, a domain-oriented context framework with
+  explicit cores, routing, and prompt compilation.
+\item
+  A \textbf{within-subjects evaluation protocol} spanning 149
+  decision-scoped questions on four codebases, with published raw runs
+  and replication artifacts.
+\item
+  \textbf{Empirical evidence} that routed Context Cores compress input
+  tokens by 8×-38× while matching or exceeding full-repository accuracy
+  when core metadata and routing are adequate.
+\item
+  A \textbf{stratum-dependent production decision matrix} comparing
+  Conditions B, C, and D under stated limitations (LLM-as-judge, partial
+  Django export).
+\end{enumerate}
+
+\section{Problem Formulation}\label{problem-formulation}
+
+\subsection{Attention Dilution in Large Context
+Windows}\label{attention-dilution-in-large-context-windows}
+
+Let \(P\) denote the user query and \(R = \{f_1, f_2, \dots, f_n\}\) the
+set of repository files. Under Condition A, the input prompt is
+
+\[I_A = [\text{SystemInstructions}, R, P].\]
+
+As \(|R|\) grows, token length \(L(I_A)\) increases linearly. Prior work
+shows that retrieval performance over long prompts follows a U-shaped
+curve: information in the middle of the context is frequently
+under-attended {[}1{]}.
+
+\subsection{File-Centric versus Decision-Centric
+Organization}\label{file-centric-versus-decision-centric-organization}
+
+Traditional retrieval systems (lexical RAG, semantic chunking) operate
+at file granularity {[}4{]}. Developer queries are often
+decision-centric. Answering \emph{``How do we restrict API write
+operations on viewsets to JWT-authenticated users?''} does not require
+every serializer or view class; it requires rules governing
+serialization, view configuration, and authentication, plus specific
+file routes.
+
+\subsection{Observed Failure Modes}\label{observed-failure-modes}
+
+In audits of naive coding assistants, we observed recurring failures on:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{System API boundaries:} Confusion in helper utilities while
+  missing event-delegation patterns.
+\item
+  \textbf{Settings configuration maps:} Outdated properties due to
+  absent single sources of truth.
+\item
+  \textbf{Cross-cutting rules:} Hallucinated integration paths when only
+  one subsystem appears in context.
+\end{itemize}
+
+\section{Related Work}\label{related-work}
+
+\subsection{Retrieval-Augmented
+Generation}\label{retrieval-augmented-generation}
+
+Lexical retrieval (e.g., BM25) and dense embedding retrieval are widely
+used to prune LLM contexts {[}4{]}. Naive RAG often chunks files into
+arbitrary blocks, disrupting control flow. On codebases, this fragments
+class declarations from method implementations, forcing models to infer
+missing interfaces.
+
+\subsection{Knowledge Graphs and
+GraphRAG}\label{knowledge-graphs-and-graphrag}
+
+Graph-based methods model code as entities and relations (calls,
+inheritance, imports) {[}5, 6{]}. Graphs preserve structure but optimize
+connectivity over sufficiency. A developer modifying a settings
+parameter may receive a large adjacent subgraph of consumers, flooding
+the prompt with irrelevant code.
+
+\subsection{Code Intelligence and AST
+Indexing}\label{code-intelligence-and-ast-indexing}
+
+Static analysis assistants parse abstract syntax trees (ASTs) for
+precise declaration maps. AST indices lack business and operational
+semantics: architectural constraints expressed in prose (e.g.,
+\emph{``never send emails without user confirmation''}) are not
+captured.
+
+\subsection{Context Engineering and
+Compression}\label{context-engineering-and-compression}
+
+Prompt pruning, token compression, and context distillation remove
+redundant tokens post hoc {[}7{]}. These methods do not restructure
+repository knowledge; token and latency costs re-emerge as repositories
+scale.
+
+\section{Hypotheses}\label{hypotheses}
+
+We formalize the framework assumptions as follows:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Primary hypothesis (\(H_1\)):} Dynamically routed,
+  domain-oriented Context Cores produce responses equal or superior in
+  correctness, completeness, and actionability to full-repository
+  contexts, while significantly reducing input tokens and latency.
+\item
+  \textbf{\(H_{1a}\) (token reduction):} \(L(I_B) \ll L(I_A)\).
+\item
+  \textbf{\(H_{1b}\) (latency reduction):} \(t_B \ll t_A\).
+\item
+  \textbf{\(H_{1c}\) (domain accuracy):} On business-rule and
+  domain-logic questions, \(\text{Acc}_B \ge \text{Acc}_A\).
+\item
+  \textbf{\(H_{1d}\) (hallucination mitigation):} Context Cores reduce
+  structural hallucinations via explicit boundaries and exclusions.
+\item
+  \textbf{\(H_{1e}\) (expert preference):} Under blinded preference
+  rating, domain experts prefer or rate as equal Condition B in at least
+  60\% of cases versus Condition A.
+\end{itemize}
+
+\textbf{Falsification criteria.} We reject \(H_1\) if (i) mean accuracy
+of B falls more than 15\% below A on the aggregate set, or (ii) blind
+expert preference for B falls below 60\%.
+
+\section{The AI Context OS
+Architecture}\label{the-ai-context-os-architecture}
+
+The framework comprises three layers:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{Context Cores:} Curated markdown documents per application
+  domain, containing system-prompt guidelines, key entities (classes,
+  interfaces, APIs), and links to critical source files.
+\item
+  \textbf{Context Router:} A lightweight classifier (keyword- or
+  embedding-based) that scores queries against cores.
+\item
+  \textbf{Dynamic Prompt Builder:} An orchestrator that compiles base
+  instructions, active core guidelines, user preferences, and tool
+  definitions.
+\end{enumerate}
+
+Figure 1 summarizes the compilation pipeline: the router scores the
+query against cores; matched cores feed the prompt builder together with
+base system instructions; the assembled prompt is sent to the LLM.
+
+\textbf{Figure 1.} Context compilation pipeline: User Query
+\(\rightarrow\) Context Router \(\rightarrow\) \{Workspace Core, Comm
+Core, \ldots\} \(\rightarrow\) Dynamic Prompt Builder \(\rightarrow\)
+LLM.
+
+\subsection{Taxonomy of Context Cores}\label{taxonomy-of-context-cores}
+
+We classify cores into five domains:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Personal/default core:} User metadata, preferences,
+  conversational history.
+\item
+  \textbf{Workspace core:} File system, document stores, local database
+  schemas.
+\item
+  \textbf{Communication core:} Messaging and mail integrations.
+\item
+  \textbf{System control core:} Execution paths, scripting, input
+  automation.
+\item
+  \textbf{Browsing core:} Browsers, web sessions, tabs, URL requests.
+\end{itemize}
+
+\subsection{Core Construction}\label{core-construction}
+
+Cores follow the \textbf{minimal context principle:}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{Domain boundary mapping:} Identify distinct responsibilities
+  (e.g., billing versus database migration).
+\item
+  \textbf{Entity extraction:} Capture public interfaces, settings maps,
+  and structural invariants.
+\item
+  \textbf{Prose compression:} Replace raw listings with concise rules
+  (e.g., \emph{``SQLite schema version 3.4''}).
+\item
+  \textbf{Exclusions:} State explicit out-of-scope boundaries to reduce
+  hallucination.
+\end{enumerate}
+
+\subsection{Curation Cost}\label{curation-cost}
+
+Context Cores introduce manual curation overhead. Across test projects:
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}lcc@{}}
+\toprule\noalign{}
+Project & Cores & Authoring time \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+MailAgent & 6 & \textasciitilde12 h \\
+Django REST Framework & 5 & \textasciitilde18 h \\
+Navorina & 11 & \textasciitilde40 h \\
+Oiloop & 5 & \textasciitilde10 h \\
+\end{longtable}
+}
+
+Initial overhead ranges from approximately 10 to 40 hours depending on
+scale and coupling.
+
+\section{Experimental Methodology}\label{experimental-methodology}
+
+\subsection{Testbed}\label{testbed}
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}lcccc@{}}
+\toprule\noalign{}
+Repository & LOC & Language & Questions & Cores \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+MailAgent & 320k & TypeScript & 45 & 6 \\
+Django REST Framework & \textasciitilde1.2M & Python & 42 & 5 \\
+Navorina & \textasciitilde270k & Python & 42 & 11 \\
+Oiloop & \textasciitilde180k & Swift (macOS) & 20 & 5 \\
+\end{longtable}
+}
+
+\subsection{Design}\label{design}
+
+We applied a within-subjects design with \texttt{gpt-4o-mini} as the
+response and judge model:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Condition A:} All repository source and documentation.
+\item
+  \textbf{Condition B:} Routed core texts only.
+\item
+  \textbf{Condition C:} Static dependency subgraph (BFS expansion up to
+  two hops).
+\end{itemize}
+
+\subsection{Metrics}\label{metrics}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Accuracy (0-3):} Correctness of technical details, frameworks,
+  and APIs.
+\item
+  \textbf{Completeness (0-2):} Required steps, side effects, and file
+  locations.
+\item
+  \textbf{Actionability (1-5):} Readability and executability without
+  placeholders.
+\item
+  \textbf{Input tokens} and \textbf{latency (ms).}
+\item
+  \textbf{Hallucination rate (\%):} Incorrect APIs, classes, or files
+  referenced.
+\end{itemize}
+
+\section{Results}\label{results}
+
+Canonical runs: MailAgent \texttt{run-1781319187610}, Navorina
+\texttt{run-1781143403051}, Oiloop Phase 3.1 \texttt{run-1781660908},
+Django aggregate \texttt{run-drf-phase-2.1-aggregate} (per-question CSV
+not preserved for Django).
+
+\subsection{Cross-Project Comparison}\label{cross-project-comparison}
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.1250}}
+  >{\centering\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.0972}}
+  >{\centering\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.1528}}
+  >{\centering\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.1250}}
+  >{\centering\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.1806}}
+  >{\centering\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.1528}}
+  >{\centering\arraybackslash}p{(\linewidth - 12\tabcolsep) * \real{0.1667}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Project
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Cond.
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Mean Acc.
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Halluc.
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Mean tokens
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+Router F1
+\end{minipage} & \begin{minipage}[b]{\linewidth}\centering
+CCR\_tokens
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+MailAgent (45 Q) & A & 1.38 & 20\% & 88,113 & - & 1× \\
+& B & \textbf{1.67} & 18\% & \textbf{10,615} & \textbf{1.00} &
+\textbf{8.3×} \\
+& C & 1.24 & 22\% & 20,955 & - & 4.2× \\
+Django REST (42 Q)† & A & 1.35 & 18\% & \textasciitilde76,000 & - &
+1× \\
+& B & \textbf{1.68} & 22\% & \textbf{\textasciitilde2,000} & 0.72 &
+\textbf{38×} \\
+& C & 1.40 & \textbf{11\%} & \textasciitilde18,000 & - & 4.2× \\
+Navorina (42 Q) & A & 1.00 & 24\% & 27,627 & - & 1× \\
+& B & \textbf{1.19} & 19\% & \textbf{2,021} & 0.87 & \textbf{13.7×} \\
+& C & 0.93 & \textbf{7\%} & 11,858 & - & 2.3× \\
+Oiloop (20 Q, Ph 3.1) & A & 0.75 & 30\% & 76,663 & - & 1× \\
+& B & \textbf{2.70} & \textbf{0\%} & \textbf{6,334} & 1.00 &
+\textbf{12.1×} \\
+& C & 2.35 & 10\% & 8,963 & - & 8.6× \\
+\end{longtable}
+}
+
+† Django: aggregate export only; bootstrap CI not computed (no
+\texttt{paired.csv}).
+
+\subsection{Oiloop Phase 3.1}\label{oiloop-phase-3.1}
+
+Phase 3.1 used \textbf{workspace-core v1.1.0}, corrected gold labels,
+and gold routing (F1 = 1.0):
+
+\begin{itemize}
+\tightlist
+\item
+  B versus A accuracy: 2.70 versus 0.75 (Δ +1.95, N = 20).
+\item
+  Bootstrap 95\% CI on paired Δ (B − A): {[}+1.60, +2.30{]}; B exceeded
+  A on 19/20 questions.
+\item
+  Production keyword router (Run 3): F1 = 1.0, B = 2.75, hallucination
+  0\% (\texttt{run-prod-router-1781701118}).
+\item
+  Cross-cutting ablation (Run 2, 8 Q): B 2.875 \textgreater{} D (hybrid)
+  2.50 \textgreater{} C 2.375 - \(H_{1f}\) rejected.
+\end{itemize}
+
+Prior Oiloop runs (pre-v1.1 cores) showed B 1.20 versus A 1.00; core
+metadata richness (\(H_{1g}\)) explains the Phase 3.1 improvement.
+
+\subsection{Compression and Latency}\label{compression-and-latency}
+
+CCR\_tokens (mean tokens A / mean tokens B): 8.3× MailAgent, 38× Django,
+13.7× Navorina, 12.1× Oiloop Phase 3.1. Condition B latency was
+consistently lower than A on measured runs.
+
+\subsection{Preference Pilots}\label{preference-pilots}
+
+\textbf{Author-rated blind pilot} (10 questions, Phase 3.1 answers,
+shuffled A/B): B preferred 7, equal 3, A 0 (n=10; not independent
+raters; source: \texttt{research/human-blind-pilot-oiloop.csv}).
+
+\textbf{Masked decode preference} (prior Oiloop canonical): B preferred
+or equal on 75\% of 20 questions.
+
+\section{Discussion}\label{discussion}
+
+\subsection{Core Richness and Multi-Core
+Routing}\label{core-richness-and-multi-core-routing}
+
+Early Oiloop runs showed thin B accuracy (1.05-1.20) when cores lacked
+enforcement chains and cross-cutting routes returned a single core.
+Phase 3.1 addressed this via expanded metadata (entities, invariants,
+rule-enforcement chains) and multi-core keyword routing (up to two cores
+on tied scores). B accuracy rose from 1.20 to 2.70. Production default
+on Oiloop is Condition B (\texttt{.fast} routing), not graph C.
+
+\subsection{When Graph Retrieval Wins}\label{when-graph-retrieval-wins}
+
+On Django REST and Navorina, C achieved lower hallucination than B (11\%
+versus 22\%; 7\% versus 19\%) despite mixed accuracy. When trust
+dominates, C is the recommended default for those profiles.
+
+On Oiloop Phase 3.1, B exceeded C on accuracy and matched or beat C on
+hallucination. Graph C remains an opt-in path (\texttt{.deep}).
+
+\subsection{Hybrid Core plus Graph}\label{hybrid-core-plus-graph}
+
+Condition D (routed core plus 15k-token graph supplement) did not match
+C accuracy at lower cost than B on eight cross-cutting questions.
+Multi-core B is the simpler strategy when cores are metadata-rich.
+
+\subsection{Empirical Decision Matrix}\label{empirical-decision-matrix}
+
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3214}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3214}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3571}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Profile
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Default
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Evidence
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Narrow domain, F1 \(\geq\) 0.95 (MailAgent, Oiloop prod) & B & MailAgent
+F1 = 1.0; Oiloop Run 3 F1 = 1.0 \\
+Integrated OSS, hallucination-sensitive (DRF, Navorina) & C & C
+hallucination \textless{} B \\
+Integrated private app, rich cores (Oiloop Ph 3.1) & B & B 2.70;
+multi-core wins cross-cutting \\
+Full-repository dump & None & Dominated on cost and accuracy \\
+\end{longtable}
+}
+
+\section{Limitations}\label{limitations}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{LLM-as-judge:} All accuracy and hallucination scores use
+  gpt-4o-mini; no inter-rater agreement with humans on the full
+  149-question bank.
+\item
+  \textbf{Expert preference:} Masked decode and the author blind pilot
+  are not substitutes for independent blind human studies.
+\item
+  \textbf{Django REST:} Only aggregate metrics exported; per-question
+  \texttt{paired.csv} was not preserved.
+\item
+  \textbf{Curation cost:} 10-40 hours per codebase; semantic drift
+  requires maintenance.
+\item
+  \textbf{Router dependency:} B quality scales with routing F1;
+  mitigated by multi-core and semantic routing on DRF/Navorina.
+\item
+  \textbf{Single model:} All runs use gpt-4o-mini; generalization
+  untested.
+\item
+  \textbf{Oiloop A baseline variance:} Condition A scores drifted
+  between runs; Phase 3.1 is the reference.
+\end{enumerate}
+
+\section{Future Work}\label{future-work}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Semi-automated core generation from AST and documentation.
+\item
+  Context drift monitors (PR hooks when source links change).
+\item
+  Full Django REST re-run with per-question export.
+\item
+  Independent human blind study (10-question pilot protocol published).
+\item
+  Multi-model replication on the Oiloop product path.
+\end{enumerate}
+
+\section{Conclusion}\label{conclusion}
+
+Full-repository loading is token-inefficient for decision-scoped
+questions. Domain-oriented Context Cores with multi-core routing deliver
+8-38× compression (CCR\_tokens) on open-source projects and
+\textasciitilde12× on Oiloop Phase 3.1. When cores are metadata-rich,
+accuracy substantially exceeds monolithic dumps (Oiloop: B 2.70 versus A
+0.75; bootstrap CI entirely above zero). Production defaults are
+stratum-dependent: B on narrow, high-F1 paths; C on
+hallucination-sensitive integrated OSS. Hybrid core-plus-graph did not
+outperform rich multi-core B on Oiloop cross-cutting questions. We
+release protocols, three full raw run exports, and an aggregate Django
+export with stated limitations.
+
+\section{References}\label{references}
+
+{[}1{]} N. Liu et al., ``Lost in the Middle: How Language Models Use
+Long Contexts,'' \emph{Transactions of the Association for Computational
+Linguistics}, vol.~12, pp.~157-173, 2024.
+
+{[}2{]} O. Press et al., ``Train Short, Test Long: Attention with Linear
+Biases Enables Input Length Extrapolation,'' \emph{ICLR}, 2022.
+
+{[}3{]} E. Evans, \emph{Domain-Driven Design: Tackling Complexity in the
+Heart of Software}. Addison-Wesley, 2003.
+
+{[}4{]} P. Lewis et al., ``Retrieval-Augmented Generation for
+Knowledge-Intensive NLP Tasks,'' \emph{Advances in Neural Information
+Processing Systems}, 2020.
+
+{[}5{]} D. Edge et al., ``From Local to Global: A GraphRAG Approach to
+Query-Focused Summarization,'' \emph{arXiv:2404.16130}, 2024.
+
+{[}6{]} D. Guo et al., ``GraphCodeBERT: Pre-training Code
+Representations with Data Flow,'' \emph{International Conference on
+Learning Representations}, 2021.
+
+{[}7{]} H. Jiang et al., ``LLMLingua: Compressing Prompts for
+Accelerated Inference of Large Language Models,'' \emph{EMNLP}, 2023.
+
+\section{Appendix A: Example Evaluation
+Questions}\label{appendix-a-example-evaluation-questions}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{OL01:} How does Oiloop store user preferences and chat
+  history?
+\item
+  \textbf{OL05:} How does Oiloop handle sandboxed folder access on
+  macOS?
+\item
+  \textbf{OL15:} How does EventKit Reminders authorization avoid
+  freezing Oiloop in background mode?
+\item
+  \textbf{OL18:} How are Safari tab titles and URLs fetched?
+\end{itemize}
+
+\section{Appendix B: Context Core
+Template}\label{appendix-b-context-core-template}
+
+\begin{verbatim}
+# [Core Name] Core
+
+## Purpose
+Decision domain description.
+
+## Key Entities
+- `EntityName`: Class/struct and responsibility.
+
+## Invariants & Rules
+1. Mandatory checks and constraints.
+
+## Exclusions
+- Explicit out-of-scope boundaries.
+\end{verbatim}
+
+\section{Appendix C: Router Sketch}\label{appendix-c-router-sketch}
+
+\begin{verbatim}
+struct ContextRouter {
+    static func route(userInput: String) -> Set<ContextCore> {
+        let lower = userInput.lowercased()
+        // Score cores by keyword presence; return matching set
+    }
+}
+\end{verbatim}
+
+\section{Appendix D: Blinded Rater
+Instructions}\label{appendix-d-blinded-rater-instructions}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Answers are randomized as ``Option 1'' and ``Option 2.''
+\item
+  Rate each option on accuracy (0-3), completeness (0-2), and
+  actionability (1-5).
+\item
+  Select the preferred option without knowing the retrieval source.
+\end{enumerate}
+
+\section{Data Availability}\label{data-availability}
+
+Research repository:
+\texttt{https://github.com/navorina-labs/AI-Context-OS}
+
+Evaluation dataset: \texttt{research/questions.md}
+
+Raw metrics: \texttt{context-os/evaluations/} and
+\texttt{experiments/*/runs/}
+
+\end{document}

@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Alexander Young" />
+  <meta name="keywords" content="Context engineering, Large language
+models, Software engineering, Retrieval-augmented
+generation, Domain-driven design" />
+  <title>Domain-Oriented Context Cores: Bounded Context for AI Decision Support in Software Projects</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="arxiv-academic.css" />
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Domain-Oriented Context Cores: Bounded Context for AI
+Decision Support in Software Projects</h1>
+<p class="author">Alexander Young</p>
+<p class="date">June 2026</p>
+<div class="abstract">
+<div class="abstract-title">Abstract</div>
+<p>Modern AI-assisted software development often loads repository-scale
+context into large language models (LLMs), increasing cost, latency, and
+attention dilution on scoped decision questions. We introduce AI Context
+OS, a framework that models repository knowledge as Context Cores -
+domain-oriented context partitions with lightweight multi-core routing.
+We report exploratory within-subjects A/B/C experiments on four
+codebases (149 decision-scoped questions; gpt-4o-mini; LLM-as-judge):
+MailAgent, Django REST Framework, Navorina, and Oiloop (private macOS).
+Context Cores (Condition B) achieved 8× to 38× token compression
+(CCR_tokens) and large cost reductions versus full-repository baselines
+(Condition A). On three open-source projects, B mean accuracy exceeded A
+by 19-24 percentage points. On Oiloop (Phase 3.1, 20 questions, v1.1
+cores), B reached 2.70 versus A 0.75 (bootstrap 95% CI on paired Δ:
+[+1.60, +2.30]); a production keyword router preserved gains (B 2.75, F1
+1.0, hallucination 0%). Hybrid core-plus-graph retrieval (Condition D)
+did not beat multi-core B on cross-cutting questions (H<span
+class="math inline"><sub>1<em>f</em></sub></span> rejected). The primary
+hypothesis is supported on decision-scoped questions: efficiency gains
+are consistent; accuracy gains require adequate core metadata and
+multi-core routing on integrated codebases. A 10-question author-rated
+blind pilot preferred B in 70% of cases, with the remaining 30% rated
+equal (n=10; not independent experts). Masked decode preference on prior
+runs: 75% B-or-equal. We release protocols, raw runs (three of four
+full; Django aggregate-only), and routing artifacts for replication.</p>
+</div>
+</header>
+<h1 id="introduction">Introduction</h1>
+<p>The integration of large language models (LLMs) into software
+engineering workflows has progressed from function-level code completion
+to repository-level understanding and reasoning. Contemporary commercial
+LLMs expose context windows of up to two million tokens, encouraging a
+direct engineering response: loading the entire workspace - source
+files, dependencies, documentation, and configuration - into the prompt
+baseline.</p>
+<p>This brute-force approach simplifies retrieval pipelines but
+introduces three systematic costs:</p>
+<ol type="1">
+<li><strong>Token cost inflation.</strong> Processing tens of thousands
+of tokens per query is financially unsustainable at high query
+volumes.</li>
+<li><strong>Latency degradation.</strong> Inference time scales with
+prompt length, introducing multi-second delays that disrupt developer
+focus.</li>
+<li><strong>Attention dilution.</strong> LLMs frequently fail to locate
+and prioritize critical details when surrounded by large volumes of
+irrelevant code, yielding incorrect recommendations, omissions, or
+hallucinations [1].</li>
+</ol>
+<p>To address these limitations, we propose <strong>Context
+Cores</strong>, a structured alternative grounded in domain-driven
+design (DDD) [3]. Instead of treating a repository as a monolithic file
+index, we construct minimal, self-contained semantic units aligned with
+distinct architectural responsibilities. A lightweight query router
+selects active cores for each query, compiling only essential guidelines
+and code symbols.</p>
+<p>We present the <strong>AI Context OS</strong> framework and report a
+multi-phase evaluation across three open-source codebases and one
+proprietary macOS application. We compare:</p>
+<ul>
+<li><strong>Condition A (full-repository baseline):</strong> The entire
+repository structure and files loaded into the LLM context.</li>
+<li><strong>Condition B (routed Context Cores):</strong> Scoped domain
+guidelines and relevant entities loaded via keyword or semantic
+routing.</li>
+<li><strong>Condition C (graph-based retrieval):</strong> A dependency
+graph built via static AST analysis, loading nodes and code snippets
+within two hops of query seeds.</li>
+</ul>
+<h2 id="contributions">Contributions</h2>
+<p>This paper makes the following contributions:</p>
+<ol type="1">
+<li><strong>AI Context OS</strong>, a domain-oriented context framework
+with explicit cores, routing, and prompt compilation.</li>
+<li>A <strong>within-subjects evaluation protocol</strong> spanning 149
+decision-scoped questions on four codebases, with published raw runs and
+replication artifacts.</li>
+<li><strong>Empirical evidence</strong> that routed Context Cores
+compress input tokens by 8×-38× while matching or exceeding
+full-repository accuracy when core metadata and routing are
+adequate.</li>
+<li>A <strong>stratum-dependent production decision matrix</strong>
+comparing Conditions B, C, and D under stated limitations (LLM-as-judge,
+partial Django export).</li>
+</ol>
+<h1 id="problem-formulation">Problem Formulation</h1>
+<h2 id="attention-dilution-in-large-context-windows">Attention Dilution
+in Large Context Windows</h2>
+<p>Let <span class="math inline"><em>P</em></span> denote the user query
+and <span
+class="math inline"><em>R</em> = {<em>f</em><sub>1</sub>, <em>f</em><sub>2</sub>, …, <em>f</em><sub><em>n</em></sub>}</span>
+the set of repository files. Under Condition A, the input prompt is</p>
+<p><span
+class="math display"><em>I</em><sub><em>A</em></sub> = [SystemInstructions, <em>R</em>, <em>P</em>].</span></p>
+<p>As <span class="math inline">|<em>R</em>|</span> grows, token length
+<span
+class="math inline"><em>L</em>(<em>I</em><sub><em>A</em></sub>)</span>
+increases linearly. Prior work shows that retrieval performance over
+long prompts follows a U-shaped curve: information in the middle of the
+context is frequently under-attended [1].</p>
+<h2 id="file-centric-versus-decision-centric-organization">File-Centric
+versus Decision-Centric Organization</h2>
+<p>Traditional retrieval systems (lexical RAG, semantic chunking)
+operate at file granularity [4]. Developer queries are often
+decision-centric. Answering <em>“How do we restrict API write operations
+on viewsets to JWT-authenticated users?”</em> does not require every
+serializer or view class; it requires rules governing serialization,
+view configuration, and authentication, plus specific file routes.</p>
+<h2 id="observed-failure-modes">Observed Failure Modes</h2>
+<p>In audits of naive coding assistants, we observed recurring failures
+on:</p>
+<ul>
+<li><strong>System API boundaries:</strong> Confusion in helper
+utilities while missing event-delegation patterns.</li>
+<li><strong>Settings configuration maps:</strong> Outdated properties
+due to absent single sources of truth.</li>
+<li><strong>Cross-cutting rules:</strong> Hallucinated integration paths
+when only one subsystem appears in context.</li>
+</ul>
+<h1 id="related-work">Related Work</h1>
+<h2 id="retrieval-augmented-generation">Retrieval-Augmented
+Generation</h2>
+<p>Lexical retrieval (e.g., BM25) and dense embedding retrieval are
+widely used to prune LLM contexts [4]. Naive RAG often chunks files into
+arbitrary blocks, disrupting control flow. On codebases, this fragments
+class declarations from method implementations, forcing models to infer
+missing interfaces.</p>
+<h2 id="knowledge-graphs-and-graphrag">Knowledge Graphs and
+GraphRAG</h2>
+<p>Graph-based methods model code as entities and relations (calls,
+inheritance, imports) [5, 6]. Graphs preserve structure but optimize
+connectivity over sufficiency. A developer modifying a settings
+parameter may receive a large adjacent subgraph of consumers, flooding
+the prompt with irrelevant code.</p>
+<h2 id="code-intelligence-and-ast-indexing">Code Intelligence and AST
+Indexing</h2>
+<p>Static analysis assistants parse abstract syntax trees (ASTs) for
+precise declaration maps. AST indices lack business and operational
+semantics: architectural constraints expressed in prose (e.g.,
+<em>“never send emails without user confirmation”</em>) are not
+captured.</p>
+<h2 id="context-engineering-and-compression">Context Engineering and
+Compression</h2>
+<p>Prompt pruning, token compression, and context distillation remove
+redundant tokens post hoc [7]. These methods do not restructure
+repository knowledge; token and latency costs re-emerge as repositories
+scale.</p>
+<h1 id="hypotheses">Hypotheses</h1>
+<p>We formalize the framework assumptions as follows:</p>
+<ul>
+<li><strong>Primary hypothesis (<span
+class="math inline"><em>H</em><sub>1</sub></span>):</strong> Dynamically
+routed, domain-oriented Context Cores produce responses equal or
+superior in correctness, completeness, and actionability to
+full-repository contexts, while significantly reducing input tokens and
+latency.</li>
+<li><strong><span
+class="math inline"><em>H</em><sub>1<em>a</em></sub></span> (token
+reduction):</strong> <span
+class="math inline"><em>L</em>(<em>I</em><sub><em>B</em></sub>) ≪ <em>L</em>(<em>I</em><sub><em>A</em></sub>)</span>.</li>
+<li><strong><span
+class="math inline"><em>H</em><sub>1<em>b</em></sub></span> (latency
+reduction):</strong> <span
+class="math inline"><em>t</em><sub><em>B</em></sub> ≪ <em>t</em><sub><em>A</em></sub></span>.</li>
+<li><strong><span
+class="math inline"><em>H</em><sub>1<em>c</em></sub></span> (domain
+accuracy):</strong> On business-rule and domain-logic questions, <span
+class="math inline">Acc<sub><em>B</em></sub> ≥ Acc<sub><em>A</em></sub></span>.</li>
+<li><strong><span
+class="math inline"><em>H</em><sub>1<em>d</em></sub></span>
+(hallucination mitigation):</strong> Context Cores reduce structural
+hallucinations via explicit boundaries and exclusions.</li>
+<li><strong><span
+class="math inline"><em>H</em><sub>1<em>e</em></sub></span> (expert
+preference):</strong> Under blinded preference rating, domain experts
+prefer or rate as equal Condition B in at least 60% of cases versus
+Condition A.</li>
+</ul>
+<p><strong>Falsification criteria.</strong> We reject <span
+class="math inline"><em>H</em><sub>1</sub></span> if (i) mean accuracy
+of B falls more than 15% below A on the aggregate set, or (ii) blind
+expert preference for B falls below 60%.</p>
+<h1 id="the-ai-context-os-architecture">The AI Context OS
+Architecture</h1>
+<p>The framework comprises three layers:</p>
+<ol type="1">
+<li><strong>Context Cores:</strong> Curated markdown documents per
+application domain, containing system-prompt guidelines, key entities
+(classes, interfaces, APIs), and links to critical source files.</li>
+<li><strong>Context Router:</strong> A lightweight classifier (keyword-
+or embedding-based) that scores queries against cores.</li>
+<li><strong>Dynamic Prompt Builder:</strong> An orchestrator that
+compiles base instructions, active core guidelines, user preferences,
+and tool definitions.</li>
+</ol>
+<p>Figure 1 summarizes the compilation pipeline: the router scores the
+query against cores; matched cores feed the prompt builder together with
+base system instructions; the assembled prompt is sent to the LLM.</p>
+<p><strong>Figure 1.</strong> Context compilation pipeline: User Query
+<span class="math inline">→</span> Context Router <span
+class="math inline">→</span> {Workspace Core, Comm Core, …} <span
+class="math inline">→</span> Dynamic Prompt Builder <span
+class="math inline">→</span> LLM.</p>
+<h2 id="taxonomy-of-context-cores">Taxonomy of Context Cores</h2>
+<p>We classify cores into five domains:</p>
+<ul>
+<li><strong>Personal/default core:</strong> User metadata, preferences,
+conversational history.</li>
+<li><strong>Workspace core:</strong> File system, document stores, local
+database schemas.</li>
+<li><strong>Communication core:</strong> Messaging and mail
+integrations.</li>
+<li><strong>System control core:</strong> Execution paths, scripting,
+input automation.</li>
+<li><strong>Browsing core:</strong> Browsers, web sessions, tabs, URL
+requests.</li>
+</ul>
+<h2 id="core-construction">Core Construction</h2>
+<p>Cores follow the <strong>minimal context principle:</strong></p>
+<ol type="1">
+<li><strong>Domain boundary mapping:</strong> Identify distinct
+responsibilities (e.g., billing versus database migration).</li>
+<li><strong>Entity extraction:</strong> Capture public interfaces,
+settings maps, and structural invariants.</li>
+<li><strong>Prose compression:</strong> Replace raw listings with
+concise rules (e.g., <em>“SQLite schema version 3.4”</em>).</li>
+<li><strong>Exclusions:</strong> State explicit out-of-scope boundaries
+to reduce hallucination.</li>
+</ol>
+<h2 id="curation-cost">Curation Cost</h2>
+<p>Context Cores introduce manual curation overhead. Across test
+projects:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Project</th>
+<th style="text-align: center;">Cores</th>
+<th style="text-align: center;">Authoring time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">MailAgent</td>
+<td style="text-align: center;">6</td>
+<td style="text-align: center;">~12 h</td>
+</tr>
+<tr>
+<td style="text-align: left;">Django REST Framework</td>
+<td style="text-align: center;">5</td>
+<td style="text-align: center;">~18 h</td>
+</tr>
+<tr>
+<td style="text-align: left;">Navorina</td>
+<td style="text-align: center;">11</td>
+<td style="text-align: center;">~40 h</td>
+</tr>
+<tr>
+<td style="text-align: left;">Oiloop</td>
+<td style="text-align: center;">5</td>
+<td style="text-align: center;">~10 h</td>
+</tr>
+</tbody>
+</table>
+<p>Initial overhead ranges from approximately 10 to 40 hours depending
+on scale and coupling.</p>
+<h1 id="experimental-methodology">Experimental Methodology</h1>
+<h2 id="testbed">Testbed</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Repository</th>
+<th style="text-align: center;">LOC</th>
+<th style="text-align: center;">Language</th>
+<th style="text-align: center;">Questions</th>
+<th style="text-align: center;">Cores</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">MailAgent</td>
+<td style="text-align: center;">320k</td>
+<td style="text-align: center;">TypeScript</td>
+<td style="text-align: center;">45</td>
+<td style="text-align: center;">6</td>
+</tr>
+<tr>
+<td style="text-align: left;">Django REST Framework</td>
+<td style="text-align: center;">~1.2M</td>
+<td style="text-align: center;">Python</td>
+<td style="text-align: center;">42</td>
+<td style="text-align: center;">5</td>
+</tr>
+<tr>
+<td style="text-align: left;">Navorina</td>
+<td style="text-align: center;">~270k</td>
+<td style="text-align: center;">Python</td>
+<td style="text-align: center;">42</td>
+<td style="text-align: center;">11</td>
+</tr>
+<tr>
+<td style="text-align: left;">Oiloop</td>
+<td style="text-align: center;">~180k</td>
+<td style="text-align: center;">Swift (macOS)</td>
+<td style="text-align: center;">20</td>
+<td style="text-align: center;">5</td>
+</tr>
+</tbody>
+</table>
+<h2 id="design">Design</h2>
+<p>We applied a within-subjects design with <code>gpt-4o-mini</code> as
+the response and judge model:</p>
+<ul>
+<li><strong>Condition A:</strong> All repository source and
+documentation.</li>
+<li><strong>Condition B:</strong> Routed core texts only.</li>
+<li><strong>Condition C:</strong> Static dependency subgraph (BFS
+expansion up to two hops).</li>
+</ul>
+<h2 id="metrics">Metrics</h2>
+<ul>
+<li><strong>Accuracy (0-3):</strong> Correctness of technical details,
+frameworks, and APIs.</li>
+<li><strong>Completeness (0-2):</strong> Required steps, side effects,
+and file locations.</li>
+<li><strong>Actionability (1-5):</strong> Readability and executability
+without placeholders.</li>
+<li><strong>Input tokens</strong> and <strong>latency
+(ms).</strong></li>
+<li><strong>Hallucination rate (%):</strong> Incorrect APIs, classes, or
+files referenced.</li>
+</ul>
+<h1 id="results">Results</h1>
+<p>Canonical runs: MailAgent <code>run-1781319187610</code>, Navorina
+<code>run-1781143403051</code>, Oiloop Phase 3.1
+<code>run-1781660908</code>, Django aggregate
+<code>run-drf-phase-2.1-aggregate</code> (per-question CSV not preserved
+for Django).</p>
+<h2 id="cross-project-comparison">Cross-Project Comparison</h2>
+<table>
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 9%" />
+<col style="width: 15%" />
+<col style="width: 12%" />
+<col style="width: 18%" />
+<col style="width: 15%" />
+<col style="width: 16%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: left;">Project</th>
+<th style="text-align: center;">Cond.</th>
+<th style="text-align: center;">Mean Acc.</th>
+<th style="text-align: center;">Halluc.</th>
+<th style="text-align: center;">Mean tokens</th>
+<th style="text-align: center;">Router F1</th>
+<th style="text-align: center;">CCR_tokens</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">MailAgent (45 Q)</td>
+<td style="text-align: center;">A</td>
+<td style="text-align: center;">1.38</td>
+<td style="text-align: center;">20%</td>
+<td style="text-align: center;">88,113</td>
+<td style="text-align: center;">-</td>
+<td style="text-align: center;">1×</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: center;">B</td>
+<td style="text-align: center;"><strong>1.67</strong></td>
+<td style="text-align: center;">18%</td>
+<td style="text-align: center;"><strong>10,615</strong></td>
+<td style="text-align: center;"><strong>1.00</strong></td>
+<td style="text-align: center;"><strong>8.3×</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: center;">C</td>
+<td style="text-align: center;">1.24</td>
+<td style="text-align: center;">22%</td>
+<td style="text-align: center;">20,955</td>
+<td style="text-align: center;">-</td>
+<td style="text-align: center;">4.2×</td>
+</tr>
+<tr>
+<td style="text-align: left;">Django REST (42 Q)†</td>
+<td style="text-align: center;">A</td>
+<td style="text-align: center;">1.35</td>
+<td style="text-align: center;">18%</td>
+<td style="text-align: center;">~76,000</td>
+<td style="text-align: center;">-</td>
+<td style="text-align: center;">1×</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: center;">B</td>
+<td style="text-align: center;"><strong>1.68</strong></td>
+<td style="text-align: center;">22%</td>
+<td style="text-align: center;"><strong>~2,000</strong></td>
+<td style="text-align: center;">0.72</td>
+<td style="text-align: center;"><strong>38×</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: center;">C</td>
+<td style="text-align: center;">1.40</td>
+<td style="text-align: center;"><strong>11%</strong></td>
+<td style="text-align: center;">~18,000</td>
+<td style="text-align: center;">-</td>
+<td style="text-align: center;">4.2×</td>
+</tr>
+<tr>
+<td style="text-align: left;">Navorina (42 Q)</td>
+<td style="text-align: center;">A</td>
+<td style="text-align: center;">1.00</td>
+<td style="text-align: center;">24%</td>
+<td style="text-align: center;">27,627</td>
+<td style="text-align: center;">-</td>
+<td style="text-align: center;">1×</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: center;">B</td>
+<td style="text-align: center;"><strong>1.19</strong></td>
+<td style="text-align: center;">19%</td>
+<td style="text-align: center;"><strong>2,021</strong></td>
+<td style="text-align: center;">0.87</td>
+<td style="text-align: center;"><strong>13.7×</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: center;">C</td>
+<td style="text-align: center;">0.93</td>
+<td style="text-align: center;"><strong>7%</strong></td>
+<td style="text-align: center;">11,858</td>
+<td style="text-align: center;">-</td>
+<td style="text-align: center;">2.3×</td>
+</tr>
+<tr>
+<td style="text-align: left;">Oiloop (20 Q, Ph 3.1)</td>
+<td style="text-align: center;">A</td>
+<td style="text-align: center;">0.75</td>
+<td style="text-align: center;">30%</td>
+<td style="text-align: center;">76,663</td>
+<td style="text-align: center;">-</td>
+<td style="text-align: center;">1×</td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: center;">B</td>
+<td style="text-align: center;"><strong>2.70</strong></td>
+<td style="text-align: center;"><strong>0%</strong></td>
+<td style="text-align: center;"><strong>6,334</strong></td>
+<td style="text-align: center;">1.00</td>
+<td style="text-align: center;"><strong>12.1×</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;"></td>
+<td style="text-align: center;">C</td>
+<td style="text-align: center;">2.35</td>
+<td style="text-align: center;">10%</td>
+<td style="text-align: center;">8,963</td>
+<td style="text-align: center;">-</td>
+<td style="text-align: center;">8.6×</td>
+</tr>
+</tbody>
+</table>
+<p>† Django: aggregate export only; bootstrap CI not computed (no
+<code>paired.csv</code>).</p>
+<h2 id="oiloop-phase-3.1">Oiloop Phase 3.1</h2>
+<p>Phase 3.1 used <strong>workspace-core v1.1.0</strong>, corrected gold
+labels, and gold routing (F1 = 1.0):</p>
+<ul>
+<li>B versus A accuracy: 2.70 versus 0.75 (Δ +1.95, N = 20).</li>
+<li>Bootstrap 95% CI on paired Δ (B − A): [+1.60, +2.30]; B exceeded A
+on 19/20 questions.</li>
+<li>Production keyword router (Run 3): F1 = 1.0, B = 2.75, hallucination
+0% (<code>run-prod-router-1781701118</code>).</li>
+<li>Cross-cutting ablation (Run 2, 8 Q): B 2.875 &gt; D (hybrid) 2.50
+&gt; C 2.375 - <span
+class="math inline"><em>H</em><sub>1<em>f</em></sub></span>
+rejected.</li>
+</ul>
+<p>Prior Oiloop runs (pre-v1.1 cores) showed B 1.20 versus A 1.00; core
+metadata richness (<span
+class="math inline"><em>H</em><sub>1<em>g</em></sub></span>) explains
+the Phase 3.1 improvement.</p>
+<h2 id="compression-and-latency">Compression and Latency</h2>
+<p>CCR_tokens (mean tokens A / mean tokens B): 8.3× MailAgent, 38×
+Django, 13.7× Navorina, 12.1× Oiloop Phase 3.1. Condition B latency was
+consistently lower than A on measured runs.</p>
+<h2 id="preference-pilots">Preference Pilots</h2>
+<p><strong>Author-rated blind pilot</strong> (10 questions, Phase 3.1
+answers, shuffled A/B): B preferred 7, equal 3, A 0 (n=10; not
+independent raters; source:
+<code>research/human-blind-pilot-oiloop.csv</code>).</p>
+<p><strong>Masked decode preference</strong> (prior Oiloop canonical): B
+preferred or equal on 75% of 20 questions.</p>
+<h1 id="discussion">Discussion</h1>
+<h2 id="core-richness-and-multi-core-routing">Core Richness and
+Multi-Core Routing</h2>
+<p>Early Oiloop runs showed thin B accuracy (1.05-1.20) when cores
+lacked enforcement chains and cross-cutting routes returned a single
+core. Phase 3.1 addressed this via expanded metadata (entities,
+invariants, rule-enforcement chains) and multi-core keyword routing (up
+to two cores on tied scores). B accuracy rose from 1.20 to 2.70.
+Production default on Oiloop is Condition B (<code>.fast</code>
+routing), not graph C.</p>
+<h2 id="when-graph-retrieval-wins">When Graph Retrieval Wins</h2>
+<p>On Django REST and Navorina, C achieved lower hallucination than B
+(11% versus 22%; 7% versus 19%) despite mixed accuracy. When trust
+dominates, C is the recommended default for those profiles.</p>
+<p>On Oiloop Phase 3.1, B exceeded C on accuracy and matched or beat C
+on hallucination. Graph C remains an opt-in path
+(<code>.deep</code>).</p>
+<h2 id="hybrid-core-plus-graph">Hybrid Core plus Graph</h2>
+<p>Condition D (routed core plus 15k-token graph supplement) did not
+match C accuracy at lower cost than B on eight cross-cutting questions.
+Multi-core B is the simpler strategy when cores are metadata-rich.</p>
+<h2 id="empirical-decision-matrix">Empirical Decision Matrix</h2>
+<table>
+<colgroup>
+<col style="width: 32%" />
+<col style="width: 32%" />
+<col style="width: 35%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: left;">Profile</th>
+<th style="text-align: left;">Default</th>
+<th style="text-align: left;">Evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Narrow domain, F1 <span
+class="math inline">≥</span> 0.95 (MailAgent, Oiloop prod)</td>
+<td style="text-align: left;">B</td>
+<td style="text-align: left;">MailAgent F1 = 1.0; Oiloop Run 3 F1 =
+1.0</td>
+</tr>
+<tr>
+<td style="text-align: left;">Integrated OSS, hallucination-sensitive
+(DRF, Navorina)</td>
+<td style="text-align: left;">C</td>
+<td style="text-align: left;">C hallucination &lt; B</td>
+</tr>
+<tr>
+<td style="text-align: left;">Integrated private app, rich cores (Oiloop
+Ph 3.1)</td>
+<td style="text-align: left;">B</td>
+<td style="text-align: left;">B 2.70; multi-core wins cross-cutting</td>
+</tr>
+<tr>
+<td style="text-align: left;">Full-repository dump</td>
+<td style="text-align: left;">None</td>
+<td style="text-align: left;">Dominated on cost and accuracy</td>
+</tr>
+</tbody>
+</table>
+<h1 id="limitations">Limitations</h1>
+<ol type="1">
+<li><strong>LLM-as-judge:</strong> All accuracy and hallucination scores
+use gpt-4o-mini; no inter-rater agreement with humans on the full
+149-question bank.</li>
+<li><strong>Expert preference:</strong> Masked decode and the author
+blind pilot are not substitutes for independent blind human
+studies.</li>
+<li><strong>Django REST:</strong> Only aggregate metrics exported;
+per-question <code>paired.csv</code> was not preserved.</li>
+<li><strong>Curation cost:</strong> 10-40 hours per codebase; semantic
+drift requires maintenance.</li>
+<li><strong>Router dependency:</strong> B quality scales with routing
+F1; mitigated by multi-core and semantic routing on DRF/Navorina.</li>
+<li><strong>Single model:</strong> All runs use gpt-4o-mini;
+generalization untested.</li>
+<li><strong>Oiloop A baseline variance:</strong> Condition A scores
+drifted between runs; Phase 3.1 is the reference.</li>
+</ol>
+<h1 id="future-work">Future Work</h1>
+<ol type="1">
+<li>Semi-automated core generation from AST and documentation.</li>
+<li>Context drift monitors (PR hooks when source links change).</li>
+<li>Full Django REST re-run with per-question export.</li>
+<li>Independent human blind study (10-question pilot protocol
+published).</li>
+<li>Multi-model replication on the Oiloop product path.</li>
+</ol>
+<h1 id="conclusion">Conclusion</h1>
+<p>Full-repository loading is token-inefficient for decision-scoped
+questions. Domain-oriented Context Cores with multi-core routing deliver
+8-38× compression (CCR_tokens) on open-source projects and ~12× on
+Oiloop Phase 3.1. When cores are metadata-rich, accuracy substantially
+exceeds monolithic dumps (Oiloop: B 2.70 versus A 0.75; bootstrap CI
+entirely above zero). Production defaults are stratum-dependent: B on
+narrow, high-F1 paths; C on hallucination-sensitive integrated OSS.
+Hybrid core-plus-graph did not outperform rich multi-core B on Oiloop
+cross-cutting questions. We release protocols, three full raw run
+exports, and an aggregate Django export with stated limitations.</p>
+<h1 id="references">References</h1>
+<p>[1] N. Liu et al., “Lost in the Middle: How Language Models Use Long
+Contexts,” <em>Transactions of the Association for Computational
+Linguistics</em>, vol. 12, pp. 157-173, 2024.</p>
+<p>[2] O. Press et al., “Train Short, Test Long: Attention with Linear
+Biases Enables Input Length Extrapolation,” <em>ICLR</em>, 2022.</p>
+<p>[3] E. Evans, <em>Domain-Driven Design: Tackling Complexity in the
+Heart of Software</em>. Addison-Wesley, 2003.</p>
+<p>[4] P. Lewis et al., “Retrieval-Augmented Generation for
+Knowledge-Intensive NLP Tasks,” <em>Advances in Neural Information
+Processing Systems</em>, 2020.</p>
+<p>[5] D. Edge et al., “From Local to Global: A GraphRAG Approach to
+Query-Focused Summarization,” <em>arXiv:2404.16130</em>, 2024.</p>
+<p>[6] D. Guo et al., “GraphCodeBERT: Pre-training Code Representations
+with Data Flow,” <em>International Conference on Learning
+Representations</em>, 2021.</p>
+<p>[7] H. Jiang et al., “LLMLingua: Compressing Prompts for Accelerated
+Inference of Large Language Models,” <em>EMNLP</em>, 2023.</p>
+<h1 id="appendix-a-example-evaluation-questions">Appendix A: Example
+Evaluation Questions</h1>
+<ul>
+<li><strong>OL01:</strong> How does Oiloop store user preferences and
+chat history?</li>
+<li><strong>OL05:</strong> How does Oiloop handle sandboxed folder
+access on macOS?</li>
+<li><strong>OL15:</strong> How does EventKit Reminders authorization
+avoid freezing Oiloop in background mode?</li>
+<li><strong>OL18:</strong> How are Safari tab titles and URLs
+fetched?</li>
+</ul>
+<h1 id="appendix-b-context-core-template">Appendix B: Context Core
+Template</h1>
+<pre class="markdown"><code># [Core Name] Core
+
+## Purpose
+Decision domain description.
+
+## Key Entities
+- `EntityName`: Class/struct and responsibility.
+
+## Invariants &amp; Rules
+1. Mandatory checks and constraints.
+
+## Exclusions
+- Explicit out-of-scope boundaries.</code></pre>
+<h1 id="appendix-c-router-sketch">Appendix C: Router Sketch</h1>
+<pre class="swift"><code>struct ContextRouter {
+    static func route(userInput: String) -&gt; Set&lt;ContextCore&gt; {
+        let lower = userInput.lowercased()
+        // Score cores by keyword presence; return matching set
+    }
+}</code></pre>
+<h1 id="appendix-d-blinded-rater-instructions">Appendix D: Blinded Rater
+Instructions</h1>
+<ol type="1">
+<li>Answers are randomized as “Option 1” and “Option 2.”</li>
+<li>Rate each option on accuracy (0-3), completeness (0-2), and
+actionability (1-5).</li>
+<li>Select the preferred option without knowing the retrieval
+source.</li>
+</ol>
+<h1 id="data-availability">Data Availability</h1>
+<p>Research repository:
+<code>https://github.com/navorina-labs/AI-Context-OS</code></p>
+<p>Evaluation dataset: <code>research/questions.md</code></p>
+<p>Raw metrics: <code>context-os/evaluations/</code> and
+<code>experiments/*/runs/</code></p>
+</body>
+</html>

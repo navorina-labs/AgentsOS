@@ -1,0 +1,880 @@
+{
+  "version": 1,
+  "suite": "design-agent-baseline",
+  "rubric": {
+    "dimensions": [
+      {
+        "id": "framing",
+        "label": "Task framing",
+        "weight": 10,
+        "review": "Identifies the primary user, job, outcome, constraints, and consequential assumptions."
+      },
+      {
+        "id": "hierarchy",
+        "label": "Hierarchy and composition",
+        "weight": 15,
+        "review": "Creates a coherent reading order, clear action hierarchy, grouping, alignment, and density."
+      },
+      {
+        "id": "behavior",
+        "label": "Interaction and state completeness",
+        "weight": 15,
+        "review": "Defines the main flow plus applicable loading, empty, error, success, disabled, focus, and recovery behavior."
+      },
+      {
+        "id": "accessibility",
+        "label": "Accessibility",
+        "weight": 15,
+        "review": "Specifies semantics, keyboard and focus behavior, labels, announcements, contrast, reflow, and motion alternatives where applicable."
+      },
+      {
+        "id": "resilience",
+        "label": "Responsive and content resilience",
+        "weight": 10,
+        "review": "Handles narrow and wide layouts, long or localized content, zoom or text scaling, overflow, and input-method changes."
+      },
+      {
+        "id": "system",
+        "label": "Design-system coherence",
+        "weight": 10,
+        "review": "Uses semantic foundations and reusable component contracts without inventing unnecessary visual languages."
+      },
+      {
+        "id": "feasibility",
+        "label": "Implementation readiness",
+        "weight": 10,
+        "review": "Provides precise, testable behavior and acceptance criteria with realistic implementation constraints."
+      },
+      {
+        "id": "evidence",
+        "label": "Evidence and claim discipline",
+        "weight": 10,
+        "review": "Separates facts, assumptions, recommendations, and preferences; does not invent research, metrics, or citations."
+      },
+      {
+        "id": "clarity",
+        "label": "Clarity and precision",
+        "weight": 5,
+        "review": "Prioritizes important decisions, avoids vague adjectives, and makes the next action unambiguous."
+      }
+    ],
+    "scale": {
+      "0": "Absent, contradictory, or actively harmful.",
+      "1": "Major gaps; unusable without substantial redesign.",
+      "2": "Partial coverage with important defects.",
+      "3": "Competent and usable, with identifiable omissions.",
+      "4": "Strong, specific, and implementation-ready.",
+      "5": "Exceptional: complete, economical, and robust under edge cases."
+    },
+    "global_fatal_errors": [
+      "Invents user research, analytics, citations, or product facts.",
+      "Contradicts an explicit task constraint.",
+      "Makes the core task inaccessible with no equivalent alternative.",
+      "Omits confirmation or recovery for an explicitly destructive irreversible action."
+    ]
+  },
+  "cases": [
+    {
+      "id": "transfer-confirmation",
+      "category": "product-spec",
+      "prompt": "cases/01-transfer-confirmation.md",
+      "must_cover": [
+        ["review", "confirmation", "подтвержден"],
+        ["recipient", "получател"],
+        ["amount", "сумм"],
+        ["error", "ошиб"],
+        ["accessibility", "доступност", "keyboard", "клавиатур"],
+        ["acceptance", "given", "критери"]
+      ],
+      "case_fatal_errors": [
+        "Allows an irreversible transfer without explicit review and confirmation.",
+        "Hides fees or total debit from the confirmation decision."
+      ]
+    },
+    {
+      "id": "ai-answer-trust",
+      "category": "ai-product",
+      "prompt": "cases/02-ai-answer-trust.md",
+      "must_cover": [
+        ["source", "citation", "источник"],
+        ["confidence", "uncertain", "уверен", "неопредел"],
+        ["loading", "streaming", "загруз", "генерац"],
+        ["error", "retry", "ошиб", "повтор"],
+        ["feedback", "обратн"],
+        ["accessibility", "доступност"]
+      ],
+      "case_fatal_errors": [
+        "Presents generated claims as verified when source support is missing."
+      ]
+    },
+    {
+      "id": "operations-dashboard",
+      "category": "enterprise",
+      "prompt": "cases/03-operations-dashboard.md",
+      "must_cover": [
+        ["hierarchy", "priority", "иерарх", "приоритет"],
+        ["filter", "фильтр"],
+        ["table", "таблиц"],
+        ["empty", "no results", "пуст", "нет результат"],
+        ["responsive", "narrow", "адаптив", "узк"],
+        ["keyboard", "focus", "клавиатур", "фокус"]
+      ],
+      "case_fatal_errors": [
+        "Removes access to critical incident data on narrow layouts."
+      ]
+    },
+    {
+      "id": "mobile-onboarding",
+      "category": "mobile",
+      "prompt": "cases/04-mobile-onboarding.md",
+      "must_cover": [
+        ["progress", "step", "прогресс", "шаг"],
+        ["permission", "разрешен"],
+        ["skip", "later", "пропуст", "позже"],
+        ["error", "ошиб"],
+        ["accessibility", "screen reader", "доступност"],
+        ["success", "activation", "успех", "активац"]
+      ],
+      "case_fatal_errors": [
+        "Uses coercive permission prompts or blocks the product before permission is contextually necessary."
+      ]
+    },
+    {
+      "id": "destructive-modal",
+      "category": "accessibility",
+      "prompt": "cases/05-destructive-modal.md",
+      "must_cover": [
+        ["dialog", "modal", "диалог", "модал"],
+        ["focus", "фокус"],
+        ["keyboard", "escape", "клавиатур"],
+        ["accessible name", "aria", "доступн"],
+        ["confirmation", "undo", "подтвержд", "отмен"],
+        ["error", "ошиб"]
+      ],
+      "case_fatal_errors": [
+        "Defaults focus to the destructive action.",
+        "Provides no confirmation or recovery for permanent deletion."
+      ]
+    },
+    {
+      "id": "localization-stress",
+      "category": "responsive-content",
+      "prompt": "cases/06-localization-stress.md",
+      "must_cover": [
+        ["localization", "translation", "локализац", "перевод"],
+        ["rtl", "right-to-left", "справа налево"],
+        ["zoom", "text scaling", "масштаб", "увеличен"],
+        ["overflow", "wrap", "переполн", "перенос"],
+        ["responsive", "адаптив"],
+        ["test", "acceptance", "тест", "критери"]
+      ],
+      "case_fatal_errors": [
+        "Solves overflow by truncating information required to complete the task."
+      ]
+    },
+    {
+      "id": "gesture-sheet",
+      "category": "motion",
+      "prompt": "cases/07-gesture-sheet.md",
+      "must_cover": [
+        ["drag", "gesture", "перетяг", "жест"],
+        ["velocity", "скорост"],
+        ["interrupt", "прерыв"],
+        ["boundary", "overscroll", "границ"],
+        ["reduced motion", "prefers-reduced-motion", "снижен"],
+        ["keyboard", "button", "клавиатур", "кнопк"]
+      ],
+      "case_fatal_errors": [
+        "Makes the gesture the only way to reach or dismiss the sheet.",
+        "Specifies ornamental motion with no reduced-motion behavior."
+      ]
+    },
+    {
+      "id": "token-governance",
+      "category": "design-system",
+      "prompt": "cases/08-token-governance.md",
+      "must_cover": [
+        ["semantic", "семантич"],
+        ["token", "токен"],
+        ["migration", "deprecation", "миграц", "устар"],
+        ["component", "компонент"],
+        ["governance", "owner", "управлен", "владел"],
+        ["acceptance", "test", "критери", "тест"]
+      ],
+      "case_fatal_errors": [
+        "Maps every raw value directly to a new semantic token without consolidation or usage intent."
+      ]
+    },
+    {
+      "id": "checkout-critique",
+      "category": "critique",
+      "prompt": "cases/09-checkout-critique.md",
+      "must_cover": [
+        ["evidence", "видно", "наблюд"],
+        ["impact", "влия"],
+        ["recommendation", "рекоменд"],
+        ["confidence", "уверен"],
+        ["priority", "severity", "приоритет", "критич"],
+        ["accessibility", "доступност"]
+      ],
+      "case_fatal_errors": [
+        "Claims user behavior or conversion impact as fact without evidence."
+      ]
+    },
+    {
+      "id": "launch-deck",
+      "category": "presentation",
+      "prompt": "cases/10-launch-deck.md",
+      "must_cover": [
+        ["narrative", "story", "нарратив", "истори"],
+        ["slide", "слайд"],
+        ["hierarchy", "иерарх"],
+        ["evidence", "source", "доказ", "источник"],
+        ["responsive", "projection", "адаптив", "проектор"],
+        ["accessibility", "contrast", "доступност", "контраст"]
+      ],
+      "case_fatal_errors": [
+        "Invents launch metrics or customer quotes."
+      ]
+    },
+    {
+      "id": "visual-dashboard-audit",
+      "category": "visual-critique",
+      "prompt": "cases/11-visual-dashboard-audit.md",
+      "assets": [
+        {"path": "assets/visual-dashboard.png", "role": "screenshot"},
+        {"path": "assets/visual-dashboard.html", "role": "source"}
+      ],
+      "must_cover": [
+        ["visible", "screenshot", "визуал", "скриншот"],
+        ["hierarchy", "priority", "иерарх", "приоритет"],
+        ["grouping", "spacing", "alignment", "групп", "интервал", "выравнив"],
+        ["system", "component", "foundation", "систем", "компонент"],
+        ["responsive", "viewport", "адаптив", "экран"],
+        ["verify", "render", "провер", "рендер"]
+      ],
+      "case_fatal_errors": [
+        "Claims interaction behavior or accessibility conformance from the screenshot alone.",
+        "Invents user outcomes or research not present in the supplied artifacts."
+      ]
+    },
+    {
+      "id": "responsive-dashboard-comparison",
+      "category": "responsive-visual-critique",
+      "prompt": "cases/12-responsive-dashboard-comparison.md",
+      "assets": [
+        {"path": "assets/visual-dashboard-1440x1000.png", "role": "screenshot"},
+        {"path": "assets/visual-dashboard-1024x1000.png", "role": "screenshot"},
+        {"path": "assets/visual-dashboard-768x1000.png", "role": "screenshot"},
+        {"path": "assets/visual-dashboard-390x1000.png", "role": "screenshot"},
+        {"path": "assets/visual-dashboard.html", "role": "source"}
+      ],
+      "must_cover": [
+        ["viewport", "width", "ширин", "экран"],
+        ["persistent", "all widths", "постоян", "все"],
+        ["transition", "between", "переход", "между"],
+        ["clip", "overflow", "обрез", "переполн"],
+        ["breakpoint", "interval", "брейкпоинт", "интервал"],
+        ["verify", "render", "провер", "рендер"]
+      ],
+      "case_fatal_errors": [
+        "Invents an exact breakpoint that was not reproduced.",
+        "Claims clipped or overflowed content is unreachable without testing scrolling.",
+        "Claims interaction behavior, accessibility conformance, or user outcomes from static screenshots alone."
+      ]
+    },
+    {
+      "id": "dashboard-before-after",
+      "category": "before-after-visual-verification",
+      "prompt": "cases/13-dashboard-before-after.md",
+      "assets": [
+        {"path": "assets/visual-dashboard-1440x1000.png", "role": "screenshot"},
+        {"path": "assets/visual-dashboard-1024x1000.png", "role": "screenshot"},
+        {"path": "assets/visual-dashboard-768x1000.png", "role": "screenshot"},
+        {"path": "assets/visual-dashboard-390x1000.png", "role": "screenshot"},
+        {"path": "assets/visual-dashboard.html", "role": "source"},
+        {"path": "assets/visual-dashboard-after-1440x1000.png", "role": "screenshot"},
+        {"path": "assets/visual-dashboard-after-1024x1000.png", "role": "screenshot"},
+        {"path": "assets/visual-dashboard-after-768x1000.png", "role": "screenshot"},
+        {"path": "assets/visual-dashboard-after-390x1000.png", "role": "screenshot"},
+        {"path": "assets/visual-dashboard-after.html", "role": "source"}
+      ],
+      "must_cover": [
+        ["before", "after", "до", "после"],
+        ["improved", "improvement", "улучш"],
+        ["regression", "regressed", "регресс"],
+        ["unchanged", "remaining", "без измен", "оста"],
+        ["visible", "source-confirmed", "unverified", "видно", "подтвержден"],
+        ["promote", "revise", "inconclusive", "вердикт", "принят"]
+      ],
+      "case_fatal_errors": [
+        "Declares the after artifact improved without checking paired evidence and regressions.",
+        "Rewards removal of task-critical content as simplification.",
+        "Claims runtime behavior, accessibility conformance, or user outcomes from static artifacts.",
+        "Calls the comparison controlled when capture conditions or task data are materially mismatched."
+      ]
+    },
+    {
+      "id": "dashboard-interaction-audit",
+      "category": "interaction-state-verification",
+      "prompt": "cases/14-dashboard-interaction-audit.md",
+      "assets": [
+        {"path": "assets/dashboard-interaction-default-1440x1000.png", "role": "screenshot"},
+        {"path": "assets/dashboard-interaction-keyboard-focus-1440x1000.png", "role": "screenshot"},
+        {"path": "assets/dashboard-interaction-ticket-selected-1440x1000.png", "role": "screenshot"},
+        {"path": "assets/dashboard-interaction-assignment-loading-1440x1000.png", "role": "screenshot"},
+        {"path": "assets/dashboard-interaction-assignment-error-1440x1000.png", "role": "screenshot"},
+        {"path": "assets/dashboard-interaction-assignment-success-1440x1000.png", "role": "screenshot"},
+        {"path": "assets/dashboard-interaction-menu-open-390x1000.png", "role": "screenshot"},
+        {"path": "assets/visual-dashboard-after.html", "role": "source"},
+        {"path": "assets/dashboard-interactions.js", "role": "source"},
+        {"path": "assets/dashboard-interaction-trace.json", "role": "reference"}
+      ],
+      "must_cover": [
+        ["interaction-observed", "trace", "наблюд", "трасс"],
+        ["focus", "keyboard", "tab", "фокус", "клавиатур"],
+        ["selection", "selected", "bulk", "выбран", "массов"],
+        ["loading", "busy", "загруз", "выполн"],
+        ["error", "retry", "ошиб", "повтор"],
+        ["success", "synchron", "успех", "синхрон"]
+      ],
+      "case_fatal_errors": [
+        "Claims full keyboard, touch, or screen-reader support from the limited trace.",
+        "Claims backend persistence or network recovery from the local harness.",
+        "Treats screenshots as proof of transition timing, animation quality, or interruption behavior.",
+        "Misses a task-critical contradiction between success feedback and another visible representation of the same entity."
+      ]
+    },
+    {
+      "id": "dashboard-accessibility-modality-audit",
+      "category": "accessibility-modality-verification",
+      "prompt": "cases/15-dashboard-accessibility-modality-audit.md",
+      "assets": [
+        {"path": "assets/dashboard-a11y-keyboard-assign-focus-1440x1000.png", "role": "screenshot"},
+        {"path": "assets/dashboard-a11y-keyboard-loading-1440x1000.png", "role": "screenshot"},
+        {"path": "assets/dashboard-a11y-keyboard-error-focus-1440x1000.png", "role": "screenshot"},
+        {"path": "assets/dashboard-a11y-keyboard-success-focus-1440x1000.png", "role": "screenshot"},
+        {"path": "assets/dashboard-a11y-mobile-menu-focus-390x1000.png", "role": "screenshot"},
+        {"path": "assets/dashboard-a11y-mobile-menu-open-390x1000.png", "role": "screenshot"},
+        {"path": "assets/dashboard-a11y-mobile-menu-escape-390x1000.png", "role": "screenshot"},
+        {"path": "assets/dashboard-a11y-forced-colors-1440x1000.png", "role": "screenshot"},
+        {"path": "assets/dashboard-a11y-reduced-motion-1440x1000.png", "role": "screenshot"},
+        {"path": "assets/dashboard-a11y-reflow-200pct-equivalent-720x500-at-2x.png", "role": "screenshot"},
+        {"path": "assets/visual-dashboard-after.html", "role": "source"},
+        {"path": "assets/dashboard-interactions.js", "role": "source"},
+        {"path": "assets/dashboard-accessibility-trace.json", "role": "reference"},
+        {"path": "assets/dashboard-accessibility-tree.json", "role": "reference"}
+      ],
+      "must_cover": [
+        ["keyboard", "tab", "focus", "клавиатур", "фокус"],
+        ["error", "retry", "recovery", "ошиб", "повтор", "восстанов"],
+        ["escape", "dismiss", "disclosure", "закры", "раскры"],
+        ["accessibility tree", "semantics-observed", "ax tree", "семантик"],
+        ["forced colors", "reduced motion", "media", "контраст", "движ"],
+        ["reflow", "zoom", "720", "масштаб", "перекомпонов"]
+      ],
+      "case_fatal_errors": [
+        "Claims named screen-reader, speech, braille, or live-region output from the Chrome accessibility tree.",
+        "Calls the 720 CSS px at device scale factor 2 reflow equivalent actual browser zoom.",
+        "Claims comprehensive keyboard, forced-colors, reduced-motion, or accessibility-conformance coverage from the bounded trace.",
+        "Misses the recorded loss of focus during assignment or the failed Escape dismissal contract."
+      ]
+    },
+    {
+      "id": "dashboard-content-resilience-audit",
+      "category": "content-resilience-verification",
+      "prompt": "cases/16-dashboard-content-resilience-audit.md",
+      "assets": [
+        {"path": "assets/dashboard-content-pseudo-1440x1000.png", "role": "screenshot"},
+        {"path": "assets/dashboard-content-pseudo-768x1000.png", "role": "screenshot"},
+        {"path": "assets/dashboard-content-pseudo-390x1000.png", "role": "screenshot"},
+        {"path": "assets/dashboard-content-pseudo-320x1000.png", "role": "screenshot"},
+        {"path": "assets/dashboard-content-rtl-1440x1000.png", "role": "screenshot"},
+        {"path": "assets/dashboard-content-rtl-390x1000.png", "role": "screenshot"},
+        {"path": "assets/dashboard-content-text-200-1440x1000.png", "role": "screenshot"},
+        {"path": "assets/dashboard-content-text-200-390x1000.png", "role": "screenshot"},
+        {"path": "assets/visual-dashboard-after.html", "role": "source"},
+        {"path": "assets/dashboard-content-stress.js", "role": "source"},
+        {"path": "assets/dashboard-content-stress-trace.json", "role": "reference"}
+      ],
+      "must_cover": [
+        ["pseudo", "localization", "string growth", "псевдо", "локализац", "строк"],
+        ["overflow", "scrollwidth", "переполн", "ширин"],
+        ["rtl", "arabic", "direction", "араб", "направлен"],
+        ["bidi", "mixed", "identifier", "смешан", "идентифик"],
+        ["text-only", "200%", "enlargement", "увеличен", "текст"],
+        ["320", "reflow", "zoom", "перекомпонов", "масштаб"]
+      ],
+      "case_fatal_errors": [
+        "Calls pseudo-localized stress strings a production translation or judges German language quality from them.",
+        "Calls the author-stylesheet text-only enlargement actual browser zoom, OS text scaling, Dynamic Type, or a user setting.",
+        "Calls the 320 CSS px viewport proof that 400% browser zoom was performed.",
+        "Solves task-critical overflow by silently truncating required labels, identifiers, status, or actions.",
+        "Misses the recorded page-level overflow in the pseudo-localized 768, 390, and 320 px states or the text-200 390 px state.",
+        "Claims RTL localization is complete while English control values remain visible in the supplied render."
+      ]
+    },
+    {
+      "id": "dashboard-design-system-audit",
+      "category": "design-system-evidence",
+      "prompt": "cases/17-dashboard-design-system-audit.md",
+      "assets": [
+        {"path": "assets/visual-dashboard-after-1440x1000.png", "role": "screenshot"},
+        {"path": "assets/visual-dashboard-after-390x1000.png", "role": "screenshot"},
+        {"path": "assets/dashboard-a11y-keyboard-assign-focus-1440x1000.png", "role": "screenshot"},
+        {"path": "assets/dashboard-interaction-assignment-error-1440x1000.png", "role": "screenshot"},
+        {"path": "assets/dashboard-a11y-forced-colors-1440x1000.png", "role": "screenshot"},
+        {"path": "assets/visual-dashboard-after.html", "role": "source"},
+        {"path": "assets/dashboard-interactions.js", "role": "source"},
+        {"path": "assets/dashboard-css-system-audit.json", "role": "reference"}
+      ],
+      "must_cover": [
+        ["token", "custom property", "токен", "переменн"],
+        ["raw", "literal", "повтор", "значен"],
+        ["component", "state", "компонент", "состояни"],
+        ["semantic", "primitive", "alias", "семантич", "примитив"],
+        ["migration", "deprecation", "rollout", "миграц", "устар"],
+        ["scope", "inventory", "unverified", "охват", "инвентар"]
+      ],
+      "case_fatal_errors": [
+        "Creates one token for every repeated raw value without proving shared semantic intent.",
+        "Introduces OKLCH or another new color notation for an isolated audit despite the established hex/RGB source format.",
+        "Claims product-wide design-system adoption, reusable component APIs, documentation, ownership, or governance from the single fixture.",
+        "Claims contrast, dark-mode readiness, or accessibility conformance from color literals, token names, or screenshots without rendered-pair measurements.",
+        "Treats equal numeric values as proof of equal semantic meaning.",
+        "Ignores that the interaction harness injects runtime styles outside the static CSS inventory."
+      ]
+    },
+    {
+      "id": "motion-runtime-evidence-audit",
+      "category": "motion-runtime-evidence",
+      "prompt": "cases/18-motion-runtime-evidence-audit.md",
+      "assets": [
+        {
+          "path": "assets/motion-workbench-default-1280x900.png",
+          "role": "screenshot"
+        },
+        {
+          "path": "assets/motion-workbench-panel-opening-mid-1280x900.png",
+          "role": "screenshot"
+        },
+        {
+          "path": "assets/motion-workbench-panel-reversing-mid-1280x900.png",
+          "role": "screenshot"
+        },
+        {
+          "path": "assets/motion-workbench-reduced-motion-panel-mid-1280x900.png",
+          "role": "screenshot"
+        },
+        {
+          "path": "assets/motion-workbench-toast-visible-1280x900.png",
+          "role": "screenshot"
+        },
+        {
+          "path": "assets/motion-workbench-toast-expired-1280x900.png",
+          "role": "screenshot"
+        },
+        {
+          "path": "assets/motion-workbench-refresh-stagger-mid-1280x900.png",
+          "role": "screenshot"
+        },
+        {
+          "path": "assets/motion-workbench.html",
+          "role": "source"
+        },
+        {
+          "path": "assets/motion-workbench-trace.json",
+          "role": "reference"
+        }
+      ],
+      "must_cover": [
+        [
+          "interrupt",
+          "reverse",
+          "прерыв",
+          "реверс"
+        ],
+        [
+          "transition: all",
+          "property",
+          "right",
+          "свойств"
+        ],
+        [
+          "reduced motion",
+          "prefers-reduced-motion",
+          "снижен"
+        ],
+        [
+          "undo",
+          "toast",
+          "timer",
+          "отмен",
+          "таймер"
+        ],
+        [
+          "refresh",
+          "stagger",
+          "routine",
+          "обновлен",
+          "каскад"
+        ],
+        [
+          "performance",
+          "unverified",
+          "smoothness",
+          "производ",
+          "не провер"
+        ]
+      ],
+      "case_fatal_errors": [
+        "Claims smoothness, stable FPS, Core Web Vitals, GPU/compositor execution, or absence of jank from still screenshots or the short Performance.getMetrics sample.",
+        "Claims complete interruptibility or velocity continuity from the single sampled reversal.",
+        "Calls reduced motion supported while the trace shows the same 420 ms panel transition and the continuing pulse animation.",
+        "Misses that the actionable Undo toast is automatically removed.",
+        "Misses that routine Refresh replays the staggered card entrance.",
+        "Claims a memory leak or no memory leak from the short heap delta."
+      ]
+    },
+    {
+      "id": "holistic-interface-review",
+      "category": "cross-discipline-orchestration",
+      "prompt": "cases/19-holistic-interface-review.md",
+      "assets": [
+        {
+          "path": "assets/holistic-review-default-1280x900.png",
+          "role": "screenshot"
+        },
+        {
+          "path": "assets/holistic-review-dialog-open-1280x900.png",
+          "role": "screenshot"
+        },
+        {
+          "path": "assets/holistic-review-dialog-error-1280x900.png",
+          "role": "screenshot"
+        },
+        {
+          "path": "assets/holistic-review-narrow-390x900.png",
+          "role": "screenshot"
+        },
+        {
+          "path": "assets/holistic-review-workbench.html",
+          "role": "source"
+        },
+        {
+          "path": "assets/holistic-review-trace.json",
+          "role": "reference"
+        }
+      ],
+      "must_cover": [
+        [
+          "accessibility",
+          "focus",
+          "modal",
+          "доступност",
+          "фокус"
+        ],
+        [
+          "layout",
+          "clipped",
+          "reachable",
+          "компонов",
+          "обрез"
+        ],
+        [
+          "writing",
+          "copy",
+          "consequence",
+          "текст",
+          "последств"
+        ],
+        [
+          "typography",
+          "truncat",
+          "line-height",
+          "типограф",
+          "усеч"
+        ],
+        [
+          "color",
+          "contrast",
+          "2.54",
+          "цвет",
+          "контраст"
+        ],
+        [
+          "ui",
+          "transition: all",
+          "radius",
+          "polish",
+          "интерфейс"
+        ],
+        [
+          "considered",
+          "rejected",
+          "отклон",
+          "не стали"
+        ],
+        [
+          "block",
+          "high",
+          "verdict",
+          "вердикт"
+        ]
+      ],
+      "case_fatal_errors": [
+        "Returns six disconnected domain reports instead of one consolidated findings table.",
+        "Reports the same narrow table clipping root cause independently under layout, typography, and accessibility.",
+        "Claims page-level horizontal overflow at 390 CSS px even though the trace records equal document scroll and client widths; the observed defect is ancestor clipping without an internal scroller.",
+        "Judges the muted-text contrast by eye or ignores the recorded 2.54:1 WCAG 2 measurement.",
+        "Calls the dialog evidence a named screen-reader test, complete keyboard or touch coverage, accessibility conformance, or proof of every modal path.",
+        "Introduces OKLCH, a new component library, or a motion dependency into the established plain-CSS hex/RGB fixture without a migration requirement.",
+        "Returns Approve or Needs changes while HIGH task-blocking modal or narrow-layout findings remain.",
+        "Edits the supplied interface despite the explicitly read-only review request.",
+        "Claims smoothness, compositor/GPU behavior, user outcomes, or repository-wide prevalence from the supplied fixture."
+      ]
+    },
+    {
+      "id": "structured-ui-specification",
+      "category": "machine-readable-specification",
+      "prompt": "cases/20-structured-ui-specification.md",
+      "assets": [
+        {
+          "path": "assets/ui-spec-brief.md",
+          "role": "reference"
+        },
+        {
+          "path": "assets/ui-spec-invalid.json",
+          "role": "reference"
+        }
+      ],
+      "must_cover": [
+        [
+          "schema_version",
+          "acceptance_criteria",
+          "open_questions"
+        ],
+        [
+          "confirmed",
+          "evidence_ids"
+        ],
+        [
+          "proposed_default_validate",
+          "requires_decision"
+        ],
+        [
+          "core_task",
+          "state",
+          "responsive",
+          "accessibility",
+          "content_stress",
+          "recovery"
+        ],
+        [
+          "focus_visible",
+          "disabled",
+          "loading",
+          "error",
+          "success"
+        ],
+        [
+          "contract_ids",
+          "verifies_contract_ids"
+        ],
+        [
+          "session",
+          "owner",
+          "reactivation",
+          "self"
+        ]
+      ],
+      "case_fatal_errors": [
+        "Returns prose or a Markdown fence instead of exactly one parseable JSON object.",
+        "Fails the supplied JSON Schema or semantic validator.",
+        "Marks an unsupported decision or contract confirmed without an evidence reference.",
+        "Presents self-deactivation, final-owner eligibility, reactivation, or expired-session preservation as decided product behavior.",
+        "Preserves the arbitrary 768px breakpoint as confirmed product truth instead of defining content-driven transitions.",
+        "Omits any required acceptance coverage group: core_task, state, responsive, accessibility, content_stress, or recovery.",
+        "Leaves an implementation-ready contract without a verifying acceptance criterion.",
+        "Leaves required interactive states neither specified nor explicitly marked not applicable with a concrete reason.",
+        "Invents API routes, backend/storage behavior, analytics events, authorization policy, user research, fixed visual tokens, or numeric motion thresholds.",
+        "Uses vague normative adjectives from the invalid draft as requirements.",
+        "Marks the specification approved while blocking policy questions remain."
+      ]
+    },
+    {
+      "id": "spec-implementation-comparison",
+      "category": "specification-conformance",
+      "prompt": "cases/21-spec-implementation-comparison.md",
+      "assets": [
+        {
+          "path": "assets/ui-spec-valid.json",
+          "role": "reference"
+        },
+        {
+          "path": "assets/transfer-implementation-workbench.html",
+          "role": "source"
+        },
+        {
+          "path": "assets/transfer-implementation-evidence.json",
+          "role": "reference"
+        },
+        {
+          "path": "assets/transfer-implementation-default-720x900.png",
+          "role": "screenshot"
+        },
+        {
+          "path": "assets/transfer-implementation-narrow-320x900.png",
+          "role": "screenshot"
+        },
+        {
+          "path": "assets/transfer-implementation-error-720x900.png",
+          "role": "screenshot"
+        },
+        {
+          "path": "assets/transfer-implementation-reduced-motion-720x900.png",
+          "role": "screenshot"
+        }
+      ],
+      "must_cover": [
+        [
+          "does_not_conform",
+          "does not conform",
+          "не соответствует"
+        ],
+        [
+          "contract-review-before-submit",
+          "contract-session-policy"
+        ],
+        [
+          "pass",
+          "fail",
+          "unverified",
+          "unresolved"
+        ],
+        [
+          "sha-256",
+          "sha256",
+          "hash",
+          "хэш"
+        ],
+        [
+          "responsive",
+          "320",
+          "horizontal overflow"
+        ],
+        [
+          "focus",
+          "announcement",
+          "screen reader",
+          "фокус"
+        ],
+        [
+          "reduced motion",
+          "spinner",
+          "animation"
+        ],
+        [
+          "remediation",
+          "root cause",
+          "исправ",
+          "причин"
+        ]
+      ],
+      "case_fatal_errors": [
+        "Returns conforms or inconclusive despite one or more failed implementation-ready contracts.",
+        "Treats missing or unverified evidence as a pass.",
+        "Scores the requires_decision session-policy contract as implementation pass or fail.",
+        "Ignores the specification and implementation SHA-256 bindings.",
+        "Claims backend persistence, real network recovery, named screen-reader output, complete modality coverage, performance, usability outcomes, or product-wide conformance from the supplied evidence.",
+        "Duplicates one responsive/content root cause as multiple independent remediation programs without synthesis.",
+        "Recommends changing the confirmed specification merely to match the faulty implementation.",
+        "Edits the supplied implementation or evidence despite the read-only comparison request."
+      ]
+    },
+    {
+      "id": "contract-driven-repair",
+      "category": "implementation-repair",
+      "prompt": "cases/22-contract-driven-repair.md",
+      "workspace_write": true,
+      "collect_artifacts": [
+        "attachments/transfer-implementation-workbench.html",
+        "repair-evidence/implementation-evidence.json",
+        "repair-evidence/repair-incomplete-720x900.png",
+        "repair-evidence/repair-complete-720x900.png",
+        "repair-evidence/repair-pending-720x900.png",
+        "repair-evidence/repair-error-720x900.png",
+        "repair-evidence/repair-narrow-320x900.png",
+        "repair-evidence/repair-reduced-motion-720x900.png"
+      ],
+      "assets": [
+        {
+          "path": "assets/ui-spec-valid.json",
+          "role": "reference"
+        },
+        {
+          "path": "assets/transfer-implementation-workbench.html",
+          "role": "source"
+        },
+        {
+          "path": "assets/transfer-implementation-evidence.json",
+          "role": "reference"
+        }
+      ],
+      "must_cover": [
+        [
+          "repaired_and_verified"
+        ],
+        [
+          "conforms",
+          "7 pass",
+          "0 fail",
+          "0 unverified"
+        ],
+        [
+          "sha-256",
+          "sha256",
+          "hash",
+          "хэш"
+        ],
+        [
+          "repair",
+          "instrument",
+          "preserve",
+          "blocked"
+        ],
+        [
+          "submission",
+          "duplicate",
+          "busy",
+          "pending"
+        ],
+        [
+          "responsive",
+          "320",
+          "overflow",
+          "wrap"
+        ],
+        [
+          "focus",
+          "announcement",
+          "reduced motion"
+        ],
+        [
+          "requires_decision",
+          "session"
+        ]
+      ],
+      "case_fatal_errors": [
+        "Returns repaired_and_verified while the bundled verifier does not return conforms with 7 pass, 0 fail, and 0 unverified.",
+        "Edits the authoritative structured specification to make the implementation pass.",
+        "Marks the requires_decision session-policy contract as repaired, passed, or failed.",
+        "Claims backend persistence, production authorization, real network recovery, complete keyboard or assistive-technology coverage, performance, usability outcomes, or product-wide conformance.",
+        "Hand-edits evidence statuses instead of regenerating them from the modified implementation.",
+        "Removes a supplied task value or action to avoid a failing gate.",
+        "Adds an external UI, motion, or testing dependency to the standalone fixture.",
+        "Leaves the implementation hash unchanged while claiming a repair."
+      ]
+    }
+  ]
+}

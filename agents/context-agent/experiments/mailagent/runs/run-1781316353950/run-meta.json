@@ -1,0 +1,128 @@
+{
+  "run_at": "2026-06-13T02:13:22.857Z",
+  "questions": 10,
+  "conditions": [
+    "A",
+    "B"
+  ],
+  "dry_run": false,
+  "skip_judge": false,
+  "baseline_chars": 320000,
+  "model": "gpt-4o-mini",
+  "router_mode": "keyword",
+  "router_mean_f1": 1,
+  "routing": [
+    {
+      "question_id": "MA01",
+      "expected": [
+        "otp-core",
+        "serialization-core"
+      ],
+      "routed": [
+        "otp-core",
+        "serialization-core"
+      ],
+      "f1": 1
+    },
+    {
+      "question_id": "MA02",
+      "expected": [
+        "deployment-testing-core"
+      ],
+      "routed": [
+        "deployment-testing-core"
+      ],
+      "f1": 1
+    },
+    {
+      "question_id": "MA03",
+      "expected": [
+        "email-core",
+        "technical-core"
+      ],
+      "routed": [
+        "email-core",
+        "technical-core"
+      ],
+      "f1": 1
+    },
+    {
+      "question_id": "MA04",
+      "expected": [
+        "business-core",
+        "product-core"
+      ],
+      "routed": [
+        "business-core",
+        "product-core"
+      ],
+      "f1": 1
+    },
+    {
+      "question_id": "MA05",
+      "expected": [
+        "otp-core",
+        "serialization-core"
+      ],
+      "routed": [
+        "otp-core",
+        "serialization-core"
+      ],
+      "f1": 1
+    },
+    {
+      "question_id": "MA06",
+      "expected": [
+        "inbox-core"
+      ],
+      "routed": [
+        "inbox-core"
+      ],
+      "f1": 1
+    },
+    {
+      "question_id": "MA07",
+      "expected": [
+        "api-core"
+      ],
+      "routed": [
+        "api-core"
+      ],
+      "f1": 1
+    },
+    {
+      "question_id": "MA08",
+      "expected": [
+        "worker-core"
+      ],
+      "routed": [
+        "worker-core"
+      ],
+      "f1": 1
+    },
+    {
+      "question_id": "MA09",
+      "expected": [
+        "data-model-core"
+      ],
+      "routed": [
+        "data-model-core"
+      ],
+      "f1": 1
+    },
+    {
+      "question_id": "MA10",
+      "expected": [
+        "deployment-testing-core"
+      ],
+      "routed": [
+        "deployment-testing-core"
+      ],
+      "f1": 1
+    }
+  ],
+  "exported_at": "2026-06-13T02:13:54.722Z",
+  "paired_questions": 10,
+  "source_repo": "Alex0nder/MailAgent",
+  "mailagent_commit": null
+}

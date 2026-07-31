@@ -1,0 +1,755 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Operations overview — revised</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --canvas: #f4f6f8;
+      --surface: #ffffff;
+      --surface-muted: #f7f8fa;
+      --text: #20242b;
+      --muted: #596273;
+      --line: #d4d9e1;
+      --accent: #155dc7;
+      --accent-hover: #0f4fae;
+      --critical: #a61b16;
+      --critical-bg: #fff2f1;
+      --major: #8a4b08;
+      --major-bg: #fff8e8;
+      --focus: #111827;
+      --radius: 10px;
+      --shadow: 0 1px 2px rgba(22, 32, 50, .08), 0 6px 18px rgba(22, 32, 50, .05);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-width: 0;
+      font: 14px/1.45 Arial, sans-serif;
+      color: var(--text);
+      background: var(--canvas);
+    }
+
+    button, input, select, summary { font: inherit; }
+
+    button, select, summary {
+      min-height: 40px;
+    }
+
+    button {
+      padding: 8px 14px;
+      border: 1px solid transparent;
+      border-radius: 7px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    button:focus-visible,
+    input:focus-visible,
+    select:focus-visible,
+    summary:focus-visible {
+      outline: 3px solid var(--focus);
+      outline-offset: 2px;
+    }
+
+    .primary {
+      color: #fff;
+      background: var(--accent);
+    }
+
+    .primary:hover { background: var(--accent-hover); }
+
+    .secondary {
+      color: var(--text);
+      background: var(--surface);
+      border-color: #aeb6c3;
+    }
+
+    .quiet {
+      color: var(--accent);
+      background: transparent;
+      border-color: transparent;
+    }
+
+    .skip-link {
+      position: fixed;
+      z-index: 10;
+      inset-block-start: 8px;
+      inset-inline-start: 8px;
+      padding: 10px 14px;
+      color: #fff;
+      background: #111827;
+      border-radius: 6px;
+      transform: translateY(-160%);
+    }
+
+    .skip-link:focus { transform: translateY(0); }
+
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .site-header {
+      display: grid;
+      grid-template-columns: auto minmax(240px, 520px) auto;
+      gap: 16px;
+      align-items: center;
+      min-height: 72px;
+      padding: 14px clamp(16px, 2.5vw, 32px);
+      background: var(--surface);
+      border-block-end: 1px solid var(--line);
+    }
+
+    .site-header h1 {
+      margin: 0;
+      font-size: 20px;
+      line-height: 1.2;
+      white-space: nowrap;
+    }
+
+    .global-search input,
+    .ticket-search input,
+    select {
+      width: 100%;
+      min-height: 40px;
+      padding: 8px 10px;
+      color: var(--text);
+      background: var(--surface);
+      border: 1px solid #aeb6c3;
+      border-radius: 6px;
+    }
+
+    .header-actions,
+    .incident-actions,
+    .toolbar-actions,
+    .pagination {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .header-menu { display: none; position: relative; }
+    .header-menu summary {
+      display: grid;
+      place-items: center;
+      padding-inline: 14px;
+      list-style: none;
+      color: var(--text);
+      background: var(--surface);
+      border: 1px solid #aeb6c3;
+      border-radius: 7px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .header-menu summary::-webkit-details-marker { display: none; }
+    .header-menu[open] .menu-panel {
+      position: absolute;
+      z-index: 3;
+      inset-block-start: calc(100% + 6px);
+      inset-inline-end: 0;
+      display: grid;
+      min-width: 140px;
+      padding: 6px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+
+    main {
+      width: min(1540px, 100%);
+      margin-inline: auto;
+      padding: 20px clamp(14px, 2vw, 28px) 40px;
+    }
+
+    .section-heading {
+      display: flex;
+      gap: 12px;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-block-end: 10px;
+    }
+
+    .section-heading h2 {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .section-heading p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .incidents {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .incident {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: center;
+      min-height: 116px;
+      padding: 14px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-inline-start: 5px solid var(--major);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .incident.critical {
+      background: var(--critical-bg);
+      border-color: #edaaa6;
+      border-inline-start-color: var(--critical);
+    }
+
+    .incident.major { background: var(--major-bg); }
+
+    .incident h3 {
+      margin: 0 0 5px;
+      font-size: 15px;
+    }
+
+    .incident p {
+      margin: 0;
+      color: #4f2530;
+    }
+
+    .severity {
+      display: inline-block;
+      margin-block-end: 5px;
+      color: var(--critical);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+
+    .major .severity { color: var(--major); }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(260px, 310px);
+      gap: 16px;
+      align-items: start;
+      margin-block-start: 20px;
+    }
+
+    .panel {
+      min-width: 0;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .panel-title {
+      margin: 0;
+      padding: 14px 16px;
+      font-size: 16px;
+      border-block-end: 1px solid var(--line);
+    }
+
+    .toolbar {
+      display: grid;
+      grid-template-columns: minmax(170px, 1.5fr) repeat(5, minmax(90px, .7fr)) auto;
+      gap: 8px;
+      align-items: end;
+      padding: 12px;
+      background: var(--surface-muted);
+      border-block-end: 1px solid var(--line);
+    }
+
+    .field {
+      display: grid;
+      gap: 4px;
+      min-width: 0;
+    }
+
+    .field label {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .table-wrap { overflow-x: auto; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+
+    th, td {
+      padding: 9px 8px;
+      text-align: start;
+      border-block-end: 1px solid var(--line);
+      white-space: nowrap;
+    }
+
+    th {
+      color: #394150;
+      background: #f0f2f5;
+    }
+
+    tbody tr:hover { background: #f8fafd; }
+
+    .select-cell {
+      width: 40px;
+      text-align: center;
+    }
+
+    input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      margin: 0;
+      accent-color: var(--accent);
+    }
+
+    .urgent {
+      color: var(--critical);
+      font-weight: 800;
+    }
+
+    .table-footer {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 60px;
+      padding: 10px 12px;
+    }
+
+    .selection-status { color: var(--muted); }
+
+    .ticket-list { display: none; }
+
+    .supporting {
+      display: grid;
+      gap: 16px;
+    }
+
+    .chart {
+      padding: 12px 14px 16px;
+    }
+
+    .bars {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(20px, 1fr));
+      gap: 8px;
+      align-items: end;
+      height: 190px;
+      padding: 12px 4px 0;
+      background: repeating-linear-gradient(to top, transparent 0 37px, #e3e7ed 38px);
+      border-block-end: 1px solid #9da6b2;
+    }
+
+    .bar {
+      display: grid;
+      align-items: end;
+      height: 100%;
+    }
+
+    .bar i {
+      display: block;
+      min-height: 8px;
+      background: var(--accent);
+      border-radius: 4px 4px 0 0;
+    }
+
+    .bar span {
+      margin-block-start: 6px;
+      color: var(--muted);
+      font-size: 11px;
+      text-align: center;
+    }
+
+    .feed {
+      margin: 0;
+      padding: 4px 14px 14px;
+      list-style: none;
+    }
+
+    .feed li {
+      padding-block: 10px;
+      border-block-end: 1px solid var(--line);
+    }
+
+    .feed li:last-child { border-block-end: 0; }
+
+    .metrics-section { margin-block-start: 24px; }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .metric {
+      min-width: 0;
+      padding: 14px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+    }
+
+    .metric b {
+      display: block;
+      margin-block: 8px 2px;
+      font-size: 24px;
+    }
+
+    .metric small { color: var(--muted); }
+
+    @media (max-width: 1180px) {
+      .site-header {
+        grid-template-columns: auto minmax(220px, 1fr) auto;
+      }
+
+      .workspace { grid-template-columns: minmax(0, 1fr); }
+
+      .supporting {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      }
+
+      .toolbar {
+        grid-template-columns: minmax(180px, 1.5fr) repeat(3, minmax(96px, 1fr));
+      }
+
+      .toolbar .field:nth-of-type(5),
+      .toolbar .field:nth-of-type(6) {
+        grid-column: span 1;
+      }
+    }
+
+    @media (max-width: 860px) {
+      .site-header {
+        grid-template-columns: auto 1fr;
+      }
+
+      .global-search {
+        grid-column: 1 / -1;
+        grid-row: 2;
+      }
+
+      .header-actions { justify-self: end; }
+
+      .incidents { grid-template-columns: 1fr; }
+
+      .toolbar {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .ticket-search { grid-column: span 2; }
+      .toolbar-actions { grid-column: span 2; }
+
+      .table-wrap { display: none; }
+
+      .ticket-list {
+        display: grid;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .ticket {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr) auto;
+        gap: 8px 12px;
+        align-items: start;
+        padding: 14px;
+        border-block-end: 1px solid var(--line);
+      }
+
+      .ticket input { margin-block-start: 2px; }
+
+      .ticket-main {
+        min-width: 0;
+      }
+
+      .ticket-title {
+        display: block;
+        margin-block-end: 4px;
+        font-weight: 800;
+        overflow-wrap: anywhere;
+      }
+
+      .ticket-meta,
+      .ticket-context {
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .ticket-context { grid-column: 2 / -1; }
+
+      .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 620px) {
+      .site-header {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 10px;
+        padding: 12px 14px;
+      }
+
+      .site-header h1,
+      .global-search,
+      .header-actions {
+        grid-column: 1;
+      }
+
+      .site-header h1 { grid-row: 1; }
+
+      .header-actions {
+        grid-row: 2;
+        justify-self: stretch;
+      }
+
+      .header-actions .primary { flex: 1; }
+
+      .global-search { grid-row: 3; }
+
+      .header-actions .secondary { display: none; }
+      .header-menu { display: block; }
+
+      main { padding-block-start: 16px; }
+
+      .section-heading {
+        display: grid;
+        gap: 2px;
+      }
+
+      .incident {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .incident-actions {
+        width: 100%;
+      }
+
+      .incident-actions button { flex: 1; }
+
+      .toolbar {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .ticket-search,
+      .toolbar-actions {
+        grid-column: auto;
+      }
+
+      .toolbar-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .supporting { grid-template-columns: minmax(0, 1fr); }
+
+      .table-footer {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .pagination {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .pagination .quiet { grid-column: 1 / -1; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to operations</a>
+  <header class="site-header">
+    <h1>Operations overview</h1>
+    <form class="global-search" role="search">
+      <label class="visually-hidden" for="global-search">Search everything</label>
+      <input id="global-search" name="global-search" type="search" placeholder="Search everything">
+    </form>
+    <div class="header-actions">
+      <button class="primary" type="button">Create ticket</button>
+      <button class="secondary" type="button">Export</button>
+      <button class="secondary" type="button">Settings</button>
+      <details class="header-menu">
+        <summary>More</summary>
+        <div class="menu-panel">
+          <button class="quiet" type="button">Export</button>
+          <button class="quiet" type="button">Settings</button>
+        </div>
+      </details>
+    </div>
+  </header>
+
+  <main id="main-content">
+    <section aria-labelledby="incidents-heading">
+      <div class="section-heading">
+        <h2 id="incidents-heading">Active incidents</h2>
+        <p>3 incidents · 267 affected tickets</p>
+      </div>
+      <div class="incidents">
+        <article class="incident critical">
+          <div>
+            <span class="severity">Critical</span>
+            <h3>Payments API</h3>
+            <p>Owner: Unassigned · 142 tickets</p>
+          </div>
+          <div class="incident-actions">
+            <button class="primary" type="button">Assign owner</button>
+            <button class="secondary" type="button">Open</button>
+          </div>
+        </article>
+        <article class="incident major">
+          <div>
+            <span class="severity">Major</span>
+            <h3>Login latency</h3>
+            <p>Owner: Maya · 86 tickets</p>
+          </div>
+          <div class="incident-actions">
+            <button class="secondary" type="button">Open</button>
+          </div>
+        </article>
+        <article class="incident major">
+          <div>
+            <span class="severity">Major</span>
+            <h3>Webhooks delayed</h3>
+            <p>Owner: Devon · 39 tickets</p>
+          </div>
+          <div class="incident-actions">
+            <button class="secondary" type="button">Open</button>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="workspace" aria-label="Ticket operations">
+      <div class="panel">
+        <h2 class="panel-title">Affected tickets</h2>
+        <form class="toolbar">
+          <div class="field ticket-search">
+            <label for="ticket-search">Search tickets</label>
+            <input id="ticket-search" name="ticket-search" type="search" placeholder="ID, subject, or customer">
+          </div>
+          <div class="field">
+            <label for="view">View</label>
+            <select id="view" name="view"><option>All views</option></select>
+          </div>
+          <div class="field">
+            <label for="status">Status</label>
+            <select id="status" name="status"><option>All statuses</option></select>
+          </div>
+          <div class="field">
+            <label for="priority">Priority</label>
+            <select id="priority" name="priority"><option>All priorities</option></select>
+          </div>
+          <div class="field">
+            <label for="owner">Owner</label>
+            <select id="owner" name="owner"><option>All owners</option></select>
+          </div>
+          <div class="field">
+            <label for="channel">Channel</label>
+            <select id="channel" name="channel"><option>All channels</option></select>
+          </div>
+          <div class="toolbar-actions">
+            <button class="primary" type="submit">Apply</button>
+            <button class="secondary" type="button" disabled>Bulk edit</button>
+          </div>
+        </form>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th class="select-cell"><label class="visually-hidden" for="select-all">Select all tickets</label><input id="select-all" type="checkbox"></th>
+                <th>ID</th><th>Priority</th><th>Subject</th><th>Status</th><th>Owner</th><th>Incident</th><th>SLA</th><th>Customer</th><th>Channel</th><th>Updated</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td class="select-cell"><label class="visually-hidden" for="t8941">Select ticket 8941</label><input id="t8941" type="checkbox"></td><td>#8941</td><td class="urgent">Urgent</td><td>Card payment reversed twice</td><td>Open</td><td>Unassigned</td><td>Payments API</td><td>12m</td><td>Northwind</td><td>Email</td><td>2m</td></tr>
+              <tr><td class="select-cell"><label class="visually-hidden" for="t8937">Select ticket 8937</label><input id="t8937" type="checkbox"></td><td>#8937</td><td>High</td><td>Unable to sign in after reset</td><td>Pending</td><td>Maya</td><td>Login latency</td><td>38m</td><td>Contoso</td><td>Chat</td><td>8m</td></tr>
+              <tr><td class="select-cell"><label class="visually-hidden" for="t8928">Select ticket 8928</label><input id="t8928" type="checkbox"></td><td>#8928</td><td>High</td><td>Webhook events arriving late</td><td>Open</td><td>Devon</td><td>Webhooks</td><td>44m</td><td>Acme Inc.</td><td>API</td><td>11m</td></tr>
+              <tr><td class="select-cell"><label class="visually-hidden" for="t8919">Select ticket 8919</label><input id="t8919" type="checkbox"></td><td>#8919</td><td>Normal</td><td>Incorrect invoice address</td><td>New</td><td>Lee</td><td>—</td><td>2h</td><td>Globex</td><td>Email</td><td>19m</td></tr>
+              <tr><td class="select-cell"><label class="visually-hidden" for="t8911">Select ticket 8911</label><input id="t8911" type="checkbox"></td><td>#8911</td><td>Normal</td><td>Need copy of last receipt</td><td>Solved</td><td>Jo</td><td>—</td><td>4h</td><td>Initech</td><td>Phone</td><td>24m</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <ul class="ticket-list" aria-label="Tickets">
+          <li class="ticket"><input type="checkbox" aria-label="Select ticket 8941"><div class="ticket-main"><span class="ticket-title">Card payment reversed twice</span><span class="ticket-meta"><span class="urgent">Urgent</span> · #8941 · Open · SLA 12m</span></div><button class="quiet" type="button">Open</button><div class="ticket-context">Payments API · Unassigned · Northwind · Email · Updated 2m</div></li>
+          <li class="ticket"><input type="checkbox" aria-label="Select ticket 8937"><div class="ticket-main"><span class="ticket-title">Unable to sign in after reset</span><span class="ticket-meta">High · #8937 · Pending · SLA 38m</span></div><button class="quiet" type="button">Open</button><div class="ticket-context">Login latency · Maya · Contoso · Chat · Updated 8m</div></li>
+          <li class="ticket"><input type="checkbox" aria-label="Select ticket 8928"><div class="ticket-main"><span class="ticket-title">Webhook events arriving late</span><span class="ticket-meta">High · #8928 · Open · SLA 44m</span></div><button class="quiet" type="button">Open</button><div class="ticket-context">Webhooks · Devon · Acme Inc. · API · Updated 11m</div></li>
+          <li class="ticket"><input type="checkbox" aria-label="Select ticket 8919"><div class="ticket-main"><span class="ticket-title">Incorrect invoice address</span><span class="ticket-meta">Normal · #8919 · New · SLA 2h</span></div><button class="quiet" type="button">Open</button><div class="ticket-context">No incident · Lee · Globex · Email · Updated 19m</div></li>
+          <li class="ticket"><input type="checkbox" aria-label="Select ticket 8911"><div class="ticket-main"><span class="ticket-title">Need copy of last receipt</span><span class="ticket-meta">Normal · #8911 · Solved · SLA 4h</span></div><button class="quiet" type="button">Open</button><div class="ticket-context">No incident · Jo · Initech · Phone · Updated 24m</div></li>
+        </ul>
+
+        <div class="table-footer">
+          <span class="selection-status" role="status">0 tickets selected</span>
+          <nav class="pagination" aria-label="Ticket pages">
+            <button class="secondary" type="button">Previous</button>
+            <button class="secondary" type="button">Next</button>
+            <button class="quiet" type="button">Export</button>
+          </nav>
+        </div>
+      </div>
+
+      <aside class="supporting" aria-label="Reporting and recent activity">
+        <section class="panel" aria-labelledby="volume-heading">
+          <h2 class="panel-title" id="volume-heading">Ticket volume</h2>
+          <div class="chart" role="img" aria-label="Ticket volume over six periods: 35, 48, 40, 82, 68, and 91 percent of the displayed range">
+            <div class="bars" aria-hidden="true">
+              <div class="bar"><i style="height:35%"></i><span>Mon</span></div>
+              <div class="bar"><i style="height:48%"></i><span>Tue</span></div>
+              <div class="bar"><i style="height:40%"></i><span>Wed</span></div>
+              <div class="bar"><i style="height:82%"></i><span>Thu</span></div>
+              <div class="bar"><i style="height:68%"></i><span>Fri</span></div>
+              <div class="bar"><i style="height:91%"></i><span>Sat</span></div>
+            </div>
+          </div>
+        </section>
+        <section class="panel" aria-labelledby="activity-heading">
+          <h2 class="panel-title" id="activity-heading">Activity</h2>
+          <ul class="feed">
+            <li>Maya assigned #8937</li>
+            <li>Incident updated</li>
+            <li>Devon replied to #8928</li>
+            <li>116 tickets remain unassigned</li>
+          </ul>
+        </section>
+      </aside>
+    </section>
+
+    <section class="metrics-section" aria-labelledby="metrics-heading">
+      <div class="section-heading">
+        <h2 id="metrics-heading">Operational metrics</h2>
+        <p>Today</p>
+      </div>
+      <div class="metrics">
+        <article class="metric">Open tickets<b>1,284</b><small>+8% today</small></article>
+        <article class="metric">First response<b>18m</b><small>+2m today</small></article>
+        <article class="metric">SLA risk<b>74</b><small>12 critical</small></article>
+        <article class="metric">CSAT<b>91%</b><small>-1.2%</small></article>
+        <article class="metric">Backlog<b>684</b><small>+43 today</small></article>
+        <article class="metric">Resolved<b>392</b><small>Today</small></article>
+        <article class="metric">Escalated<b>28</b><small>+6 today</small></article>
+        <article class="metric">Unassigned<b>116</b><small>Needs review</small></article>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

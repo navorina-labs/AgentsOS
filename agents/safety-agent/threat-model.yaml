@@ -1,0 +1,138 @@
+# Threat model проекта SafetyOS (dogfood / самооценка)
+version: "1"
+
+organization:
+  name: SafetyOS
+  migration_years: 1
+  quantum_horizon_years: 10
+
+adversary:
+  classical: true
+  quantum_record: false
+  ai_implementation: true
+
+defaults:
+  confidentiality_years: 3
+
+data_flows:
+  - id: cli-tooling
+    name: CLI / локальный анализ (без сетевого TLS)
+    storage: ephemeral
+    hndl_exposed: false
+    crypto:
+      key_exchange: []
+      signatures: []
+      symmetric: []
+      hash: [SHA-256]
+    tags: [tooling, offline, cli]
+
+  - id: crypto-scanner
+    name: Статический scanner (паттерны, не runtime-шифрование)
+    storage: ephemeral
+    hndl_exposed: false
+    crypto:
+      key_exchange: []
+      signatures: []
+      symmetric: []
+      hash: [SHA-256]
+    tags: [scanner, tooling, catalog]
+
+  - id: risk-engine
+    name: Mosca / risk / quantum posture (оценка метаданных)
+    storage: ephemeral
+    hndl_exposed: false
+    crypto:
+      key_exchange: [ML-KEM-768]
+      signatures: []
+      symmetric: []
+      hash: [SHA-256]
+    tags: [engine, tooling, pqc]
+
+  - id: assurance-catalog
+    name: Assurance и AI-vs-AI (описания атак/контролей, не prod crypto)
+    storage: ephemeral
+    hndl_exposed: false
+    crypto:
+      key_exchange: []
+      signatures: []
+      symmetric: []
+      hash: [SHA-256]
+    tags: [assurance, catalog, ai]
+
+  - id: tls-inventory
+    name: TLS inventory / reconcile (парсинг имён cipher suite)
+    storage: ephemeral
+    hndl_exposed: false
+    crypto:
+      key_exchange: [ECDHE-P256, ML-KEM-768]
+      signatures: []
+      symmetric: [AES-256-GCM]
+      hash: [SHA-256]
+    tags: [inventory, tls, edge, nginx, apache, ingress]
+
+  - id: nist-registry
+    name: Справочник NIST migration (reference data)
+    storage: ephemeral
+    hndl_exposed: false
+    crypto:
+      key_exchange: [ML-KEM-768]
+      signatures: [ML-DSA-65]
+      symmetric: []
+      hash: [SHA-256]
+    tags: [registry, catalog, nist, pqc]
+
+  - id: reports-output
+    name: Отчёты verify / HTML (метаданные, без секретов пользователя)
+    storage: short
+    hndl_exposed: false
+    crypto:
+      key_exchange: []
+      signatures: []
+      symmetric: []
+      hash: [SHA-256]
+    tags: [reports]
+
+ai_governance:
+  friend_or_foe:
+    own:
+      - id: safetyos-cli
+        kind: service
+    foreign:
+      - id: user-repo
+        kind: user
+    rules:
+      - id: iff-secrets-own-only
+        statement: Секреты не в threat model и не в промптах
+        enforce: required
+  ai_language:
+    channels:
+      - id: system
+        trust: own
+        role: instruction
+      - id: user
+        trust: foreign
+        role: data
+        delimiter_start: "<<USER>>"
+        delimiter_end: "<<END_USER>>"
+    foreign_patterns:
+      - pattern: "ignore previous"
+        action: strip_and_log
+    rules:
+      - id: lang-foreign-delimited
+        statement: foreign с delimiter
+        enforce: required
+
+policies:
+  - id: no-secrets-in-repo
+    when:
+      retention_tier: long
+      has_algorithm: RSA-2048
+    action: warn
+    recommend:
+      key_exchange: ML-KEM-768
+  - id: catalog-not-runtime
+    when:
+      retention_tier: ephemeral
+    action: recommend
+    recommend:
+      key_exchange: ML-KEM-768

@@ -1,0 +1,15 @@
+{
+  "name": "mailagent-qa-pilot-starter",
+  "private": true,
+  "description": "Minimal Playwright + MailAgent simulate test — copy or fork for CI",
+  "type": "module",
+  "scripts": {
+    "test": "playwright test",
+    "test:staging": "playwright test tests/signup-staging.spec.ts",
+    "test:ui": "playwright test --ui"
+  },
+  "devDependencies": {
+    "@mailagent/qa": "file:../../packages/mailagent-qa",
+    "@playwright/test": "^1.51.0"
+  }
+}

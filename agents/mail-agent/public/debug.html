@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-41B4KG53D1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-41B4KG53D1");
+    </script>
+    <title>Debug inboxes — MailAgent</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta name="theme-color" content="#000000" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles.css" />
+    <style>
+      .debug-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; margin: 1rem 0; }
+      .debug-table th, .debug-table td { text-align: left; padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border, #333); vertical-align: top; }
+      .debug-badge { display: inline-block; font-size: 0.7rem; padding: 0.15rem 0.45rem; border-radius: 4px; margin-right: 0.25rem; background: #222; color: #aaa; }
+      .debug-badge--ok { color: #6f6; }
+      .debug-badge--err { color: #f88; }
+      .debug-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin: 0.75rem 0; }
+      .debug-actions button { font-size: 0.8rem; padding: 0.35rem 0.65rem; cursor: pointer; }
+      .debug-actions select { font-size: 0.8rem; padding: 0.35rem 0.5rem; max-width: 100%; }
+      .debug-mono { font-family: ui-monospace, monospace; font-size: 0.8rem; word-break: break-all; }
+    </style>
+  </head>
+  <body class="app-page" data-site="app" data-doc="debug">
+    <div id="site-nav"></div>
+
+    <main class="dash-main">
+      <div class="dash-container dash-container--wide">
+        <div id="connect-gate"></div>
+        <header class="dash-toolbar" data-gate-hide>
+          <div>
+            <h1>Debug</h1>
+            <p class="dash-toolbar__sub">Inspect inboxes, simulate messages, and diagnose delivery.</p>
+          </div>
+        </header>
+        <div class="dash-panel" data-gate-hide>
+          <div class="dash-panel__body dash-panel__body--padded">
+          <div class="workspace-form-grid" style="margin-bottom:12px">
+            <label for="label">Label filter (optional)<input id="label" type="text" placeholder="ci-12345" /></label>
+          </div>
+          <button type="button" class="app-btn app-btn--ghost" id="reload-inboxes">Load inboxes</button>
+          <p class="app-err" id="err" hidden></p>
+          <ul class="app-list" id="list"></ul>
+          <div id="detail" hidden></div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <div id="site-footer"></div>
+    <script src="/site-shell.js" defer></script>
+    <script src="/app-connect-gate.js" defer></script>
+    <script src="/app-insights.js" defer></script>
+    <script src="/app-session.js" defer></script>
+    <script>
+      const App = () => window.MailAgentApp;
+      const Gate = () => window.MailAgentConnectGate;
+      const gateEl = document.getElementById("connect-gate");
+      const labelEl = document.getElementById("label");
+      const errEl = document.getElementById("err");
+      const listEl = document.getElementById("list");
+      const detailEl = document.getElementById("detail");
+
+      const params = new URLSearchParams(location.search);
+      const deepInbox = params.get("inbox");
+
+      if (params.get("label")) labelEl.value = params.get("label");
+
+      function showGate() {
+        Gate()?.renderConnectGate(gateEl, {
+          title: "Connect to Debug",
+          desc: "Inspect inboxes, simulate OTP messages, and diagnose delivery after connecting.",
+        });
+        listEl.innerHTML = "";
+        detailEl.hidden = true;
+        errEl.hidden = true;
+      }
+
+      document.addEventListener("mailagent:session-ready", () => {
+        if (!App()?.getKey()) showGate();
+        else {
+          Gate()?.clearConnectGate(gateEl);
+          loadInboxList();
+          if (deepInbox) loadInboxDetail(deepInbox, null);
+        }
+      });
+
+      document.getElementById("reload-inboxes").addEventListener("click", () => loadInboxList());
+      document.addEventListener("mailagent:connect", () => {
+        Gate()?.clearConnectGate(gateEl);
+        loadInboxList();
+        if (deepInbox) loadInboxDetail(deepInbox, null);
+      });
+      document.addEventListener("mailagent:disconnect", showGate);
+
+      let simulateScenarios = null;
+
+      async function loadSimulateScenarios() {
+        if (simulateScenarios) return simulateScenarios;
+        try {
+          const { res, data } = await authFetch("/v1/inboxes/simulate/scenarios");
+          if (res.ok && Array.isArray(data.scenarios)) {
+            simulateScenarios = data.scenarios;
+          }
+        } catch {
+          simulateScenarios = [];
+        }
+        return simulateScenarios ?? [];
+      }
+
+      async function simulateInbox(id, scenario) {
+        errEl.hidden = true;
+        const body = scenario
+          ? { scenario }
+          : { otp: "482910", subject: "MailAgent simulated OTP" };
+        try {
+          const { res, data } = await authFetch(`/v1/inboxes/${id}/simulate`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(body),
+          });
+          if (!res.ok) {
+            errEl.textContent = data.error || res.statusText;
+            errEl.hidden = false;
+            return;
+          }
+          await loadInboxDetail(id, { address: data.address });
+        } catch (err) {
+          errEl.textContent = String(err);
+          errEl.hidden = false;
+        }
+      }
+
+      async function authFetch(path, init) {
+        const base = App().getBase();
+        const key = App().getKey();
+        const res = await fetch(`${base}${path}`, {
+          ...init,
+          headers: {
+            Authorization: `Bearer ${key}`,
+            ...(init?.headers ?? {}),
+          },
+        });
+        const data = await res.json().catch(() => ({}));
+        return { base, key, res, data };
+      }
+
+      async function loadInboxList() {
+        if (!App()?.getKey()) {
+          showGate();
+          return;
+        }
+        Gate()?.clearConnectGate(gateEl);
+        errEl.hidden = true;
+        detailEl.hidden = true;
+        listEl.innerHTML = "";
+        const label = labelEl.value.trim();
+        const q = label ? `?label=${encodeURIComponent(label)}&limit=50` : "?limit=50";
+        try {
+          const { res, data } = await authFetch(`/v1/inboxes${q}`);
+          if (!res.ok) {
+            errEl.textContent = data.error || res.statusText;
+            errEl.hidden = false;
+            return;
+          }
+          const inboxes = data.inboxes || [];
+          if (!inboxes.length) {
+            errEl.textContent = "No active inboxes.";
+            errEl.hidden = false;
+            return;
+          }
+          for (const box of inboxes) {
+            const li = document.createElement("li");
+            li.innerHTML = `<strong>${esc(box.id)}</strong><br /><span class="debug-mono">${esc(box.address)}</span>${box.label ? `<br />label: ${esc(box.label)}` : ""}`;
+            li.style.cursor = "pointer";
+            li.addEventListener("click", () => loadInboxDetail(box.id, box));
+            listEl.appendChild(li);
+          }
+        } catch (err) {
+          errEl.textContent = String(err);
+          errEl.hidden = false;
+        }
+      }
+
+      async function loadInboxDetail(id, boxMeta) {
+        detailEl.hidden = false;
+        detailEl.innerHTML = "<p>Loading…</p>";
+        const { base, res: diagRes, data: diag } = await authFetch(`/v1/inboxes/${id}/diagnose`);
+        if (!diagRes.ok) {
+          detailEl.innerHTML = `<p class="app-err">${esc(diag.error || diagRes.statusText)}</p>`;
+          return;
+        }
+        const messages = diag.messages || [];
+        const deliveries = diag.callbacks || [];
+
+        let html = `<h2>Inbox ${esc(id)}</h2>`;
+        if (diag.address) html += `<p class="debug-mono">${esc(diag.address)}</p>`;
+        if (diag.label) html += `<p>label: ${esc(diag.label)}</p>`;
+
+        if (Array.isArray(diag.troubleshooting) && diag.troubleshooting.length) {
+          html += `<h3>Troubleshooting</h3><ul class="doc-list">`;
+          for (const step of diag.troubleshooting) {
+            html += `<li>${esc(step)}</li>`;
+          }
+          html += `</ul>`;
+        }
+
+        const scenarios = await loadSimulateScenarios();
+        html += `<div class="debug-actions">`;
+        html += `<label>Simulate <select id="sim-scenario">`;
+        html += `<option value="">custom OTP</option>`;
+        for (const s of scenarios) {
+          html += `<option value="${esc(s.id)}">${esc(s.id)}</option>`;
+        }
+        html += `</select></label>`;
+        html += btn("Inject", () => {
+          const sel = document.getElementById("sim-scenario");
+          const scenario = sel?.value?.trim() || undefined;
+          simulateInbox(id, scenario);
+        });
+        html += btn("Copy wait curl", () => copyCurl(base, id, "wait"));
+        html += btn("Copy extract curl", () => copyCurl(base, id, "extract"));
+        html += btn("Copy diagnose curl", () => copyCurl(base, id, "diagnose"));
+        if (diag.debugUiUrl) {
+          html += `<a href="${esc(diag.debugUiUrl)}" target="_blank" rel="noopener"><button type="button">Open share link</button></a>`;
+        }
+        html += btn("Refresh", () => loadInboxDetail(id, boxMeta));
+        html += `</div>`;
+
+        html += `<h3>Messages (${messages.length})</h3>`;
+        if (!messages.length) {
+          html += `<p class="doc-note">No messages — check webhook, allowlist, staging send.</p>`;
+        } else {
+          html += `<table class="debug-table"><thead><tr><th>From</th><th>Subject</th><th>OTP</th><th>Links</th><th>Meta</th></tr></thead><tbody>`;
+          for (const m of messages) {
+            const badges = [];
+            if (m.hasRaw) badges.push('<span class="debug-badge debug-badge--ok">raw</span>');
+            if (m.attachmentCount > 0) badges.push(`<span class="debug-badge">${m.attachmentCount} att</span>`);
+            const links = (m.links || []).slice(0, 2).map((u) => `<a href="${esc(u)}" target="_blank" rel="noopener">link</a>`).join(" ");
+            html += `<tr><td class="debug-mono">${esc(m.from || "")}</td><td>${esc(m.subject || "")}</td><td><strong>${esc(m.otp || "—")}</strong></td><td>${links || "—"}</td><td>${badges.join("")}${m.rawUrl ? ` <a href="${esc(base + m.rawUrl)}" target="_blank">.eml</a>` : ""}</td></tr>`;
+          }
+          html += `</tbody></table>`;
+        }
+
+        html += `<h3>Callback log (${deliveries.length})</h3>`;
+        if (!deliveries.length) {
+          html += `<p class="doc-note">No callback deliveries (callbackUrl not set or no messages yet).</p>`;
+        } else {
+          html += `<table class="debug-table"><thead><tr><th>OK</th><th>Status</th><th>URL</th><th>Error</th><th>At</th></tr></thead><tbody>`;
+          for (const d of deliveries) {
+            const okCls = d.ok ? "debug-badge--ok" : "debug-badge--err";
+            html += `<tr><td><span class="debug-badge ${okCls}">${d.ok ? "ok" : "fail"}</span></td><td>${esc(String(d.statusCode ?? "—"))}</td><td class="debug-mono">${esc(d.callbackUrl || "")}</td><td>${esc(d.error || "—")}</td><td>${esc(d.createdAt || "")}</td></tr>`;
+          }
+          html += `</tbody></table>`;
+        }
+
+        detailEl.innerHTML = html;
+        history.replaceState(null, "", `?inbox=${encodeURIComponent(id)}`);
+      }
+
+      function btn(label, fn) {
+        const id = "b" + Math.random().toString(36).slice(2);
+        setTimeout(() => document.getElementById(id)?.addEventListener("click", fn), 0);
+        return `<button type="button" id="${id}">${label}</button>`;
+      }
+
+      function copyCurl(base, inboxId, kind) {
+        const key = App().getKey();
+        const path =
+          kind === "wait"
+            ? `/v1/inboxes/${inboxId}/wait?timeout=120`
+            : kind === "diagnose"
+              ? `/v1/inboxes/${inboxId}/diagnose`
+              : `/v1/inboxes/${inboxId}/extract`;
+        const curl = `curl -sS "${base}${path}" -H "Authorization: Bearer ${key}"`;
+        navigator.clipboard.writeText(curl).catch(() => {});
+      }
+
+      function esc(s) {
+        return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/"/g, "&quot;");
+      }
+
+      if (deepInbox && !App()?.getKey()) {
+        detailEl.hidden = false;
+        detailEl.innerHTML = `<p class="doc-note">Connect with your API key above — inbox <code>${esc(deepInbox)}</code> will open automatically.</p>`;
+      }
+    </script>
+  </body>
+</html>

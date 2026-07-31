@@ -1,0 +1,23 @@
+name: Context OS
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: npx context-os check --min-score 85
+      - run: npx context-os maturity --min operational
+      - run: npx context-os drift check --base origin/main --strict
+      - run: npx context-os cores verify --base origin/main
+      - run: npx context-os contracts verify --base origin/main

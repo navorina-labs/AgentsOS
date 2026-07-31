@@ -1,0 +1,31 @@
+{
+  "description": "Drift CI — map code paths to cores",
+  "path_patterns": [
+    {
+      "patterns": ["src/**"],
+      "cores": ["technical-core"]
+    },
+    {
+      "patterns": [".github/workflows/**", "Dockerfile"],
+      "cores": ["operational-core"]
+    },
+    {
+      "patterns": ["docs/business-model.md"],
+      "cores": ["business-core"]
+    },
+    {
+      "patterns": ["docs/product-spec.md"],
+      "cores": ["product-core"]
+    },
+    {
+      "patterns": ["docs/architecture.md"],
+      "cores": ["technical-core"]
+    },
+    {
+      "patterns": ["docs/operations.md"],
+      "cores": ["operational-core"]
+    }
+  ],
+  "codePrefixes": ["src/", "docs/", ".github/workflows/"],
+  "warnUnmapped": true
+}

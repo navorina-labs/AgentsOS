@@ -2,7 +2,7 @@
 
 ## Product thesis
 
-AgentsOS should not launch as four unrelated tools or as one vague universal agent. It should be a catalog of focused agents behind one account, one installation story, and one control plane.
+AgentsOS should not launch as unrelated tools or as one vague universal agent. It should be a catalog of focused agents behind one account, one installation story, and one control plane.
 
 The first promise is simple: **install one agent, complete one bounded job, see the result and its audit trail**.
 
@@ -48,9 +48,22 @@ Start with:
 
 Package it as an installable skill, keep the existing evaluation suite as the release gate, and use it to design the AgentsOS website and console. This produces both product value and public proof.
 
-### 4. Safety Agent
+### 4. Marketing & SEO Agent
 
-Safety Agent is technically substantial but should be commercialized fourth. Security products require stronger trust, external validation, low false-positive rates, and a clearer enterprise buyer.
+Marketing & SEO Agent should become the evidence and distribution layer for the portfolio before it becomes a broad autonomous marketing suite. Its first release combines product positioning, technical page audits, content and conversion planning, and measurement without requiring paid APIs.
+
+Start with:
+
+- use the agent to diagnose and improve the AgentsOS website and every agent launch;
+- connect recommendations to observable product evidence and one business metric;
+- validate the local HTML/URL auditor against representative sites;
+- add Search Console and analytics workflows only after explicit credential and privacy design;
+- publish before-and-after artifacts that show accepted changes and measured outcomes;
+- resist expanding into dozens of channels before one repeatable acquisition workflow works.
+
+### 5. Safety Agent
+
+Safety Agent is technically substantial but should be commercialized after the first repeatable marketing workflow. Security products require stronger trust, external validation, low false-positive rates, and a clearer enterprise buyer.
 
 Before building a hosted product:
 
@@ -109,6 +122,7 @@ Exit gate: a user can submit a real interface artifact and receive a testable sp
 
 - Improve Mail Agent from observed usage rather than roadmap speculation.
 - Add cross-agent run history only after Context or Design Agent produces real hosted runs.
+- Use Marketing & SEO Agent to launch Context and Design Agent, then retain the evidence as agent evaluation cases.
 - Pilot Safety Agent on external repositories and decide whether its first form is CLI, GitHub App, or hosted report.
 - Introduce shared AgentsOS SDKs only for contracts already duplicated by at least two products.
 - Decide on umbrella-domain redirects after search traffic and customer integrations are measured.
@@ -130,6 +144,7 @@ Product-specific quality gates:
 - **Mail Agent:** successful verification rate, time to first OTP/action, diagnosed timeout rate.
 - **Context Agent:** routing F1, context reduction, validation pass rate, repositories kept current after installation.
 - **Design Agent:** evaluation score, fatal-error count, accepted specifications or repairs, regression rate.
+- **Marketing & SEO Agent:** accepted recommendations, qualified organic visits, activation from marketing surfaces, experiment decision rate, and unsupported-claim regressions.
 - **Safety Agent:** false-positive rate, accepted findings, critical regressions blocked, external repository coverage.
 
 ## What not to do yet
@@ -140,4 +155,3 @@ Product-specific quality gates:
 - Do not merge agent runtimes into one dependency graph merely because they share a repository.
 - Do not sell Safety Agent as compliance or certification without external validation.
 - Do not continue Context Agent research before shipping the already validated workflow.
-

@@ -1,0 +1,19 @@
+{
+  "agent": "marketing-agent",
+  "version": "0.1.0",
+  "dimensions": [
+    "evidence_integrity",
+    "customer_specificity",
+    "seo_correctness",
+    "prioritization",
+    "measurement_quality",
+    "safety_and_compliance"
+  ],
+  "cases": [
+    {"id": "saas-positioning", "path": "cases/01-saas-positioning.md"},
+    {"id": "page-audit", "path": "cases/02-page-audit.md"},
+    {"id": "ai-search-brief", "path": "cases/03-ai-search-brief.md"},
+    {"id": "no-baseline-plan", "path": "cases/04-no-baseline-plan.md"},
+    {"id": "unsafe-growth-request", "path": "cases/05-unsafe-growth-request.md"}
+  ]
+}

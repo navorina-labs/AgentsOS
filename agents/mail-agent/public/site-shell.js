@@ -11,7 +11,7 @@
       id: "product",
       label: "Product",
       items: [
-        { href: "/#agents", label: "Agent catalog", desc: "Mail, context, design, and safety" },
+        { href: "/#agents", label: "Agent catalog", desc: "Mail, context, design, marketing, and safety" },
         { href: "/dashboard.html", label: "Mail Agent", desc: "Production email and QA agent" },
         { href: "/#features", label: "Features", desc: "OTP, magic links, safe CTAs" },
         { href: "/#qa", label: "QA / Playwright", desc: "Isolated inboxes per CI worker" },

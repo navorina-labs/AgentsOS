@@ -10,6 +10,7 @@ The platform split should be:
 - **Context Agent** — context preparation and routing.
 - **Safety Agent** — security and cryptographic posture.
 - **Design Agent** — design specification, review, and verification.
+- **Marketing & SEO Agent** — positioning, discoverability, content, conversion, and growth measurement.
 - **Mail Agent** — email, signup verification, inboxes, and communication workflows.
 
 This keeps every agent understandable while sharing one commercial and operational foundation.
@@ -35,4 +36,3 @@ Recommended rules:
 - Put tokens in GitHub Actions secrets or environments, never in this repository.
 - Keep legacy packages publishing during the transition and mark replacements in their README and package metadata before deprecation.
 - Release agents independently; do not force a repository-wide version.
-

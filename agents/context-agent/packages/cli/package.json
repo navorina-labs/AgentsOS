@@ -27,14 +27,14 @@
     "context-engineering"
   ],
   "license": "MIT",
-  "homepage": "https://github.com/navorina-labs/AI-Context-OS#readme",
+  "homepage": "https://github.com/navorina-labs/AgentsOS/tree/main/agents/context-agent#readme",
   "bugs": {
-    "url": "https://github.com/navorina-labs/AI-Context-OS/issues"
+    "url": "https://github.com/navorina-labs/AgentsOS/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/navorina-labs/AI-Context-OS.git",
-    "directory": "packages/cli"
+    "url": "git+https://github.com/navorina-labs/AgentsOS.git",
+    "directory": "agents/context-agent/packages/cli"
   },
   "publishConfig": {
     "access": "public"

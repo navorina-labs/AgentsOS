@@ -5,7 +5,8 @@
   "homepage": "https://webmailagent.com",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Alex0nder/MailAgent.git"
+    "url": "git+https://github.com/navorina-labs/AgentsOS.git",
+    "directory": "agents/mail-agent"
   },
   "private": true,
   "type": "module",
@@ -102,12 +103,11 @@
     "prepare:skills-pr": "node scripts/prepare-skills-pr.mjs",
     "import:skill-hub": "node scripts/import-skill-hub.mjs",
     "check:catalog-prs": "node scripts/check-catalog-prs.mjs",
-    "harden:repo": "gh repo edit Alex0nder/MailAgent --enable-secret-scanning --enable-secret-scanning-push-protection",
+    "harden:repo": "gh repo edit navorina-labs/AgentsOS --enable-secret-scanning --enable-secret-scanning-push-protection",
     "package:codex": "node scripts/package-codex-plugin.mjs",
     "codex:install": "node scripts/codex-install.mjs",
     "test:pw:setup": "node scripts/playwright-global-setup.mjs",
     "ci:mailagent-alerts": "npm run build:qa && node scripts/ci-mailagent-alerts.mjs",
-    "repo:github-about": "gh repo edit Alex0nder/MailAgent --description \"Temporary email inboxes for AI agents & QA/E2E — MCP, REST, OTP/magic links. Cloudflare Workers, Neon, Resend. MIT.\" --homepage https://webmailagent.com",
     "eval:context-os:route": "node context-os/eval/route-eval.mjs",
     "eval:context-os:router-build": "node context-os/eval/build-router-embeddings.mjs",
     "eval:context-os:route-semantic": "node context-os/eval/route-eval.mjs --semantic",

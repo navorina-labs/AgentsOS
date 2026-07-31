@@ -6,8 +6,8 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Alex0nder/MailAgent.git",
-    "directory": "mcp"
+    "url": "git+https://github.com/navorina-labs/AgentsOS.git",
+    "directory": "agents/mail-agent/mcp"
   },
   "homepage": "https://webmailagent.com/docs/agents.html",
   "keywords": [

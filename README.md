@@ -56,3 +56,7 @@ See each agent's README or `SKILL.md` for its own setup and verification command
 
 - [Platform direction](docs/platform-direction.md)
 - [Product roadmap and priorities](docs/product-roadmap.md)
+
+## License
+
+AgentsOS is released under the [MIT License](LICENSE). Individual agents retain their compatible MIT license files. See [Third-party notices](THIRD_PARTY_NOTICES.md) for attribution that applies to adapted material.

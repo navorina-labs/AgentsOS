@@ -132,6 +132,7 @@ html {
 
 body {
   margin: 0;
+  overflow-x: clip;
   font-family: var(--font);
   font-size: 16px;
   line-height: 1.6;
@@ -862,6 +863,12 @@ main.landing .qa-pain-card h3 {
   gap: 12px;
 }
 
+.hero-proof {
+  margin: 18px 0 0;
+  font-size: 13px;
+  color: var(--text-dim);
+}
+
 .hero-code-panel {
   justify-self: end;
   width: min(100%, 580px);
@@ -898,6 +905,7 @@ main.landing .qa-pain-card h3 {
 
 /* —— Code panel —— */
 .code-panel {
+  min-width: 0;
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   background: var(--bg-elevated);
@@ -1452,6 +1460,164 @@ main.landing .section-head .section-desc {
   display: none;
 }
 
+/* —— AgentsOS catalog —— */
+.agents-catalog-section {
+  padding-block: var(--section-y);
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.045), transparent 42%),
+    var(--bg);
+}
+
+.agents-catalog-head {
+  max-width: 720px;
+}
+
+.agent-catalog-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 48px;
+}
+
+.agent-catalog-card {
+  display: flex;
+  flex-direction: column;
+  min-height: 330px;
+  padding: 28px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  background: rgba(255, 255, 255, 0.018);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.04) inset;
+  transition-property: transform, border-color, background-color, box-shadow;
+  transition-duration: 180ms;
+  transition-timing-function: ease-out;
+}
+
+.agent-catalog-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-strong);
+  background: rgba(255, 255, 255, 0.03);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.06) inset,
+    0 24px 56px rgba(0, 0, 0, 0.36);
+}
+
+.agent-catalog-card--live {
+  background:
+    radial-gradient(circle at 90% 0%, rgba(255, 255, 255, 0.08), transparent 40%),
+    rgba(255, 255, 255, 0.025);
+}
+
+.agent-catalog-card-top,
+.agent-catalog-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.agent-glyph {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  flex: 0 0 auto;
+  border: 1px solid var(--border-strong);
+  border-radius: 13px;
+  color: var(--text);
+  background: var(--surface);
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 600;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.06) inset;
+}
+
+.agent-status {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding-inline: 10px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  color: var(--text-dim);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.agent-status--live {
+  color: var(--text);
+  border-color: var(--border-strong);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.agent-catalog-copy {
+  margin-block: 36px 28px;
+}
+
+.agent-kicker {
+  margin: 0 0 8px;
+  color: var(--text-dim);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.agent-catalog-copy h3 {
+  margin: 0 0 12px;
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+}
+
+.agent-catalog-copy p:last-child {
+  margin: 0;
+  max-width: 34rem;
+  color: var(--text-muted);
+  line-height: 1.65;
+}
+
+.agent-catalog-card > .agent-text-link,
+.agent-catalog-actions {
+  margin-top: auto;
+}
+
+.agent-text-link {
+  color: var(--text-muted);
+  font-size: 14px;
+  font-weight: 500;
+  transition-property: color;
+  transition-duration: 150ms;
+}
+
+.agent-text-link:hover {
+  color: var(--text);
+}
+
+.agent-catalog-actions .btn {
+  flex: 0 0 auto;
+}
+
+@media (max-width: 760px) {
+  .agent-catalog-grid {
+    grid-template-columns: 1fr;
+    margin-top: 36px;
+  }
+
+  .agent-catalog-card {
+    min-height: 0;
+    padding: 24px;
+  }
+
+  .agent-catalog-actions {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
 .bento-grid {
   display: grid;
   gap: 16px;
@@ -1990,6 +2156,7 @@ main.landing .section-head .section-desc {
 
 .workspace-grid {
   display: grid;
+  min-width: 0;
   gap: 16px;
   margin-bottom: 32px;
 }
@@ -2001,6 +2168,7 @@ main.landing .section-head .section-desc {
 }
 
 .workspace-card {
+  min-width: 0;
   padding: 20px 22px;
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
@@ -2018,6 +2186,12 @@ main.landing .section-head .section-desc {
   font-size: 14px;
   line-height: 1.55;
   color: var(--text-muted);
+  overflow-wrap: anywhere;
+}
+
+.workspace-card code {
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .workspace-code-panel {

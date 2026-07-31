@@ -9,6 +9,7 @@ AgentsOS is a home for focused AI agents that can be used independently and comb
 | [Context Agent](agents/context-agent) | Builds, routes, validates, and evaluates minimal project context for AI-assisted work. | Existing implementation imported from AI Context OS |
 | [Safety Agent](agents/safety-agent) | Audits cryptographic posture, post-quantum migration, policies, and implementation risks. | Renamed from SafetyOS; legacy CLI remains compatible |
 | [Design Agent](agents/design-agent) | Produces implementation-ready interface specifications, critiques, and design-system guidance. | Existing skill and evaluation suite imported |
+| [Marketing & SEO Agent](agents/marketing-agent) | Turns product evidence into positioning, SEO audits, content systems, conversion experiments, and measurable growth plans. | First skill release with a local HTML/URL auditor |
 | [Mail Agent](agents/mail-agent) | Gives agents email verification, inbox, QA, and workspace communication capabilities. | Existing service; first module of the future AgentsOS Cloud |
 
 Each agent keeps its own runtime, dependencies, tests, and release lifecycle. The repository root contains only shared governance and platform documentation, so one agent can evolve without forcing a release of the others.
@@ -21,6 +22,7 @@ AgentsOS/
 │   ├── context-agent/
 │   ├── safety-agent/
 │   ├── design-agent/
+│   ├── marketing-agent/
 │   └── mail-agent/
 └── docs/
     └── platform-direction.md
@@ -34,6 +36,7 @@ Do not create a separate npm account or token for every agent. Use one organizat
 @agentsos/context
 @agentsos/safety
 @agentsos/design
+@agentsos/marketing
 @agentsos/mail
 @agentsos/mcp
 ```

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Marketing & SEO Agent"
+  short_description: "Evidence-led marketing strategy and SEO audits"
+  default_prompt: "Use $marketing-agent to audit this product or website and produce a prioritized, measurable growth plan."

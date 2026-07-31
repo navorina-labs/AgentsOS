@@ -1,0 +1,44 @@
+# Context OS keyword router F1 gate — no secrets, no LLM
+name: Mail Agent / Context OS router
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "agents/mail-agent/context-os/**"
+      - "agents/mail-agent/src/mcp/manifest.ts"
+      - "agents/mail-agent/src/lib/service-presets.ts"
+      - "agents/mail-agent/mcp/src/service-presets.ts"
+  pull_request:
+    branches: [main]
+    paths:
+      - "agents/mail-agent/context-os/**"
+      - "agents/mail-agent/src/mcp/manifest.ts"
+      - "agents/mail-agent/src/lib/service-presets.ts"
+      - "agents/mail-agent/mcp/src/service-presets.ts"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    working-directory: agents/mail-agent
+
+jobs:
+  router-f1:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: agents/mail-agent/package-lock.json
+
+      - run: npm ci
+
+      - name: npm run check:context-os-router
+        run: npm run check:context-os-router
+

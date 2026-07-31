@@ -1,0 +1,63 @@
+# Publish @mailagent/* to npm and mailagent-agent to PyPI.
+# In the monorepo, releases use mail-v* tags to avoid collisions with other agents.
+name: Mail Agent / Publish packages
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "mail-v*"
+
+permissions:
+  contents: read
+  id-token: write
+
+defaults:
+  run:
+    working-directory: agents/mail-agent
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: agents/mail-agent/package-lock.json
+          registry-url: https://registry.npmjs.org
+
+      - name: npm 11+ for trusted publishing / GAT CLI
+        run: npm install -g npm@latest
+
+      - run: npm ci
+      - run: npm run publish:check
+
+      - name: Full prod gate before publish
+        env:
+          MAILAGENT_API_URL: https://api.webmailagent.com
+          MAILAGENT_API_KEY: ${{ secrets.MAILAGENT_API_KEY }}
+        run: |
+          if [ -z "$MAILAGENT_API_KEY" ]; then
+            echo "::error::Set MAILAGENT_API_KEY for release gate — see agents/mail-agent/docs/OPERATOR.md"
+            exit 1
+          fi
+          npx playwright install chromium --with-deps
+          npm run test:prod
+
+      - name: Publish @mailagent/mcp
+        run: node scripts/publish-if-new.mjs mcp/package.json
+
+      - name: Publish @mailagent/qa
+        run: node scripts/publish-if-new.mjs packages/mailagent-qa/package.json
+
+      - name: Publish @mailagent/agent
+        run: node scripts/publish-if-new.mjs packages/mailagent-agent/package.json
+
+      - name: Publish mailagent-agent (PyPI)
+        env:
+          PYPI_API_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
+        run: node scripts/publish-if-new-pypi.mjs
+

@@ -56,6 +56,7 @@ See each agent's README or `SKILL.md` for its own setup and verification command
 
 - [Platform direction](docs/platform-direction.md)
 - [Product roadmap and priorities](docs/product-roadmap.md)
+- [CI and independent releases](docs/ci-and-releases.md)
 
 ## License
 

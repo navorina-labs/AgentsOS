@@ -1,0 +1,50 @@
+# Policy files, npm audit, verify:codex, GitHub secret scanning — no prod secrets
+name: Mail Agent / Security baseline
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "agents/mail-agent/**"
+      - ".github/workflows/mail-security-baseline.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "agents/mail-agent/**"
+      - ".github/workflows/mail-security-baseline.yml"
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    working-directory: agents/mail-agent
+
+jobs:
+  doctor-security:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: agents/mail-agent/package-lock.json
+
+      - run: npm ci
+
+      - name: npm run doctor:security
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npm run doctor:security
+
+      - name: Catalog PR status (weekly)
+        if: github.event_name == 'schedule'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npm run check:catalog-prs
+

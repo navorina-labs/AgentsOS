@@ -24,7 +24,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/navorina-labs/AI-Context-OS.git",
-    "directory": "packages/eval"
+    "url": "https://github.com/navorina-labs/AgentsOS.git",
+    "directory": "agents/context-agent/packages/eval"
   }
 }

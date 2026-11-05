@@ -10,7 +10,7 @@ AgentsOS is a home for focused AI agents that can be used independently and comb
 | [Safety Agent](agents/safety-agent) | Audits cryptographic posture, post-quantum migration, policies, and implementation risks. | Renamed from SafetyOS; legacy CLI remains compatible |
 | [Design Agent](agents/design-agent) | Produces implementation-ready interface specifications, critiques, and design-system guidance. | Existing skill and evaluation suite imported |
 | [Marketing & SEO Agent](agents/marketing-agent) | Turns product evidence into positioning, SEO audits, content systems, conversion experiments, and measurable growth plans. | First skill release with a local HTML/URL auditor |
-| [Mail Agent](agents/mail-agent) | Gives agents email verification, inbox, QA, and workspace communication capabilities. | Existing service; first module of the future AgentsOS Cloud |
+| [Mail Agent](https://github.com/navorina-labs/MailAgent) | Gives agents email verification, inbox, QA, and workspace communication capabilities. | Live at [webmailagent.com](https://webmailagent.com). Developed in [navorina-labs/MailAgent](https://github.com/navorina-labs/MailAgent); `agents/mail-agent` here is an older snapshot |
 
 Each agent keeps its own runtime, dependencies, tests, and release lifecycle. The repository root contains only shared governance and platform documentation, so one agent can evolve without forcing a release of the others.
 

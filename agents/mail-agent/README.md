@@ -1,3 +1,6 @@
+> [!IMPORTANT]
+> Mail Agent is developed in [navorina-labs/MailAgent](https://github.com/navorina-labs/MailAgent). This folder is an older snapshot kept for the AgentsOS layout; use the MailAgent repository for source code, issues, releases and install commands.
+
 # Mail Agent
 
 **The email and communication agent in AgentsOS.** Mail Agent remains a focused product while its account, billing, run orchestration, and agent-discovery infrastructure evolves into the shared AgentsOS Cloud control plane.
